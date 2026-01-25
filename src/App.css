@@ -2571,7 +2571,7 @@ a {
 
   /* Force grayscale for print */
   .cv-container * {
-    color-adjust: exact;
+    print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
 

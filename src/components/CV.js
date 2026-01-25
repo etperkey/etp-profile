@@ -23,7 +23,7 @@ function CV() {
 
   return (
     <div className="cv-page">
-      <BloodSmearBackground />
+      <BloodSmearBackground density="medium" />
       <div className="cv-container">
         <a href="#home" className="cv-back-link no-print" onClick={(e) => { e.preventDefault(); window.location.hash = ''; }}>Back to Home</a>
         <button className="cv-print-btn no-print" onClick={handlePrint}>

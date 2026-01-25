@@ -34,9 +34,12 @@ function useIsMobile(breakpoint = 768) {
 function BloodSmearBackground({ density = 'full' }) {
   const isMobile = useIsMobile();
 
-  // On mobile, cap density at 'light' for performance
-  // full -> light, medium -> light, light -> light
-  const effectiveDensity = isMobile ? 'light' : density;
+  // On mobile, cap density at 'light' but allow lower densities through
+  // full -> light, medium -> medium, light -> light
+  const densityOrder = { light: 0, medium: 1, full: 2 };
+  const effectiveDensity = isMobile && densityOrder[density] > densityOrder['light']
+    ? 'light'
+    : density;
 
   const cells = useMemo(() => {
     const cellArray = [];

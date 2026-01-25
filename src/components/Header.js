@@ -31,6 +31,7 @@ function Header() {
             <li><a href="#publications" onClick={() => setIsMenuOpen(false)}>Publications</a></li>
             <li><a href="#projects" onClick={() => setIsMenuOpen(false)}>Research</a></li>
             <li><a href="#tools" onClick={() => setIsMenuOpen(false)}>Tools</a></li>
+            <li><a href="#cv" onClick={() => setIsMenuOpen(false)}>CV</a></li>
             <li><a href="#contact" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
           </ul>
         </nav>

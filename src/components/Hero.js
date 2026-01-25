@@ -67,6 +67,21 @@ function BloodSmearBackground() {
       });
     }
 
+    // Eosinophils (1-2) - bilobed nucleus, bright red granules, ~12-17μm (rare, 1-4% of WBCs)
+    const numEosinophils = 1 + Math.floor(Math.random() * 2);
+    for (let i = 0; i < numEosinophils; i++) {
+      cellArray.push({
+        id: cellId++,
+        type: 'eosinophil',
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: 34 + Math.random() * 12,
+        duration: 25 + Math.random() * 35,
+        delay: Math.random() * -30,
+        opacity: 0.22 + Math.random() * 0.1,
+      });
+    }
+
     return cellArray;
   }, []);
 

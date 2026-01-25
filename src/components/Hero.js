@@ -134,6 +134,12 @@ const cellImages = {
     // DLBCL - Diffuse Large B-Cell Lymphoma (Wikimedia Commons, 10x zoom)
     { path: '/cell-library/malignant/lymphoma/DLBCL/dlbcl_testis_high_10x.jpg', label: 'DLBCL' },
     { path: '/cell-library/malignant/lymphoma/DLBCL/dlbcl_testis_med_10x.jpg', label: 'DLBCL' },
+    // Classical Hodgkin Lymphoma - Reed-Sternberg cells (owl-eye appearance)
+    { path: '/cell-library/malignant/lymphoma/hodgkin-classical/rs_001.jpg', label: 'Reed-Sternberg Cell' },
+    { path: '/cell-library/malignant/lymphoma/hodgkin-classical/rs_002.jpg', label: 'Reed-Sternberg Cell' },
+    // NLPHL - Popcorn cells (LP cells, multilobed nucleus)
+    { path: '/cell-library/malignant/lymphoma/hodgkin-nlphl/popcorn_001.jpg', label: 'Popcorn Cell (NLPHL)' },
+    { path: '/cell-library/malignant/lymphoma/hodgkin-nlphl/popcorn_002.jpg', label: 'Popcorn Cell (NLPHL)' },
   ],
 };
 

@@ -109,7 +109,7 @@ function ResearchTools() {
 
   return (
     <section id="tools" className="research-tools section-with-blood-smear">
-      <BloodSmearBackground />
+      <BloodSmearBackground density="light" />
       <div className="container">
         <h2 className="section-title">PhD Research Tools</h2>
         <p className="tools-intro">

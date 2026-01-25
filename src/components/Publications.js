@@ -86,7 +86,7 @@ function Publications() {
 
   return (
     <section id="publications" className="publications section-with-blood-smear">
-      <BloodSmearBackground />
+      <BloodSmearBackground density="light" />
       <div className="container">
         <h2 className="section-title">Selected Publications</h2>
 

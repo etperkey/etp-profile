@@ -2,49 +2,51 @@ import React, { useMemo } from 'react';
 
 // Blood Smear Background Component
 // Realistic blood smear animation with RBCs, WBCs, and platelets
-function BloodSmearBackground() {
+// density: 'full' (default), 'medium', 'light' - controls cell count for performance
+function BloodSmearBackground({ density = 'full' }) {
   const cells = useMemo(() => {
     const cellArray = [];
-    // Generate 1200-1500 RBCs for dense smear (~7μm, smaller)
-    // Slight size variation (anisocytosis) and occasional overlapping
-    const numRBCs = 1200 + Math.floor(Math.random() * 300);
+
+    // Scale factors based on density
+    const scale = density === 'full' ? 1 : density === 'medium' ? 0.4 : 0.25;
+
+    // Generate RBCs - scaled by density
+    const numRBCs = Math.floor((400 + Math.floor(Math.random() * 100)) * scale);
     for (let i = 0; i < numRBCs; i++) {
-      const size = 11 + Math.random() * 3; // Subtle size variation (~80% range)
+      const size = 11 + Math.random() * 3;
       cellArray.push({
         id: i,
         type: 'rbc',
         x: Math.random() * 100,
         y: Math.random() * 100,
         size: size,
-        duration: 35 + Math.random() * 25, // Slower for small cells (parallax)
+        duration: 35 + Math.random() * 25,
         delay: Math.random() * -30,
         opacity: 0.15 + Math.random() * 0.1,
-        zIndex: Math.random() < 0.15 ? 2 : 1, // 15% overlap others
+        zIndex: Math.random() < 0.15 ? 2 : 1,
       });
     }
 
-    // Platelets (100-150) - tiny purple fragments, ~10-20 per RBC in real smear
-    const numPlatelets = 100 + Math.floor(Math.random() * 50);
+    // Platelets - scaled by density
+    const numPlatelets = Math.floor((40 + Math.floor(Math.random() * 20)) * scale);
     for (let i = 0; i < numPlatelets; i++) {
       cellArray.push({
         id: numRBCs + i,
         type: 'platelet',
         x: Math.random() * 100,
         y: Math.random() * 100,
-        size: 4 + Math.random() * 4, // Very small
-        duration: 45 + Math.random() * 30, // Slowest (smallest = parallax)
+        size: 4 + Math.random() * 4,
+        duration: 45 + Math.random() * 30,
         delay: Math.random() * -30,
         opacity: 0.25 + Math.random() * 0.15,
         zIndex: 0,
       });
     }
 
-    // WBCs with realistic differential (~60% neutrophils, ~30% lymphocytes, ~10% monocytes)
     let cellId = numRBCs + numPlatelets;
 
-    // Neutrophils (16-24) - segmented nucleus, ~12-15μm (2x RBC)
-    // 50% have 2 lobes, 50% have 3 lobes
-    const numNeutrophils = 16 + Math.floor(Math.random() * 9);
+    // Neutrophils - scaled
+    const numNeutrophils = Math.floor((8 + Math.floor(Math.random() * 4)) * scale);
     for (let i = 0; i < numNeutrophils; i++) {
       cellArray.push({
         id: cellId++,
@@ -58,8 +60,8 @@ function BloodSmearBackground() {
       });
     }
 
-    // Lymphocytes (8-12) - large round nucleus, ~8-12μm (1.5x RBC), ~25-30% of WBCs
-    const numLymphocytes = 8 + Math.floor(Math.random() * 5);
+    // Lymphocytes - scaled
+    const numLymphocytes = Math.floor((4 + Math.floor(Math.random() * 3)) * scale);
     for (let i = 0; i < numLymphocytes; i++) {
       cellArray.push({
         id: cellId++,
@@ -73,8 +75,8 @@ function BloodSmearBackground() {
       });
     }
 
-    // Monocytes (1-3) - kidney-shaped nucleus, ~18-22μm (3x RBC, largest WBC), ~5-8% of WBCs
-    const numMonocytes = 1 + Math.floor(Math.random() * 3);
+    // Monocytes - scaled (at least 1 if density allows)
+    const numMonocytes = Math.max(density === 'light' ? 0 : 1, Math.floor((1 + Math.floor(Math.random() * 2)) * scale));
     for (let i = 0; i < numMonocytes; i++) {
       cellArray.push({
         id: cellId++,
@@ -88,25 +90,25 @@ function BloodSmearBackground() {
       });
     }
 
-    // Eosinophils (1-2) - bilobed nucleus, bright red granules, ~12-17μm (rare, 1-4% of WBCs)
-    // 50% have 2 lobes, 50% have 3 lobes
-    const numEosinophils = 1 + Math.floor(Math.random() * 2);
-    for (let i = 0; i < numEosinophils; i++) {
-      cellArray.push({
-        id: cellId++,
-        type: Math.random() < 0.5 ? 'eosinophil' : 'eosinophil-3lobe',
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: 34 + Math.random() * 12,
-        duration: 25 + Math.random() * 35,
-        delay: Math.random() * -30,
-        opacity: 0.33 + Math.random() * 0.15,
-      });
+    // Eosinophils - only in full/medium density
+    if (density !== 'light') {
+      const numEosinophils = Math.floor((1 + Math.floor(Math.random() * 1)) * scale);
+      for (let i = 0; i < numEosinophils; i++) {
+        cellArray.push({
+          id: cellId++,
+          type: Math.random() < 0.5 ? 'eosinophil' : 'eosinophil-3lobe',
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          size: 34 + Math.random() * 12,
+          duration: 25 + Math.random() * 35,
+          delay: Math.random() * -30,
+          opacity: 0.33 + Math.random() * 0.15,
+        });
+      }
     }
 
-    // Basophils (0-1) - super rare, <1% of WBCs, dark purple granules obscuring nucleus
-    const numBasophils = Math.random() < 0.5 ? 0 : 1;
-    for (let i = 0; i < numBasophils; i++) {
+    // Basophils - only in full density
+    if (density === 'full' && Math.random() < 0.5) {
       cellArray.push({
         id: cellId++,
         type: 'basophil',
@@ -120,7 +122,7 @@ function BloodSmearBackground() {
     }
 
     return cellArray;
-  }, []);
+  }, [density]);
 
   return (
     <div className="blood-smear-background">

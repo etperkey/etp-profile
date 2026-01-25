@@ -307,6 +307,9 @@ a {
   position: absolute;
   border-radius: 50%;
   animation: floatCell linear infinite;
+  will-change: transform;
+  contain: layout style;
+  backface-visibility: hidden;
 }
 
 .floating-cell.rbc {
@@ -2432,11 +2435,46 @@ a {
 
   .cv-container {
     max-width: 100%;
-    font-size: 9.5pt;
+    font-size: 10pt;
     line-height: 1.2;
     background: white;
     padding: 0;
     box-shadow: none;
+    border: none;
+    backdrop-filter: none;
+  }
+
+  /* Remove all link styling - make them look like plain text */
+  .cv-container a {
+    color: #000 !important;
+    text-decoration: none !important;
+    pointer-events: none;
+  }
+
+  /* Hide the Google Scholar link text in metrics */
+  .cv-metrics a {
+    color: #000 !important;
+  }
+
+  .cv-header {
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+    page-break-after: avoid;
+  }
+
+  .cv-header h1 {
+    font-size: 13pt;
+    margin-bottom: 2px;
+  }
+
+  .cv-header h2 {
+    font-size: 11pt;
+  }
+
+  .cv-metrics {
+    font-size: 9pt;
+    color: #333;
+    margin-top: 4px;
   }
 
   .cv-section {
@@ -2444,50 +2482,116 @@ a {
   }
 
   .cv-section h3 {
+    font-size: 10pt;
     margin-bottom: 4px;
+    padding-bottom: 1px;
+  }
+
+  .cv-contact {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between;
+    gap: 20px;
+    font-size: 9.5pt;
+  }
+
+  .cv-contact-block {
+    flex: 1;
+  }
+
+  .cv-contact-block p {
+    margin: 0;
+    line-height: 1.2;
   }
 
   .cv-entry {
+    display: flex !important;
+    flex-direction: row !important;
+    margin-bottom: 3px;
+    page-break-inside: avoid;
+  }
+
+  .cv-years {
+    min-width: 80px !important;
+    width: 80px !important;
+    flex-shrink: 0 !important;
+    font-size: 9.5pt;
+    padding-right: 10px;
+    color: #666 !important;
+  }
+
+  .cv-details {
+    flex: 1 !important;
+    font-size: 10pt;
+  }
+
+  .cv-title {
+    font-weight: bold;
+  }
+
+  .cv-institution {
+    float: right;
+    font-weight: bold;
+    font-size: 10pt;
+  }
+
+  .cv-details p {
+    margin: 0;
+    line-height: 1.2;
+    clear: right;
+  }
+
+  .cv-note {
+    font-size: 9pt;
     margin-bottom: 4px;
   }
 
   .cv-publication {
-    margin-bottom: 6px;
+    display: flex !important;
+    flex-direction: row !important;
+    margin-bottom: 4px;
+    page-break-inside: avoid;
   }
 
   .cv-publication.first-author {
-    background: none;
-    border-left: none;
-    padding: 0;
-    margin-left: 0;
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-left: 2px solid #333 !important;
+    padding-left: 6px !important;
+    margin-left: -8px !important;
   }
 
-  .cv-header {
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    page-break-after: avoid;
+  .cv-pub-year {
+    min-width: 45px !important;
+    width: 45px !important;
+    flex-shrink: 0 !important;
+    font-size: 9.5pt;
+    padding-right: 8px;
+    color: #666 !important;
   }
 
-  .cv-metrics {
-    font-size: 9pt;
-    color: #333;
+  /* Force grayscale for print */
+  .cv-container * {
+    color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 
-  .cv-metrics a {
-    color: #000;
-  }
-
-  .cv-container a {
-    color: #000;
-    text-decoration: none;
+  .cv-pub-details {
+    flex: 1 !important;
+    font-size: 9.5pt;
+    line-height: 1.2;
   }
 
   .cv-footer {
     display: none;
   }
 
+  /* Page break controls */
+  .cv-section:nth-of-type(n+8) {
+    page-break-before: auto;
+  }
+
   @page {
-    margin: 0.5in 0.6in;
+    margin: 0.4in 0.5in;
   }
 }
 

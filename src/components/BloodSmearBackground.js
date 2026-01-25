@@ -1,14 +1,48 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
+
+// Hook to detect mobile devices for performance optimization
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(() => {
+    // SSR-safe initial check
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth <= breakpoint;
+  });
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= breakpoint);
+
+    // Use matchMedia for better performance than resize listener
+    const mediaQuery = window.matchMedia(`(max-width: ${breakpoint}px)`);
+
+    // Modern API (addEventListener) with fallback (addListener)
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', checkMobile);
+      return () => mediaQuery.removeEventListener('change', checkMobile);
+    } else {
+      mediaQuery.addListener(checkMobile);
+      return () => mediaQuery.removeListener(checkMobile);
+    }
+  }, [breakpoint]);
+
+  return isMobile;
+}
 
 // Blood Smear Background Component
 // Realistic blood smear animation with RBCs, WBCs, and platelets
 // density: 'full' (default), 'medium', 'light' - controls cell count for performance
+// On mobile, density is automatically reduced for better performance
 function BloodSmearBackground({ density = 'full' }) {
+  const isMobile = useIsMobile();
+
+  // On mobile, cap density at 'light' for performance
+  // full -> light, medium -> light, light -> light
+  const effectiveDensity = isMobile ? 'light' : density;
+
   const cells = useMemo(() => {
     const cellArray = [];
 
-    // Scale factors based on density
-    const scale = density === 'full' ? 1 : density === 'medium' ? 0.4 : 0.25;
+    // Scale factors based on effective density (mobile-aware)
+    const scale = effectiveDensity === 'full' ? 1 : effectiveDensity === 'medium' ? 0.4 : 0.25;
 
     // Generate RBCs - scaled by density
     const numRBCs = Math.floor((400 + Math.floor(Math.random() * 100)) * scale);
@@ -76,7 +110,7 @@ function BloodSmearBackground({ density = 'full' }) {
     }
 
     // Monocytes - scaled (at least 1 if density allows)
-    const numMonocytes = Math.max(density === 'light' ? 0 : 1, Math.floor((1 + Math.floor(Math.random() * 2)) * scale));
+    const numMonocytes = Math.max(effectiveDensity === 'light' ? 0 : 1, Math.floor((1 + Math.floor(Math.random() * 2)) * scale));
     for (let i = 0; i < numMonocytes; i++) {
       cellArray.push({
         id: cellId++,
@@ -91,7 +125,7 @@ function BloodSmearBackground({ density = 'full' }) {
     }
 
     // Eosinophils - only in full/medium density
-    if (density !== 'light') {
+    if (effectiveDensity !== 'light') {
       const numEosinophils = Math.floor((1 + Math.floor(Math.random() * 1)) * scale);
       for (let i = 0; i < numEosinophils; i++) {
         cellArray.push({
@@ -108,7 +142,7 @@ function BloodSmearBackground({ density = 'full' }) {
     }
 
     // Basophils - only in full density
-    if (density === 'full' && Math.random() < 0.5) {
+    if (effectiveDensity === 'full' && Math.random() < 0.5) {
       cellArray.push({
         id: cellId++,
         type: 'basophil',
@@ -122,10 +156,10 @@ function BloodSmearBackground({ density = 'full' }) {
     }
 
     return cellArray;
-  }, [density]);
+  }, [effectiveDensity]);
 
   return (
-    <div className="blood-smear-background">
+    <div className={`blood-smear-background${isMobile ? ' blood-smear-mobile' : ''}`}>
       {cells.map(cell => (
         <div
           key={cell.id}

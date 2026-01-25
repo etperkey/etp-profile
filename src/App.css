@@ -83,6 +83,19 @@ a {
   color: white;
 }
 
+.btn-tertiary {
+  background-color: transparent;
+  color: var(--text-color);
+  border: 2px solid var(--text-color);
+  opacity: 0.8;
+}
+
+.btn-tertiary:hover {
+  background-color: var(--text-color);
+  color: var(--background-color);
+  opacity: 1;
+}
+
 /* Section Title */
 .section-title {
   font-size: 2.5rem;
@@ -283,6 +296,11 @@ a {
   height: 100%;
   pointer-events: none;
   z-index: 0;
+  /* Subtle plasma tint - pale yellow/straw color of real plasma */
+  background: linear-gradient(135deg,
+    rgba(255, 252, 240, 0.3) 0%,
+    rgba(255, 248, 230, 0.25) 50%,
+    rgba(255, 250, 235, 0.3) 100%);
 }
 
 .floating-cell {
@@ -314,18 +332,56 @@ a {
     transparent 70%);
 }
 
-/* Neutrophil - bilobed nucleus with fine granules */
-.floating-cell.neutrophil {
+/* Neutrophil - multilobulated nucleus with fine granules (50% reduced, 20% lighter) */
+.floating-cell.neutrophil,
+.floating-cell.neutrophil-3lobe {
   background:
-    /* Fine pink/lilac granules scattered in cytoplasm */
-    radial-gradient(circle at 15% 25%, rgba(180, 130, 160, 0.5) 1.5px, transparent 2px),
-    radial-gradient(circle at 75% 20%, rgba(180, 130, 160, 0.5) 1.5px, transparent 2px),
-    radial-gradient(circle at 25% 75%, rgba(180, 130, 160, 0.5) 1.5px, transparent 2px),
-    radial-gradient(circle at 80% 70%, rgba(180, 130, 160, 0.5) 1.5px, transparent 2px),
-    radial-gradient(circle at 10% 55%, rgba(180, 130, 160, 0.5) 1.5px, transparent 2px),
-    radial-gradient(circle at 85% 45%, rgba(180, 130, 160, 0.5) 1.5px, transparent 2px),
-    radial-gradient(circle at 20% 90%, rgba(180, 130, 160, 0.5) 1.5px, transparent 2px),
-    radial-gradient(circle at 70% 85%, rgba(180, 130, 160, 0.5) 1.5px, transparent 2px),
+    /* Fine pink/lilac granules scattered throughout cytoplasm */
+    radial-gradient(circle at 5% 8%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 15% 10%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 12% 20%, rgba(65, 35, 95, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 18% 12%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 25% 15%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 28% 18%, rgba(65, 35, 95, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 10% 38%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 8% 42%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 6% 52%, rgba(65, 35, 95, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 22% 40%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 10% 62%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 8% 72%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 6% 82%, rgba(65, 35, 95, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 22% 70%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 10% 92%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 25% 92%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 78% 10%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 75% 15%, rgba(65, 35, 95, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 92% 18%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 78% 25%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 78% 38%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 88% 42%, rgba(65, 35, 95, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 75% 45%, rgba(65, 35, 95, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 78% 62%, rgba(65, 35, 95, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 88% 72%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 85% 82%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 95% 70%, rgba(65, 35, 95, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 78% 92%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 88% 88%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 38% 10%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 48% 8%, rgba(65, 35, 95, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 58% 18%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 45% 25%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 65% 28%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 38% 78%, rgba(65, 35, 95, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 48% 75%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 58% 92%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 45% 90%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 65% 88%, rgba(65, 35, 95, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 35% 48%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 65% 52%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 70% 62%, rgba(65, 35, 95, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 68% 35%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 32% 65%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
+    radial-gradient(circle at 30% 28%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
     /* Base cytoplasm - pale pink */
     radial-gradient(ellipse at 50% 50%,
       rgba(250, 240, 245, 0.95) 0%,
@@ -334,32 +390,72 @@ a {
   box-shadow: inset 0 0 6px rgba(180, 140, 160, 0.3);
 }
 
-/* Bilobed nucleus - left lobe */
+/* Multilobulated nucleus - irregular left lobe */
 .floating-cell.neutrophil::before {
   content: '';
   position: absolute;
-  top: 30%;
-  left: 22%;
-  width: 30%;
-  height: 40%;
-  border-radius: 50% 30% 50% 50%;
+  top: 28%;
+  left: 18%;
+  width: 26%;
+  height: 32%;
+  border-radius: 45% 55% 40% 60%;
   background: rgba(60, 30, 90, 0.8);
-  transform: rotate(-10deg);
+  transform: rotate(-15deg);
+  /* Additional lobe extending down */
+  box-shadow:
+    8px 18px 0 -4px rgba(60, 30, 90, 0.8),
+    -2px 22px 0 -6px rgba(60, 30, 90, 0.75);
 }
 
-/* Bilobed nucleus - right lobe connected by thin bridge */
+/* Multilobulated nucleus - irregular right lobes with connections */
 .floating-cell.neutrophil::after {
   content: '';
   position: absolute;
-  top: 32%;
+  top: 30%;
   left: 48%;
-  width: 28%;
-  height: 38%;
-  border-radius: 30% 50% 50% 50%;
+  width: 24%;
+  height: 28%;
+  border-radius: 55% 45% 50% 50%;
   background: rgba(60, 30, 90, 0.8);
-  transform: rotate(10deg);
-  /* Thin chromatin bridge connecting to left lobe */
-  box-shadow: -8px 8px 0 -6px rgba(60, 30, 90, 0.7);
+  transform: rotate(12deg);
+  /* Multiple lobes with thin chromatin bridges */
+  box-shadow:
+    -12px 6px 0 -8px rgba(60, 30, 90, 0.7),
+    10px 15px 0 -5px rgba(60, 30, 90, 0.8),
+    18px 8px 0 -6px rgba(60, 30, 90, 0.75),
+    6px 22px 0 -7px rgba(60, 30, 90, 0.7);
+}
+
+/* Neutrophil 3-lobe variant nucleus */
+.floating-cell.neutrophil-3lobe::before {
+  content: '';
+  position: absolute;
+  top: 25%;
+  left: 12%;
+  width: 22%;
+  height: 28%;
+  border-radius: 50% 45% 45% 55%;
+  background: rgba(60, 30, 90, 0.8);
+  transform: rotate(-20deg);
+  /* Third lobe connection */
+  box-shadow:
+    12px 20px 0 -6px rgba(60, 30, 90, 0.8);
+}
+.floating-cell.neutrophil-3lobe::after {
+  content: '';
+  position: absolute;
+  top: 28%;
+  left: 42%;
+  width: 20%;
+  height: 24%;
+  border-radius: 45% 55% 50% 50%;
+  background: rgba(60, 30, 90, 0.8);
+  transform: rotate(5deg);
+  /* Two more lobes with bridges */
+  box-shadow:
+    -14px 5px 0 -9px rgba(60, 30, 90, 0.7),
+    22px 2px 0 -4px rgba(60, 30, 90, 0.8),
+    20px 18px 0 -6px rgba(60, 30, 90, 0.75);
 }
 
 /* Lymphocyte - large round nucleus, thin cytoplasm rim */
@@ -383,7 +479,7 @@ a {
     rgba(50, 30, 80, 0.8) 100%);
 }
 
-/* Monocyte - kidney/horseshoe-shaped nucleus, gray-blue cytoplasm */
+/* Monocyte - kidney-bean shaped nucleus, gray-blue cytoplasm */
 .floating-cell.monocyte {
   background: radial-gradient(ellipse at 40% 40%,
     rgba(200, 210, 225, 0.95) 0%,
@@ -392,50 +488,168 @@ a {
   box-shadow: inset 0 0 10px rgba(100, 110, 140, 0.4);
 }
 
-/* Kidney-shaped nucleus with indentation */
+/* Kidney bean-shaped nucleus - offset from center with indentation */
 .floating-cell.monocyte::before {
   content: '';
   position: absolute;
-  top: 22%;
-  left: 20%;
-  width: 60%;
-  height: 56%;
-  border-radius: 50% 50% 50% 50%;
+  top: 20%;
+  left: 10%;
+  width: 55%;
+  height: 50%;
+  border-radius: 70% 30% 30% 70% / 60% 60% 40% 40%;
   background: rgba(70, 50, 100, 0.75);
-  transform: rotate(-20deg);
+  transform: rotate(-15deg);
 }
 
-/* Indentation to create kidney shape */
+/* Second lobe of kidney bean creating the indented shape */
 .floating-cell.monocyte::after {
   content: '';
   position: absolute;
-  top: 25%;
-  left: 25%;
-  width: 28%;
-  height: 35%;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at 50% 50%,
-    rgba(200, 210, 225, 0.95) 0%,
-    rgba(180, 190, 210, 0.9) 100%);
-  transform: rotate(-20deg);
+  top: 35%;
+  left: 35%;
+  width: 40%;
+  height: 38%;
+  border-radius: 30% 70% 70% 30% / 40% 40% 60% 60%;
+  background: rgba(70, 50, 100, 0.75);
+  transform: rotate(-15deg);
 }
 
-/* Eosinophil - bilobed nucleus, large bright red/orange granules */
-.floating-cell.eosinophil {
+/* Eosinophil - multilobulated nucleus, dense small bright red/orange granules */
+.floating-cell.eosinophil,
+.floating-cell.eosinophil-3lobe {
   background:
-    /* Large bright red-orange eosinophilic granules - the hallmark feature */
-    radial-gradient(circle at 18% 30%, rgba(220, 80, 60, 0.85) 3px, transparent 4px),
-    radial-gradient(circle at 70% 25%, rgba(230, 90, 50, 0.85) 3px, transparent 4px),
-    radial-gradient(circle at 30% 70%, rgba(215, 75, 55, 0.85) 3px, transparent 4px),
-    radial-gradient(circle at 75% 65%, rgba(225, 85, 45, 0.85) 3px, transparent 4px),
-    radial-gradient(circle at 15% 60%, rgba(220, 70, 50, 0.85) 2.5px, transparent 3.5px),
-    radial-gradient(circle at 80% 45%, rgba(230, 80, 55, 0.85) 2.5px, transparent 3.5px),
-    radial-gradient(circle at 25% 85%, rgba(210, 75, 60, 0.85) 3px, transparent 4px),
-    radial-gradient(circle at 65% 80%, rgba(225, 90, 50, 0.85) 2.5px, transparent 3.5px),
-    radial-gradient(circle at 50% 20%, rgba(220, 85, 55, 0.85) 2.5px, transparent 3.5px),
-    radial-gradient(circle at 40% 50%, rgba(215, 80, 60, 0.85) 3px, transparent 4px),
-    radial-gradient(circle at 60% 55%, rgba(230, 75, 50, 0.85) 2.5px, transparent 3.5px),
-    radial-gradient(circle at 85% 80%, rgba(220, 90, 55, 0.85) 2.5px, transparent 3.5px),
+    /* Dense small red-orange eosinophilic granules (4x density) - the hallmark feature */
+    radial-gradient(circle at 5% 8%, rgba(220, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 10% 5%, rgba(230, 90, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 8% 15%, rgba(215, 75, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 15% 10%, rgba(225, 85, 45, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 12% 18%, rgba(220, 70, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 6% 22%, rgba(230, 80, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 18% 15%, rgba(210, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 22% 8%, rgba(225, 90, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 5% 28%, rgba(220, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 10% 32%, rgba(215, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 8% 38%, rgba(230, 75, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 15% 35%, rgba(220, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 12% 42%, rgba(225, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 6% 48%, rgba(215, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 18% 45%, rgba(230, 75, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 22% 38%, rgba(220, 90, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 5% 52%, rgba(225, 80, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 10% 58%, rgba(210, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 8% 62%, rgba(230, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 15% 55%, rgba(220, 90, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 12% 68%, rgba(215, 80, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 6% 72%, rgba(225, 85, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 18% 65%, rgba(230, 75, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 22% 58%, rgba(220, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 5% 78%, rgba(215, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 10% 82%, rgba(225, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 8% 88%, rgba(230, 75, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 15% 85%, rgba(220, 90, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 12% 92%, rgba(210, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 6% 95%, rgba(225, 80, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 18% 88%, rgba(215, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 22% 82%, rgba(230, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 72% 5%, rgba(220, 90, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 78% 10%, rgba(215, 80, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 75% 8%, rgba(225, 85, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 82% 12%, rgba(230, 75, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 85% 5%, rgba(220, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 88% 15%, rgba(215, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 92% 8%, rgba(225, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 95% 12%, rgba(230, 75, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 72% 18%, rgba(220, 90, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 78% 22%, rgba(210, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 75% 28%, rgba(225, 80, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 82% 25%, rgba(215, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 85% 32%, rgba(230, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 88% 28%, rgba(220, 90, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 92% 35%, rgba(215, 80, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 95% 22%, rgba(225, 85, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 72% 38%, rgba(230, 75, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 78% 42%, rgba(220, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 75% 48%, rgba(215, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 82% 45%, rgba(225, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 85% 52%, rgba(230, 75, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 88% 48%, rgba(220, 90, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 92% 55%, rgba(210, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 95% 42%, rgba(225, 80, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 72% 58%, rgba(215, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 78% 62%, rgba(230, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 75% 68%, rgba(220, 90, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 82% 65%, rgba(215, 80, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 85% 72%, rgba(225, 85, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 88% 68%, rgba(230, 75, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 92% 75%, rgba(220, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 95% 62%, rgba(215, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 72% 78%, rgba(225, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 78% 82%, rgba(230, 75, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 75% 88%, rgba(220, 90, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 82% 85%, rgba(210, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 85% 92%, rgba(225, 80, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 88% 88%, rgba(215, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 92% 95%, rgba(230, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 95% 82%, rgba(220, 90, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 28% 5%, rgba(215, 80, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 32% 10%, rgba(225, 85, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 35% 8%, rgba(230, 75, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 38% 15%, rgba(220, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 42% 5%, rgba(215, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 45% 12%, rgba(225, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 48% 8%, rgba(230, 75, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 52% 15%, rgba(220, 90, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 55% 5%, rgba(210, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 58% 10%, rgba(225, 80, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 62% 8%, rgba(215, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 65% 15%, rgba(230, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 28% 78%, rgba(220, 90, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 32% 82%, rgba(215, 80, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 35% 88%, rgba(225, 85, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 38% 85%, rgba(230, 75, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 42% 92%, rgba(220, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 45% 88%, rgba(215, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 48% 95%, rgba(225, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 52% 82%, rgba(230, 75, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 55% 88%, rgba(220, 90, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 58% 92%, rgba(210, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 62% 85%, rgba(225, 80, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 65% 95%, rgba(215, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 25% 25%, rgba(230, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 28% 32%, rgba(220, 90, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 25% 42%, rgba(215, 80, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 28% 48%, rgba(225, 85, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 25% 55%, rgba(230, 75, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 28% 62%, rgba(220, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 25% 72%, rgba(215, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 68% 25%, rgba(225, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 65% 32%, rgba(230, 75, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 68% 42%, rgba(220, 90, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 65% 48%, rgba(210, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 68% 55%, rgba(225, 80, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 65% 62%, rgba(215, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 68% 72%, rgba(230, 75, 60, 0.9) 1px, transparent 1.4px),
+    /* Middle area granules - filling the cytoplasm */
+    radial-gradient(circle at 32% 18%, rgba(220, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 38% 22%, rgba(225, 90, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 42% 18%, rgba(230, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 48% 22%, rgba(215, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 55% 18%, rgba(220, 75, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 60% 22%, rgba(225, 90, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 32% 72%, rgba(230, 80, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 38% 75%, rgba(215, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 42% 72%, rgba(220, 90, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 48% 75%, rgba(225, 75, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 55% 72%, rgba(230, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 60% 75%, rgba(215, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 35% 28%, rgba(220, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 58% 28%, rgba(225, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 35% 68%, rgba(230, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 58% 68%, rgba(215, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 32% 58%, rgba(220, 80, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 60% 58%, rgba(225, 85, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 38% 65%, rgba(230, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 55% 65%, rgba(215, 75, 50, 0.9) 1px, transparent 1.4px),
     /* Base cytoplasm - pale pink */
     radial-gradient(ellipse at 50% 50%,
       rgba(255, 245, 240, 0.95) 0%,
@@ -444,32 +658,199 @@ a {
   box-shadow: inset 0 0 8px rgba(180, 100, 80, 0.3);
 }
 
-/* Eosinophil bilobed nucleus - left lobe */
+/* Eosinophil multilobulated nucleus - irregular left lobe */
 .floating-cell.eosinophil::before {
   content: '';
   position: absolute;
-  top: 35%;
-  left: 18%;
-  width: 28%;
-  height: 35%;
-  border-radius: 50% 40% 50% 50%;
+  top: 32%;
+  left: 15%;
+  width: 24%;
+  height: 30%;
+  border-radius: 45% 55% 42% 58%;
   background: rgba(80, 50, 120, 0.8);
-  transform: rotate(-15deg);
+  transform: rotate(-18deg);
+  /* Additional lobe bulging */
+  box-shadow:
+    6px 14px 0 -5px rgba(80, 50, 120, 0.8),
+    -3px 18px 0 -6px rgba(80, 50, 120, 0.75);
 }
 
-/* Eosinophil bilobed nucleus - right lobe (spectacle-shaped connection) */
+/* Eosinophil multilobulated nucleus - irregular right lobes */
 .floating-cell.eosinophil::after {
   content: '';
   position: absolute;
-  top: 38%;
-  left: 52%;
-  width: 26%;
-  height: 32%;
-  border-radius: 40% 50% 50% 50%;
+  top: 35%;
+  left: 50%;
+  width: 22%;
+  height: 26%;
+  border-radius: 55% 45% 48% 52%;
   background: rgba(80, 50, 120, 0.8);
   transform: rotate(15deg);
-  /* Thin chromatin bridge */
-  box-shadow: -10px 5px 0 -7px rgba(80, 50, 120, 0.7);
+  /* Multiple lobes with chromatin bridges */
+  box-shadow:
+    -14px 4px 0 -9px rgba(80, 50, 120, 0.7),
+    8px 12px 0 -5px rgba(80, 50, 120, 0.8),
+    15px 5px 0 -6px rgba(80, 50, 120, 0.75);
+}
+
+/* Eosinophil 3-lobe variant nucleus */
+.floating-cell.eosinophil-3lobe::before {
+  content: '';
+  position: absolute;
+  top: 28%;
+  left: 10%;
+  width: 20%;
+  height: 26%;
+  border-radius: 48% 52% 45% 55%;
+  background: rgba(80, 50, 120, 0.8);
+  transform: rotate(-22deg);
+  /* Third lobe connection */
+  box-shadow:
+    10px 18px 0 -5px rgba(80, 50, 120, 0.8);
+}
+.floating-cell.eosinophil-3lobe::after {
+  content: '';
+  position: absolute;
+  top: 32%;
+  left: 40%;
+  width: 18%;
+  height: 22%;
+  border-radius: 50% 50% 48% 52%;
+  background: rgba(80, 50, 120, 0.8);
+  transform: rotate(8deg);
+  /* Two more lobes with bridges */
+  box-shadow:
+    -12px 3px 0 -8px rgba(80, 50, 120, 0.7),
+    20px 0 0 -4px rgba(80, 50, 120, 0.8),
+    18px 14px 0 -5px rgba(80, 50, 120, 0.75);
+}
+
+/* Basophil - super rare (<1%), dark blue-purple granules with visible nucleus behind */
+.floating-cell.basophil {
+  background:
+    /* Dense dark blue-purple basophilic granules (3x count) */
+    radial-gradient(circle at 8% 12%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 15% 8%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 12% 18%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 18% 15%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 22% 10%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 10% 25%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 25% 18%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 15% 22%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 28% 12%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 20% 28%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 32% 15%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 12% 32%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 35% 22%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 25% 35%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 38% 28%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 30% 38%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 42% 18%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 18% 42%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 45% 25%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 22% 45%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 48% 32%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 35% 48%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 52% 22%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 28% 52%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 55% 28%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 32% 55%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 58% 35%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 38% 58%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 62% 42%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 42% 62%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 65% 48%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 48% 65%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 68% 55%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 55% 68%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 72% 38%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 38% 72%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 75% 45%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 45% 75%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 78% 52%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 52% 78%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 82% 58%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 58% 82%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 85% 65%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 65% 85%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 88% 72%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 72% 88%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 78% 78%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 82% 82%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 15% 62%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 62% 15%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 18% 68%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 68% 18%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 22% 72%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 72% 22%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 25% 78%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 78% 25%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 28% 82%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 82% 28%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 32% 85%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 85% 32%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 35% 88%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 88% 35%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 8% 48%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 48% 8%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 92% 48%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 48% 92%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 8% 88%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 88% 8%, rgba(35, 15, 75, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 92% 88%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle at 88% 92%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
+    /* Base cytoplasm - pale lavender */
+    radial-gradient(ellipse at 50% 50%,
+      rgba(235, 230, 250, 0.95) 0%,
+      rgba(220, 215, 240, 0.9) 70%,
+      rgba(200, 195, 225, 0.85) 100%);
+  box-shadow: inset 0 0 8px rgba(60, 40, 100, 0.4);
+}
+
+/* Basophil nucleus - bilobed, visible behind granules */
+.floating-cell.basophil::before {
+  content: '';
+  position: absolute;
+  top: 28%;
+  left: 20%;
+  width: 28%;
+  height: 35%;
+  border-radius: 50%;
+  background: rgba(30, 15, 60, 0.85);
+  box-shadow: 22px 8px 0 -3px rgba(30, 15, 60, 0.85);
+}
+
+/* Platelet - tiny purple-ish fragments, irregular shape */
+.floating-cell.platelet {
+  background: radial-gradient(ellipse at 40% 40%,
+    rgba(180, 160, 200, 0.9) 0%,
+    rgba(160, 140, 180, 0.85) 60%,
+    rgba(140, 120, 160, 0.8) 100%);
+  border-radius: 45% 55% 50% 50%;
+  box-shadow: inset 0 0 2px rgba(100, 80, 140, 0.5);
+}
+
+/* Platelet central granule zone */
+.floating-cell.platelet::before {
+  content: '';
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 50%;
+  height: 50%;
+  border-radius: 40%;
+  background: rgba(140, 110, 170, 0.6);
+}
+
+/* Soft drop shadows for all WBCs */
+.floating-cell.neutrophil,
+.floating-cell.neutrophil-3lobe,
+.floating-cell.lymphocyte,
+.floating-cell.monocyte,
+.floating-cell.eosinophil,
+.floating-cell.eosinophil-3lobe,
+.floating-cell.basophil {
+  filter: drop-shadow(1px 2px 3px rgba(0, 0, 0, 0.15));
 }
 
 @keyframes floatCell {
@@ -493,6 +874,15 @@ a {
 .hero-content {
   text-align: center;
   max-width: 800px;
+  background: rgba(255, 255, 255, 0.50);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  z-index: 10;
 }
 
 /* Profile Flip Card Container */
@@ -678,6 +1068,17 @@ a {
   font-size: 1.1rem;
 }
 
+.mentor-link {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.mentor-link:hover {
+  color: var(--secondary);
+}
+
 .about-skills h3 {
   margin-bottom: 20px;
   font-size: 1.3rem;
@@ -717,10 +1118,38 @@ a {
   background-color: rgba(139, 92, 246, 0.08);
 }
 
+/* Sections with Blood Smear Background */
+.section-with-blood-smear {
+  position: relative;
+  overflow: hidden;
+}
+
+.section-with-blood-smear .blood-smear-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.section-with-blood-smear .container {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.70);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 16px;
+  padding: 40px;
+  margin: 20px auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 /* Publications Section */
 .publications {
   padding: 100px 20px;
-  background-color: var(--background-alt);
+  background-color: #f8f5f2;
 }
 
 .publication-metrics {
@@ -1187,7 +1616,7 @@ a {
 /* Research Tools Section */
 .research-tools {
   padding: 100px 20px;
-  background-color: var(--background-alt);
+  background-color: #f8f5f2;
 }
 
 .tools-intro {
@@ -1774,5 +2203,406 @@ a {
 
   .insight-title {
     font-size: 1.05rem;
+  }
+}
+
+/* ==========================================
+   CV PAGE STYLES
+   ========================================== */
+
+.cv-page {
+  background: #f8f5f2;
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cv-page .blood-smear-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.cv-container {
+  max-width: 850px;
+  margin: 0 auto;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 10pt;
+  line-height: 1.25;
+  color: #000;
+  background: rgba(255, 255, 255, 0.70);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: 40px 50px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.cv-print-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  background: var(--primary-color, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  z-index: 1000;
+}
+
+.cv-print-btn:hover {
+  background: var(--primary-dark, #1d4ed8);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.cv-header {
+  text-align: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1.5px solid #000;
+}
+
+.cv-header h1 {
+  font-size: 14pt;
+  font-weight: bold;
+  margin: 0 0 3px 0;
+  letter-spacing: 1.5px;
+}
+
+.cv-header h2 {
+  font-size: 12pt;
+  font-weight: normal;
+  margin: 0;
+}
+
+.cv-metrics {
+  font-size: 10pt;
+  color: #555;
+  margin: 6px 0 0 0;
+  font-style: italic;
+}
+
+.cv-metrics a {
+  color: #0066cc;
+}
+
+.cv-section {
+  margin-bottom: 12px;
+}
+
+.cv-section h3 {
+  font-size: 10pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-bottom: 1px solid #000;
+  padding-bottom: 2px;
+  margin-bottom: 6px;
+}
+
+.cv-contact {
+  display: flex;
+  gap: 40px;
+}
+
+.cv-contact-block p {
+  margin: 1px 0;
+}
+
+.cv-entry {
+  display: flex;
+  margin-bottom: 6px;
+  page-break-inside: avoid;
+}
+
+.cv-years {
+  min-width: 85px;
+  font-weight: normal;
+}
+
+.cv-details {
+  flex: 1;
+}
+
+.cv-title {
+  font-weight: bold;
+}
+
+.cv-institution {
+  float: right;
+  font-weight: bold;
+}
+
+.cv-details p {
+  margin: 1px 0;
+}
+
+.cv-thesis {
+  margin-top: 2px;
+}
+
+.cv-note {
+  font-style: italic;
+  margin-bottom: 6px;
+  font-size: 9pt;
+}
+
+/* Publications */
+.cv-publication {
+  display: flex;
+  margin-bottom: 8px;
+  page-break-inside: avoid;
+}
+
+.cv-pub-year {
+  min-width: 40px;
+  font-weight: normal;
+}
+
+.cv-pub-details {
+  flex: 1;
+  margin: 0;
+}
+
+.cv-publication.first-author {
+  background: #f8f9fa;
+  padding: 4px 6px;
+  margin-left: -6px;
+  border-left: 2px solid #0066cc;
+}
+
+.cv-pub-year sup {
+  color: #0066cc;
+  font-weight: bold;
+}
+
+.cv-journal em {
+  font-style: italic;
+}
+
+/* Links in CV */
+.cv-container a {
+  color: #0066cc;
+  text-decoration: none;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.cv-container a:hover {
+  color: #004499;
+  text-decoration: underline;
+  background-color: rgba(0, 102, 204, 0.08);
+  border-radius: 2px;
+}
+
+.cv-footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #ccc;
+  text-align: center;
+  color: #666;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12px;
+}
+
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .cv-page {
+    padding: 0;
+    background: white;
+  }
+
+  .cv-page .blood-smear-background {
+    display: none !important;
+  }
+
+  .cv-container {
+    max-width: 100%;
+    font-size: 9.5pt;
+    line-height: 1.2;
+    background: white;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .cv-section {
+    margin-bottom: 8px;
+  }
+
+  .cv-section h3 {
+    margin-bottom: 4px;
+  }
+
+  .cv-entry {
+    margin-bottom: 4px;
+  }
+
+  .cv-publication {
+    margin-bottom: 6px;
+  }
+
+  .cv-publication.first-author {
+    background: none;
+    border-left: none;
+    padding: 0;
+    margin-left: 0;
+  }
+
+  .cv-header {
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    page-break-after: avoid;
+  }
+
+  .cv-metrics {
+    font-size: 9pt;
+    color: #333;
+  }
+
+  .cv-metrics a {
+    color: #000;
+  }
+
+  .cv-container a {
+    color: #000;
+    text-decoration: none;
+  }
+
+  .cv-footer {
+    display: none;
+  }
+
+  @page {
+    margin: 0.5in 0.6in;
+  }
+}
+
+/* Back to Home link for CV */
+.cv-back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  background: #f3f4f6;
+  color: #374151;
+  text-decoration: none;
+  border-radius: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.cv-back-link:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+/* CV Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .cv-page {
+    padding: 10px;
+  }
+
+  .cv-container {
+    padding: 20px 15px;
+    font-size: 9pt;
+  }
+
+  .cv-header h1 {
+    font-size: 12pt;
+    letter-spacing: 1px;
+  }
+
+  .cv-header h2 {
+    font-size: 10pt;
+  }
+
+  .cv-metrics {
+    font-size: 8pt;
+    line-height: 1.4;
+  }
+
+  .cv-contact {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .cv-entry {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .cv-years {
+    width: auto;
+    font-size: 9pt;
+    color: #666;
+  }
+
+  .cv-publication {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .cv-pub-year {
+    width: auto;
+    font-size: 9pt;
+  }
+
+  .cv-print-btn {
+    top: 10px;
+    right: 10px;
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .cv-back-link {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cv-container {
+    padding: 15px 12px;
+    font-size: 8.5pt;
+  }
+
+  .cv-header h1 {
+    font-size: 11pt;
+  }
+
+  .cv-header h2 {
+    font-size: 9pt;
+  }
+
+  .cv-section h3 {
+    font-size: 9pt;
+  }
+
+  .cv-print-btn {
+    position: static;
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+    box-shadow: none;
+  }
+
+  .cv-back-link {
+    display: block;
+    text-align: center;
+    margin-bottom: 10px;
   }
 }

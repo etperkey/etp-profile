@@ -1,4 +1,5 @@
 import React from 'react';
+import BloodSmearBackground from './BloodSmearBackground';
 
 // KanLab custom icon component
 const KanLabIcon = () => (
@@ -107,7 +108,8 @@ function ResearchTools() {
   ];
 
   return (
-    <section id="tools" className="research-tools">
+    <section id="tools" className="research-tools section-with-blood-smear">
+      <BloodSmearBackground />
       <div className="container">
         <h2 className="section-title">PhD Research Tools</h2>
         <p className="tools-intro">

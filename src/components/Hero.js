@@ -1,110 +1,5 @@
-import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-
-// Blood Smear Background Component
-function BloodSmearBackground() {
-  const cells = useMemo(() => {
-    const cellArray = [];
-    // Generate 240-300 RBCs for dense smear (~7μm, smaller)
-    const numRBCs = 240 + Math.floor(Math.random() * 60);
-    for (let i = 0; i < numRBCs; i++) {
-      cellArray.push({
-        id: i,
-        type: 'rbc',
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: 12 + Math.random() * 8,
-        duration: 20 + Math.random() * 30,
-        delay: Math.random() * -30,
-        opacity: 0.15 + Math.random() * 0.1,
-      });
-    }
-
-    // WBCs with realistic differential (~60% neutrophils, ~30% lymphocytes, ~10% monocytes)
-    let cellId = numRBCs;
-
-    // Neutrophils (5-7) - segmented nucleus, ~12-15μm (2x RBC)
-    const numNeutrophils = 5 + Math.floor(Math.random() * 3);
-    for (let i = 0; i < numNeutrophils; i++) {
-      cellArray.push({
-        id: cellId++,
-        type: 'neutrophil',
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: 32 + Math.random() * 12,
-        duration: 25 + Math.random() * 35,
-        delay: Math.random() * -30,
-        opacity: 0.18 + Math.random() * 0.1,
-      });
-    }
-
-    // Lymphocytes (2-4) - large round nucleus, ~8-12μm (1.5x RBC)
-    const numLymphocytes = 2 + Math.floor(Math.random() * 3);
-    for (let i = 0; i < numLymphocytes; i++) {
-      cellArray.push({
-        id: cellId++,
-        type: 'lymphocyte',
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: 26 + Math.random() * 10,
-        duration: 25 + Math.random() * 35,
-        delay: Math.random() * -30,
-        opacity: 0.2 + Math.random() * 0.1,
-      });
-    }
-
-    // Monocytes (1-2) - kidney-shaped nucleus, ~18-22μm (3x RBC, largest WBC)
-    const numMonocytes = 1 + Math.floor(Math.random() * 2);
-    for (let i = 0; i < numMonocytes; i++) {
-      cellArray.push({
-        id: cellId++,
-        type: 'monocyte',
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: 42 + Math.random() * 14,
-        duration: 25 + Math.random() * 35,
-        delay: Math.random() * -30,
-        opacity: 0.18 + Math.random() * 0.1,
-      });
-    }
-
-    // Eosinophils (1-2) - bilobed nucleus, bright red granules, ~12-17μm (rare, 1-4% of WBCs)
-    const numEosinophils = 1 + Math.floor(Math.random() * 2);
-    for (let i = 0; i < numEosinophils; i++) {
-      cellArray.push({
-        id: cellId++,
-        type: 'eosinophil',
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: 34 + Math.random() * 12,
-        duration: 25 + Math.random() * 35,
-        delay: Math.random() * -30,
-        opacity: 0.22 + Math.random() * 0.1,
-      });
-    }
-
-    return cellArray;
-  }, []);
-
-  return (
-    <div className="blood-smear-background">
-      {cells.map(cell => (
-        <div
-          key={cell.id}
-          className={`floating-cell ${cell.type}`}
-          style={{
-            left: `${cell.x}%`,
-            top: `${cell.y}%`,
-            width: `${cell.size}px`,
-            height: `${cell.size}px`,
-            opacity: cell.opacity,
-            animationDuration: `${cell.duration}s`,
-            animationDelay: `${cell.delay}s`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import BloodSmearBackground from './BloodSmearBackground';
 
 // Cell image categories - algorithmically selected best representatives
 // Selected using image quality metrics (sharpness, contrast) and typicality scoring
@@ -181,7 +76,7 @@ function preloadImage(src) {
   });
 }
 
-function Hero() {
+function Hero({ theme = 'modern' }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [currentCell, setCurrentCell] = useState(null);
 
@@ -234,7 +129,7 @@ function Hero() {
 
   return (
     <section id="home" className="hero">
-      <BloodSmearBackground />
+      {theme === 'modern' && <BloodSmearBackground />}
       <div className="hero-content">
         <div className="profile-flip-wrapper">
           <div
@@ -278,6 +173,7 @@ function Hero() {
         <div className="hero-buttons">
           <a href="#projects" className="btn btn-primary">Current Research</a>
           <a href="#tools" className="btn btn-secondary">Data Tools</a>
+          <a href="#cv" className="btn btn-tertiary">View CV</a>
         </div>
       </div>
     </section>

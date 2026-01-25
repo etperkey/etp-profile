@@ -39,13 +39,13 @@ function About() {
               cutting-edge immunotherapies including BiTEs, CAR-T cells, and checkpoint inhibitors.
             </p>
             <p>
-              <strong>Current Research:</strong> Working with Dr. Justin Kline's lab, I investigate
+              <strong>Current Research:</strong> Working with <a href="https://klinelab.uchicago.edu/" target="_blank" rel="noopener noreferrer" className="mentor-link"><strong>Dr. Justin Kline</strong></a>'s lab, I investigate
               how lymphomas evade immune surveillance and how we can overcome resistance to
               immunotherapy. My projects focus on TP53-driven immune escape, optimizing
               BiTE therapy, and understanding lymphoma dissemination through chemokine signaling.
             </p>
             <p>
-              <strong>Prior Work:</strong> My PhD training with <strong>Dr. Ivan Maillard</strong> at
+              <strong>Prior Work:</strong> My PhD training with <a href="https://www.mskcc.org/research-areas/labs/ivan-maillard" target="_blank" rel="noopener noreferrer" className="mentor-link"><strong>Dr. Ivan Maillard</strong></a> at
               the University of Michigan and University of Pennsylvania uncovered how
               stromal cells in lymph nodes regulate T cell responses through Notch signaling,
               with applications to graft-versus-host disease and T cell aging. This work was

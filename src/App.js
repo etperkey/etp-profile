@@ -10,10 +10,31 @@ import Footer from './components/Footer';
 import ThemeSwitcher from './components/ThemeSwitcher';
 import MySpacePlayer from './components/MySpacePlayer';
 import DancingBabies from './components/DancingBabies';
+import CV from './components/CV';
 import './App.css';
 
 function App() {
   const [theme, setTheme] = useState('modern');
+  const [currentPage, setCurrentPage] = useState('home');
+
+  // Handle hash-based routing
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash === '#cv' || hash === '#/cv') {
+        setCurrentPage('cv');
+      } else {
+        setCurrentPage('home');
+      }
+    };
+
+    // Check on mount
+    handleHashChange();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   useEffect(() => {
     // Remove all theme classes
@@ -27,11 +48,16 @@ function App() {
     };
   }, [theme]);
 
+  // Render CV page
+  if (currentPage === 'cv') {
+    return <CV />;
+  }
+
   return (
     <div className="App">
       <Header />
       <main>
-        <Hero />
+        <Hero theme={theme} />
         <About />
         <Publications />
         <Projects />

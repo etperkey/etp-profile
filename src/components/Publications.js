@@ -1,4 +1,5 @@
 import React from 'react';
+import BloodSmearBackground from './BloodSmearBackground';
 
 function Publications() {
   // First-author and co-first-author publications
@@ -84,7 +85,8 @@ function Publications() {
   };
 
   return (
-    <section id="publications" className="publications">
+    <section id="publications" className="publications section-with-blood-smear">
+      <BloodSmearBackground />
       <div className="container">
         <h2 className="section-title">Selected Publications</h2>
 

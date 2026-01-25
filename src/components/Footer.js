@@ -41,6 +41,14 @@ function Footer() {
               UChicago
             </a>
             <a
+              href="https://klinelab.uchicago.edu/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="social-link"
+            >
+              Kline Lab
+            </a>
+            <a
               href="https://www.doximity.com/pub/eric-perkey-md"
               target="_blank"
               rel="noopener noreferrer"

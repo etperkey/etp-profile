@@ -1,0 +1,454 @@
+{
+  "name": "Eric Perkey",
+  "credentials": "MD-PhD",
+  "scholarMetrics": {
+    "hIndex": 17,
+    "lastUpdated": "2025-01"
+  },
+  "contact": {
+    "address": [
+      "Section of Hematology/Oncology",
+      "5841 South Maryland Avenue",
+      "MC 6092",
+      "University of Chicago",
+      "Chicago, IL 60637"
+    ],
+    "email": "eric.perkey@uchicagomedicine.org",
+    "secondaryEmails": ["eperkey@umich.edu", "ericperkey@gmail.com"],
+    "website": "https://eperkey.org",
+    "googleScholar": "https://scholar.google.com/citations?user=8AF8PccAAAAJ",
+    "orcid": "0000-0002-7262-3665"
+  },
+  "clinicalTraining": [
+    {
+      "years": "2024-Present",
+      "program": "Physician Scientist Development Program",
+      "department": "Hematology/Oncology Fellowship",
+      "institution": "University of Chicago"
+    },
+    {
+      "years": "2022-2024",
+      "program": "Physician Scientist Development Program",
+      "department": "Internal Medicine Residency Program",
+      "institution": "University of Chicago"
+    }
+  ],
+  "education": [
+    {
+      "years": "2013-2022",
+      "degree": "Medical Scientist Training Program (MD-PhD)",
+      "field": "PhD: Cellular and Molecular Biology",
+      "institution": "University of Michigan",
+      "mentor": "Dr. Ivan Maillard",
+      "thesis": "Exploring a new immunological niche: How fibroblastic reticular cells tune T cell immunity through Notch signals.",
+      "thesisUrl": "https://deepblue.lib.umich.edu/handle/2027.42/172655"
+    },
+    {
+      "years": "2009-2013",
+      "degree": "Bachelor of Science",
+      "field": "Cellular and Molecular Biology",
+      "institution": "University of Michigan",
+      "thesis": "Cleaving surface sialoglycoproteins of CD4 T cells restores age-related declines in CD28-dependent signaling, T helper cell function, and enhances antibody production in mice"
+    }
+  ],
+  "certifications": [
+    {
+      "years": "2025-Present",
+      "name": "Internal Medicine Board Certification, American Board of Internal Medicine",
+      "details": "ABIM ID #560079",
+      "url": "https://www.abim.org/verify-physician/?type=name&ln=perkey&fn=eric&exact=true"
+    },
+    {
+      "years": "2024-Present",
+      "name": "Licensed Physician, State of Illinois",
+      "details": "License No. 036.173211",
+      "url": "https://npiregistry.cms.hhs.gov/provider-view/1639814254"
+    }
+  ],
+  "researchPositions": [
+    {
+      "years": "2025-Present",
+      "title": "Postdoctoral Research Fellow",
+      "institution": "University of Chicago",
+      "mentor": "Dr. Justin Kline",
+      "mentorUrl": "https://klinelab.uchicago.edu/"
+    },
+    {
+      "years": "2015-2022",
+      "title": "Graduate Researcher",
+      "institution": "University of Pennsylvania / University of Michigan",
+      "mentor": "Dr. Ivan Maillard",
+      "mentorUrl": "https://www.mskcc.org/research-areas/labs/ivan-maillard",
+      "description": "The role of stromal cells and Notch signaling in T cell immunity and graft-versus-host disease"
+    },
+    {
+      "years": "2015",
+      "title": "Graduate Rotation Student",
+      "institution": "University of Michigan",
+      "mentor": "Dr. Irina Grigorova",
+      "description": "2-photon imaging of T regulatory cell-B cell interactions"
+    },
+    {
+      "years": "2009-2013",
+      "title": "Undergraduate Researcher",
+      "institution": "University of Michigan",
+      "mentor": "Drs. Gonzalo Garcia and ",
+      "mentorLinked": "Richard A. Miller",
+      "mentorUrl": "https://www.richmillerlab.com/",
+      "description": "Effects of aging on T cell function"
+    }
+  ],
+  "publications": [
+    {
+      "year": 2025,
+      "authors": "De Sousa DM*, Perkey E*, Le Corre L*, Boulet S, Gomez Atria D, Allman A, Duval F, Daudelin JF, Brandstader JD, Lederer K, Mezra S, Odagiu L, Ennajimi M, Sarrias M, Decaluwe H, Koch U, Radtke F, Ludewig B, Siebel CW, Maillard I, Labrecque N",
+      "title": "Early Notch signals from fibroblastic reticular cells program effector CD8+ T cell differentiation",
+      "journal": "Journal of Experimental Medicine",
+      "details": "May 5;222(5):e20231758",
+      "doi": "10.1084/jem.20231758",
+      "pmid": "40111253",
+      "pmc": "PMC11925062",
+      "equalFirst": true
+    },
+    {
+      "year": 2025,
+      "authors": "Allman A, Gaudette BT, Kelly S, Alouche N, Carrington LJ, Perkey E, Brandstader JD, Outen R, Vanderbeck A, Lederer K, Zhou Y, Faryabi RB, Robertson TF, Burkhard JK, Tikhonova A, Aifantis I, Scarpellino L, Koch U, Radtke F, Lutge M, De Martin A, Ludewig B, Tveriakhina L, Gossler A, Mosteiro L, Siebel CW, Gomez Atria D, Luther S, Allan D, Maillard I",
+      "title": "Splenic fibroblasts control marginal zone B cell movement and function via two distinct Notch2-dependent regulatory programs",
+      "journal": "Immunity",
+      "details": "58(1)",
+      "doi": "10.1016/j.immuni.2024.12.003",
+      "pmid": "39731910",
+      "pmc": "PMC11735314"
+    },
+    {
+      "year": 2023,
+      "authors": "Tkachev V*, Vanderbeck A*, Perkey E*, Furlan SN, McGuckin C, Atria DG, Gerdemann U, Rui X, Lane J, Hunt DJ, Zheng H, Colonna L, Hoffman M, Yu A, Outen R, Kelly S, Allman A, Koch U, Radtke F, Ludewig B, Burbach B, Shimizu Y, Panoskaltis-Mortari A, Chen G, Carpenter SM, Harari O, Kuhnert F, Thurston G, Blazar BR, Kean LS, Maillard I",
+      "title": "Notch signaling drives intestinal graft-versus-host disease in mice and nonhuman primates",
+      "journal": "Science Translational Medicine",
+      "details": "15(702)",
+      "doi": "10.1126/scitranslmed.add1175",
+      "pmid": "37379368",
+      "pmc": "PMC10896076",
+      "equalFirst": true
+    },
+    {
+      "year": 2023,
+      "authors": "Zhou N, Choi J, Grothusen GP, Kim BJ, Ren D, Cao Z, Li Q, Liu Y, Inamdar A, Beer T, Tang HY, Perkey E, Maillard I, Bonasio R, Shi J, Ruella M, Wan L, Busino L",
+      "title": "DLBCL-associated NOTCH2 mutations escape ubiquitin-dependent degradation and promote chemoresistance",
+      "journal": "Blood",
+      "doi": "10.1182/blood.2022018752",
+      "pmid": "37235754",
+      "pmc": "PMC10656726"
+    },
+    {
+      "year": 2022,
+      "authors": "Atria DG, Gaudette B, Londregan J, Kelly S, Perkey E, Allman A, Srivastava B, Koch U, Radtke F, Ludewig B, Siebel CW, Ryan RJ, Robertson T, Burkhard JK, Pear W, Allman D, Maillard I",
+      "title": "Stromal Notch ligands foster lymphopenia-driven functional plasticity and homeostatic proliferation of naïve B cells",
+      "journal": "Journal of Clinical Investigation",
+      "doi": "10.1172/JCI158885",
+      "pmid": "35579963",
+      "pmc": "PMC9246379"
+    },
+    {
+      "year": 2022,
+      "authors": "Graniel J, Bisht K, Friedman A, White J, Perkey E, Vanderbeck A, Moroz A, Carrington L, Brandstadter J, Allen F, Niederriter Shami A, Thomas P, Crayton A, Manzor M, Mychalowych A, Chase J, Hammoud S, Keegan C, Maillard I, Nandakumar J",
+      "title": "Differential impact of a dyskeratosis congenita mutation in TPP1 on mouse hematopoiesis and germline",
+      "journal": "Life Science Alliance",
+      "details": "5(1)",
+      "doi": "10.26508/lsa.202101208",
+      "pmid": "34645668",
+      "pmc": "PMC8548261"
+    },
+    {
+      "year": 2021,
+      "authors": "Avery L, Robertson TF, Wu CF, Roy NH, Chauvin SD, Perkey E, Vanderbeck A, Maillard I, Burkhardt JK",
+      "title": "A Murine Model of X-Linked Moesin-Associated Immunodeficiency (X-MAID) Reveals Defects in T Cell Homeostasis and Migration",
+      "journal": "Frontiers in Immunology",
+      "details": "12:726406",
+      "doi": "10.3389/fimmu.2021.726406",
+      "pmid": "35069520",
+      "pmc": "PMC8770857"
+    },
+    {
+      "year": 2021,
+      "authors": "Knights A, Jun H, Liu S, Ma Y, Nudell V, Perkey E, Sorensen M, Kennedy R, Maillard I, Ye L, Wu J",
+      "title": "Acetylcholine-synthesizing macrophages in subcutaneous fat are regulated by β2-adrenergic signaling",
+      "journal": "The EMBO Journal",
+      "details": "40(24):e106061",
+      "doi": "10.15252/embj.2020106061",
+      "pmid": "34459015",
+      "pmc": "PMC8672283"
+    },
+    {
+      "year": 2021,
+      "authors": "Grill S, Padmanaban S, Friedman A, Perkey E, Allen F, Tesmer VM, Chase J, Khoriaty R, Keegan CE, Maillard I, Nandakumar J",
+      "title": "TPP1 mutagenesis screens unravel shelterin interfaces and functions in hematopoiesis",
+      "journal": "JCI Insight",
+      "doi": "10.1172/jci.insight.138059",
+      "pmid": "33822766",
+      "pmc": "PMC8262337"
+    },
+    {
+      "year": 2020,
+      "authors": "Parker KR, Migliorini D, Perkey E, Yost KE, Bhaduri A, Bagga P, Haris M, Wilson NE, Liu F, Gabunia K, Scholler J, Montine TJ, Bhoj VG, Reddy R, Mohan S, Maillard I, Kriegstein AR, June CH, Chang HY, Posey AD Jr, Satpathy AT",
+      "title": "Single-Cell Analyses Identify Brain Mural Cells Expressing CD19 as Potential Off-Tumor Targets for CAR-T Immunotherapies",
+      "journal": "Cell",
+      "doi": "10.1016/j.cell.2020.08.022",
+      "pmid": "32961131",
+      "pmc": "PMC7640763"
+    },
+    {
+      "year": 2020,
+      "authors": "Perkey E, Maurice De Sousa D, Carrington L, Chung J, Dils A, Granadier D, Koch U, Radtke F, Ludewig B, Blazar BR, Siebel CW, Brennan TV, Nolz J, Labrecque N, Maillard I",
+      "title": "GCNT1-Mediated O-Glycosylation of the Sialomucin CD43 Is a Sensitive Indicator of Notch Signaling in Activated T Cells",
+      "journal": "Journal of Immunology",
+      "doi": "10.4049/jimmunol.1901194",
+      "pmid": "32060138",
+      "pmc": "PMC7306398",
+      "firstAuthor": true
+    },
+    {
+      "year": 2020,
+      "authors": "Klossowski S, Miao H, Kempinska K, Wu T, Purohit T, Kim E, Linhares BM, Chen D, Jih G, Perkey E, Huang H, He M, Wen B, Wang Y, Yu K, Lee SC, Danet-Desnoyers G, Trotman W, Kandarpa M, Cotton A, Abdel-Wahab O, Lei H, Dou Y, Guzman M, Peterson L, Gruber T, Choi S, Sun D, Ren P, Li LS, Liu Y, Burrows F, Maillard I, Cierpicki T, Grembecka J",
+      "title": "Menin inhibitor MI-3454 induces remission in MLL1-rearranged and NPM1-mutated models of leukemia",
+      "journal": "Journal of Clinical Investigation",
+      "doi": "10.1172/JCI129126",
+      "pmid": "31855575",
+      "pmc": "PMC6994154"
+    },
+    {
+      "year": 2019,
+      "authors": "Chung J, Radojcic V, Perkey E, Parnell TJ, Niknafs Y, Jin X, Friedman A, Labrecque N, Blazar BR, Brennan TV, Siebel CW, Maillard I",
+      "title": "Early Notch Signals Induce a Pathogenic Molecular Signature during Priming of Alloantigen-Specific Conventional CD4+ T Cells in Graft-versus-Host Disease",
+      "journal": "Journal of Immunology",
+      "doi": "10.4049/jimmunol.1900192",
+      "pmid": "31182480",
+      "pmc": "PMC6615974"
+    },
+    {
+      "year": 2018,
+      "authors": "Jun H, Yu H, Gong J, Jiang J, Qiao X, Perkey E, Kim D, Emont MP, Zestos AG, Cho J, Liu J, Kennedy RT, Maillard I, Xu XZS, Wu J",
+      "title": "An immune-beige adipocyte communication via nicotinic acetylcholine receptor signaling",
+      "journal": "Nature Medicine",
+      "doi": "10.1038/s41591-018-0032-8",
+      "pmid": "29785025",
+      "pmc": "PMC5992032"
+    },
+    {
+      "year": 2018,
+      "authors": "Radojcic V, Paz K, Chung J, Du J, Perkey E, Flynn R, Zaiken M, Friedman A, Yan M, Pletneva MA, Sarantopoulos S, Siebel CW, Blazar BR, Maillard I",
+      "title": "Notch Signaling Mediated by Delta-like1/4 Ligands Controls the Pathogenesis of Chronic graft-versus-host disease in Mice",
+      "journal": "Blood",
+      "doi": "10.1182/blood-2018-03-841155",
+      "pmid": "30181175",
+      "pmc": "PMC6238189"
+    },
+    {
+      "year": 2017,
+      "authors": "Chung J, Ebens C, Perkey E, Radojcic V, Koch U, Scarpellino L, Tong A, Allen F, Wood S, Feng J, Friedman A, Granadier D, Tran I, Chai Q, Onder L, Yan M, Reddy P, Blazar B, Huang A, Brennan T, Bishop K, Ludewig B, Siebel C, Luther S, Radtke F, Maillard I",
+      "title": "Fibroblastic niches prime T cell alloimmunity through Delta-like Notch ligands",
+      "journal": "Journal of Clinical Investigation",
+      "doi": "10.1172/JCI89535",
+      "pmid": "28319044",
+      "pmc": "PMC5373885"
+    },
+    {
+      "year": 2017,
+      "authors": "Valls E, Lobry C, Geng H, Wang L, Cardenas M, Rivas M, Cerchietti L, Oh P, Yang S, Oswald E, Graham CW, Jiang Y, Hatzi K, Aguirre X, Perkey E, Li Z, Tam W, Bhatt K, Leonard J, Zweidler-McKay P, Maillard I, Elemento O, Ci W, Aifantis I, Melnick A",
+      "title": "BCL6 antagonizes NOTCH2 to maintain survival of human follicular lymphoma cells",
+      "journal": "Cancer Discovery",
+      "doi": "10.1158/2159-8290.CD-16-1189",
+      "pmid": "28232365",
+      "pmc": "PMC5413414"
+    },
+    {
+      "year": 2013,
+      "authors": "Perkey E, Fingar D, Miller RA, Garcia GG",
+      "title": "Increased TORC2 signaling promotes age-related decline in CD4 T cell signaling and function",
+      "journal": "Journal of Immunology",
+      "doi": "10.4049/jimmunol.1300073",
+      "pmid": "24078700",
+      "pmc": "PMC3827688",
+      "firstAuthor": true
+    },
+    {
+      "year": 2012,
+      "authors": "Perkey E, Miller RA, Garcia GG",
+      "title": "Ex vivo enzymatic treatment of aged CD4 T cells restores cognate T cell helper function and enhances antibody production in mice",
+      "journal": "Journal of Immunology",
+      "doi": "10.4049/jimmunol.1200487",
+      "pmid": "23136198",
+      "pmc": "PMC3518580",
+      "firstAuthor": true
+    }
+  ],
+  "reviews": [
+    {
+      "year": 2022,
+      "authors": "Perkey E, Maillard I",
+      "title": "Zinc: a damage signal promoting thymic repair",
+      "journal": "Blood",
+      "doi": "10.1182/blood.2022016333",
+      "pmid": "35737410"
+    },
+    {
+      "year": 2018,
+      "authors": "Perkey E, Maillard I",
+      "title": "New Insights into graft-versus-host disease and Graft Rejection",
+      "journal": "Annual Review of Pathology",
+      "doi": "10.1146/annurev-pathol-020117-043720",
+      "pmid": "29099650"
+    }
+  ],
+  "consortiumPublications": {
+    "consortium": "UPenn COVID Processing Unit",
+    "note": "Collaborative research unit at University of Pennsylvania during the COVID-19 pandemic",
+    "papers": [
+      {
+        "year": 2021,
+        "authors": "Goel RR, Painter MM, Apostolidis SA, Mathew D, Meng W, et al.",
+        "title": "mRNA vaccines induce durable immune memory to SARS-CoV-2 and variants of concern",
+        "journal": "Science",
+        "doi": "10.1126/science.abm0829",
+        "pmid": "34648302"
+      },
+      {
+        "year": 2021,
+        "authors": "Vella LA, Giles JR, Baxter AE, Oldridge DA, Diber F, et al.",
+        "title": "Deep immune profiling of MIS-C demonstrates marked but transient immune activation compared to adult and pediatric COVID-19",
+        "journal": "Science Immunology",
+        "doi": "10.1126/sciimmunol.abf7570",
+        "pmid": "33653907"
+      },
+      {
+        "year": 2021,
+        "authors": "Gouma S, Weirick ME, Bolton MJ, Arevalo CP, et al.",
+        "title": "Healthcare worker seromonitoring reveals complex relationships between common coronavirus antibodies and COVID-19 symptom duration",
+        "journal": "JCI Insight",
+        "doi": "10.1172/jci.insight.150449",
+        "pmid": "34237028"
+      },
+      {
+        "year": 2020,
+        "authors": "Mathew D, Giles JR, Baxter AE, Oldridge DA, Greenplate AR, et al.",
+        "title": "Deep immune profiling of COVID-19 patients reveals distinct immunotypes with therapeutic implications",
+        "journal": "Science",
+        "doi": "10.1126/science.abc8511",
+        "pmid": "32669297"
+      }
+    ]
+  },
+  "grants": [
+    {
+      "years": "2018-2022",
+      "name": "F30 – NIAID",
+      "details": "1F30AI136315. \"The role of secondary lymphoid organ fibroblastic cells in alloimmunity.\"",
+      "url": "https://reporter.nih.gov/search/dHE0g5qpxkSXvPsKlOkWGA/project-details/9655905"
+    },
+    {
+      "years": "2016",
+      "name": "Rackham Graduate School Regents Fellowship"
+    },
+    {
+      "years": "2016",
+      "name": "Rackham Graduate School Candidate Research Grant"
+    },
+    {
+      "years": "2015",
+      "name": "Rackham Graduate School Pre-Candidate Research Grant"
+    }
+  ],
+  "awards": [
+    {
+      "years": "2018",
+      "name": "Abstract Achievement Award",
+      "details": "American Society of Hematology 60th Annual Meeting"
+    },
+    {
+      "years": "2017",
+      "name": "Outstanding Poster Award",
+      "details": "UMich Life Sciences Institute Annual Poster Blitz"
+    },
+    {
+      "years": "2017",
+      "name": "Outstanding Abstract",
+      "details": "UMich Department of Internal Medicine 25th Annual Research Symposium"
+    },
+    {
+      "years": "2016",
+      "name": "American Association of Immunologists Young Investigator Award",
+      "details": "Autumn Immunology Conference"
+    },
+    {
+      "years": "2016",
+      "name": "Outstanding Poster Award",
+      "details": "Notch Signaling Gordon Research Conference"
+    },
+    {
+      "years": "2011",
+      "name": "Outstanding Poster Award",
+      "details": "Undergraduate Research Forum – University of Michigan"
+    }
+  ],
+  "presentations": [
+    { "year": 2025, "event": "Chicago Lymphoma Rounds, Lymphoma Research Foundation", "location": "Chicago, IL", "type": "Oral Presentation" },
+    { "year": 2019, "event": "The Notch Meeting", "location": "Athens, Greece", "type": "Poster" },
+    { "year": 2019, "event": "Autumn Immunology Conference", "location": "Chicago, IL", "type": "Poster" },
+    { "year": 2018, "event": "American Society of Hematology Meeting", "location": "San Diego, CA", "type": "Oral Presentation" },
+    { "year": 2018, "event": "Notch Signaling Gordon Research Conference", "location": "Lewiston, ME", "type": "Poster" },
+    { "year": 2017, "event": "UMich Department of Internal Medicine Annual Research Symposium", "location": "Ann Arbor, MI", "type": "Oral Presentation" },
+    { "year": 2016, "event": "Autumn Immunology Conference", "location": "Chicago, IL", "type": "Poster" },
+    { "year": 2016, "event": "Notch Signaling Gordon Research Conference", "location": "Lewiston, ME", "type": "Poster" },
+    { "year": 2016, "event": "Keystone Symposia – Stromal Cells in Immunity", "location": "Keystone, CO", "type": "Poster" },
+    { "year": 2012, "event": "Autumn Immunology Conference", "location": "Chicago, IL", "type": "Poster" }
+  ],
+  "teaching": [
+    {
+      "years": "2025",
+      "role": "Small Group Instructor",
+      "course": "Clinical Pathophysiology and Therapeutics",
+      "institution": "University of Chicago"
+    },
+    {
+      "years": "2012-2013",
+      "role": "Undergraduate Teaching Assistant",
+      "course": "Bio 172, Introductory Cellular and Molecular Biology",
+      "institution": "MCDB Department, University of Michigan"
+    },
+    {
+      "years": "2012-2013",
+      "role": "Study Group Leader",
+      "course": "MCDB 310, Introductory Biochemistry",
+      "institution": "Science Learning Center, University of Michigan"
+    }
+  ],
+  "mentorship": [
+    {
+      "years": "2017-2018",
+      "name": "Alexander Dils",
+      "role": "Undergraduate",
+      "current": "University of Michigan Internal Medicine Resident"
+    },
+    {
+      "years": "2015-2016",
+      "name": "David Granadier",
+      "role": "Undergraduate",
+      "current": "University of Washington MSTP Fellow"
+    }
+  ],
+  "service": [
+    { "years": "2020", "role": "UPenn COVID Processing Unit" },
+    { "years": "2016-2018", "role": "UMich MSTP Program Activities Committee" },
+    { "years": "2017", "role": "UMich MSTP Annual Retreat Co-Chair" },
+    { "years": "2014-2017", "role": "UMich Student-Run Free Clinic – Pinckney, MI" },
+    { "years": "2013-2015", "role": "Doctors of Tomorrow Mentor – Cass Tech High School, Detroit, MI" },
+    { "years": "2010-2014", "role": "Assistant Debate Coach – Cass Tech High School, Detroit, MI" }
+  ],
+  "memberships": [
+    { "years": "2025-Present", "organization": "American Society for Clinical Oncology" },
+    { "years": "2025-Present", "organization": "Society for Immunotherapy of Cancer" },
+    { "years": "2025-Present", "organization": "American Physician Scientists Association" },
+    { "years": "2018-Present", "organization": "American Society of Hematology" },
+    { "years": "2014-Present", "organization": "American College of Physicians" }
+  ]
+}

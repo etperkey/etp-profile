@@ -857,65 +857,18 @@ a {
 }
 
 /* Mobile Performance Optimizations for Blood Smear */
+/* Keep the original animation, just reduce rendering complexity */
 .blood-smear-mobile .floating-cell {
-  /* Use simpler transform for mobile - no rotation */
-  animation-name: floatCellMobile;
   /* Hint to browser for optimization */
   will-change: transform;
-  /* Reduce filter complexity on mobile WBCs */
+  /* Remove drop-shadow filter on mobile */
   filter: none !important;
 }
 
-/* Simpler mobile animation - translation only, no rotation */
-@keyframes floatCellMobile {
-  0% {
-    transform: translate(0, 0);
-  }
-  50% {
-    transform: translate(15px, 10px);
-  }
-  100% {
-    transform: translate(0, 0);
-  }
-}
-
-/* Remove pseudo-element complexity on mobile for performance */
-.blood-smear-mobile .floating-cell::before,
+/* Hide only secondary pseudo-elements (::after) on mobile */
+/* Keeps ::before for basic nucleus visibility */
 .blood-smear-mobile .floating-cell::after {
   display: none;
-}
-
-/* Simplify cell backgrounds on mobile */
-.blood-smear-mobile .floating-cell.rbc {
-  background: radial-gradient(ellipse at 30% 30%,
-    rgba(220, 80, 80, 0.9) 0%,
-    rgba(180, 50, 50, 0.95) 50%,
-    rgba(160, 40, 40, 0.9) 100%);
-}
-
-.blood-smear-mobile .floating-cell.neutrophil,
-.blood-smear-mobile .floating-cell.neutrophil-3lobe {
-  background: radial-gradient(ellipse at 40% 40%,
-    rgba(230, 200, 210, 0.9) 0%,
-    rgba(220, 190, 200, 0.85) 100%);
-}
-
-.blood-smear-mobile .floating-cell.lymphocyte {
-  background: radial-gradient(ellipse at 40% 40%,
-    rgba(200, 210, 240, 0.95) 0%,
-    rgba(180, 190, 220, 0.9) 100%);
-}
-
-.blood-smear-mobile .floating-cell.monocyte {
-  background: radial-gradient(ellipse at 40% 40%,
-    rgba(200, 210, 225, 0.95) 0%,
-    rgba(180, 190, 210, 0.9) 100%);
-}
-
-.blood-smear-mobile .floating-cell.platelet {
-  background: radial-gradient(ellipse at 40% 40%,
-    rgba(180, 160, 200, 0.9) 0%,
-    rgba(160, 140, 180, 0.85) 100%);
 }
 
 @keyframes floatCell {

@@ -42,7 +42,8 @@ function BloodSmearBackground({ density = 'full' }) {
     const cellArray = [];
 
     // Scale factors based on effective density (mobile-aware)
-    const scale = effectiveDensity === 'full' ? 1 : effectiveDensity === 'medium' ? 0.4 : 0.25;
+    // light: 0.5 (was 0.25), medium: 0.4, full: 1.0
+    const scale = effectiveDensity === 'full' ? 1 : effectiveDensity === 'medium' ? 0.4 : 0.5;
 
     // Generate RBCs - scaled by density
     const numRBCs = Math.floor((400 + Math.floor(Math.random() * 100)) * scale);

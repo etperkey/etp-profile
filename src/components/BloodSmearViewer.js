@@ -611,6 +611,7 @@ function BloodSmearViewer() {
   ];
 
   // Morphology presets - clinical scenarios with characteristic findings
+  // Platelet morphologies: giantPlatelet (compensatory production, MPN), plateletClump (activation, paraprotein), hypogranular (MDS, dysfunction)
   const morphologyPresets = [
     {
       name: 'Normal',
@@ -624,77 +625,98 @@ function BloodSmearViewer() {
       desc: 'Sickle cell disease with polychromasia',
       rbc: { spherocyte: 0, targetCell: 15, schistocyte: 0, sickleCell: 25, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 5, basophilicStippling: 0, pappenheimer: 0, polychromasia: 20 },
       wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
+      plt: { giantPlatelet: 10, plateletClump: 0, hypogranular: 0 }, // Functional asplenia → compensatory large PLT
     },
     {
       name: 'MAHA/TTP',
       desc: 'Microangiopathic hemolytic anemia with schistocytes',
       rbc: { spherocyte: 5, targetCell: 0, schistocyte: 25, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 15 },
       wbc: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 10, plateletClump: 0, hypogranular: 0 },
+      plt: { giantPlatelet: 25, plateletClump: 0, hypogranular: 0 }, // Large young PLT from rapid turnover
     },
     {
       name: 'Liver Disease',
       desc: 'Target cells, acanthocytes, stomatocytes',
       rbc: { spherocyte: 0, targetCell: 20, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 15, stomatocyte: 10, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
       wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 5, plateletClump: 0, hypogranular: 0 },
+      plt: { giantPlatelet: 5, plateletClump: 0, hypogranular: 10 }, // Hypogranular from TPO dysfunction
     },
     {
       name: 'Myelofibrosis',
       desc: 'Teardrop cells, nRBCs (set in RBC panel)',
       rbc: { spherocyte: 0, targetCell: 5, schistocyte: 5, sickleCell: 0, teardrop: 30, elliptocyte: 10, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 5, pappenheimer: 0, polychromasia: 10 },
       wbc: { bandNeutrophil: 10, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 5, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 20, plateletClump: 5, hypogranular: 0 },
+      plt: { giantPlatelet: 30, plateletClump: 10, hypogranular: 5 }, // MPN: giant/bizarre PLT + clumps
     },
     {
       name: 'Sepsis',
       desc: 'Toxic changes, left shift, Döhle bodies',
       rbc: { spherocyte: 0, targetCell: 0, schistocyte: 5, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 5, acanthocyte: 0, stomatocyte: 0, rouleaux: 10, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
       wbc: { bandNeutrophil: 25, hypersegmented: 0, toxicGranulation: 40, dohleBodies: 20, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 10, plateletClump: 0, hypogranular: 0 },
+      plt: { giantPlatelet: 15, plateletClump: 5, hypogranular: 10 }, // DIC: activation + consumption + dysfunction
     },
     {
       name: 'B12/Folate',
       desc: 'Megaloblastic anemia with hypersegmented neutrophils',
       rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 5, elliptocyte: 15, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 10, basophilicStippling: 5, pappenheimer: 0, polychromasia: 5 },
       wbc: { bandNeutrophil: 0, hypersegmented: 30, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 5, plateletClump: 0, hypogranular: 10 },
+      plt: { giantPlatelet: 10, plateletClump: 0, hypogranular: 15 }, // Megaloblastic: large dysplastic PLT
     },
     {
       name: 'Viral (Mono)',
       desc: 'Atypical lymphocytes (EBV/CMV)',
       rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
       wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 40, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
+      plt: { giantPlatelet: 5, plateletClump: 0, hypogranular: 0 }, // Mild: immune-mediated consumption
     },
     {
       name: 'CLL',
       desc: 'Chronic lymphocytic leukemia with smudge cells',
       rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 5, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
       wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 10, blast: 0, smudgeCell: 35, auerRod: 0 },
-      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 5, hypogranular: 0 }, // Some clumping from Ig coating
     },
     {
       name: 'AML',
       desc: 'Acute myeloid leukemia with blasts and Auer rods',
       rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 5 },
       wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 50, smudgeCell: 0, auerRod: 15 },
-      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 15 },
+      plt: { giantPlatelet: 10, plateletClump: 0, hypogranular: 25 }, // Dysplastic: hypogranular + some large
     },
     {
       name: 'G6PD Crisis',
       desc: 'Bite cells, blister cells from oxidative stress',
       rbc: { spherocyte: 5, targetCell: 0, schistocyte: 5, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 25, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 15 },
       wbc: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
+      plt: { giantPlatelet: 5, plateletClump: 0, hypogranular: 0 }, // Compensatory from hemolysis
     },
     {
       name: 'Multiple Myeloma',
       desc: 'Rouleaux formation from paraprotein',
       rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 40, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
       wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 0, plateletClump: 5, hypogranular: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 15, hypogranular: 5 }, // Paraprotein causes PLT clumping + dysfunction
+    },
+    {
+      name: 'ITP',
+      desc: 'Immune thrombocytopenic purpura',
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
+      plt: { giantPlatelet: 35, plateletClump: 0, hypogranular: 0 }, // Large young PLT from rapid turnover
+    },
+    {
+      name: 'DIC',
+      desc: 'Disseminated intravascular coagulation',
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 20, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 5, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 10 },
+      wbc: { bandNeutrophil: 15, hypersegmented: 0, toxicGranulation: 20, dohleBodies: 10, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
+      plt: { giantPlatelet: 20, plateletClump: 10, hypogranular: 15 }, // Consumption + dysfunction + activation
+    },
+    {
+      name: 'ET/PV',
+      desc: 'Essential Thrombocythemia / Polycythemia Vera',
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 5, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 5, pappenheimer: 0, polychromasia: 5 },
+      wbc: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
+      plt: { giantPlatelet: 35, plateletClump: 15, hypogranular: 5 }, // MPN: bizarre giant PLT + clumps
     },
   ];
 

@@ -2,6 +2,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #fdf6f0 0%, #fef9f5 50%, #fff5ee 100%);
   padding: 20px;
+  font-family: 'Rajdhani', sans-serif;
 }
 
 .guide-back-link {
@@ -46,15 +47,53 @@
 }
 
 .morphology-section {
-  margin-bottom: 50px;
+  margin-bottom: 20px;
+}
+
+.morphology-section.collapsed {
+  margin-bottom: 10px;
+}
+
+.section-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.section-toggle:hover .section-title {
+  filter: brightness(1.1);
+}
+
+.toggle-icon {
+  font-size: 0.9rem;
+  color: #666;
+  min-width: 16px;
 }
 
 .section-title {
+  flex: 1;
   font-size: 1.5rem;
   padding: 15px 25px;
   border-radius: 12px;
-  margin-bottom: 25px;
+  margin: 0;
   color: white;
+  transition: filter 0.2s;
+}
+
+.section-count {
+  font-size: 0.85rem;
+  color: #888;
+  padding-right: 10px;
+}
+
+.morphology-section.expanded .morphology-grid {
+  margin-top: 25px;
 }
 
 .section-title.rbc-title {
@@ -685,108 +724,127 @@
   box-shadow: inset 0 0 6px rgba(180, 140, 160, 0.3), 2px 3px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Multilobulated nucleus - irregular left lobe */
+/* Segmented nucleus - 4 lobes with thin bridges */
 .preview-cell.neutrophil::before {
-  content: '';
-  position: absolute;
-  top: 28%;
-  left: 18%;
-  width: 26%;
-  height: 32%;
-  border-radius: 45% 55% 40% 60%;
-  background: rgba(60, 30, 90, 0.8);
-  transform: rotate(-15deg);
-  box-shadow:
-    8px 18px 0 -4px rgba(60, 30, 90, 0.8),
-    -2px 22px 0 -6px rgba(60, 30, 90, 0.75);
+  display: none;
 }
-
-/* Multilobulated nucleus - irregular right lobes with connections */
 .preview-cell.neutrophil::after {
   content: '';
   position: absolute;
-  top: 30%;
-  left: 48%;
-  width: 24%;
-  height: 28%;
-  border-radius: 55% 45% 50% 50%;
-  background: rgba(60, 30, 90, 0.8);
-  transform: rotate(12deg);
-  box-shadow:
-    -12px 6px 0 -8px rgba(60, 30, 90, 0.7),
-    10px 15px 0 -5px rgba(60, 30, 90, 0.8),
-    18px 8px 0 -6px rgba(60, 30, 90, 0.75),
-    6px 22px 0 -7px rgba(60, 30, 90, 0.7);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 30% 40%,
+    rgba(75, 55, 115, 0.88) 0%,
+    rgba(55, 30, 90, 0.95) 100%
+  );
+  clip-path: polygon(
+    8% 58%, 5% 42%, 10% 28%, 22% 25%, 32% 35%, 30% 50%, 28% 60%,
+    30% 52%, 34% 48%, 38% 52%,
+    42% 38%, 46% 22%, 54% 20%, 62% 26%, 65% 42%, 62% 55%,
+    64% 52%, 68% 48%, 72% 52%,
+    76% 38%, 82% 28%, 92% 32%, 95% 48%, 90% 62%, 78% 68%, 70% 60%,
+    62% 65%, 52% 72%, 48% 74%, 38% 70%, 28% 65%
+  );
 }
 
-/* Normal Lymphocyte - small cell with high N:C ratio */
+/* Normal Lymphocyte - small cell with high N:C ratio, round dense nucleus
+   Size: 7-12µm (small lymphocyte), thin rim of blue cytoplasm */
 .preview-cell.lymphocyte {
   width: 55px;
   height: 55px;
   border-radius: 50%;
   background: radial-gradient(
     ellipse at 40% 40%,
-    rgba(200, 210, 240, 0.95) 0%,
-    rgba(180, 190, 220, 0.9) 100%
+    rgba(195, 205, 235, 0.95) 0%,
+    rgba(175, 185, 215, 0.9) 100%
   );
   position: relative;
-  box-shadow: inset 0 0 6px rgba(100, 100, 150, 0.4), 2px 3px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 0 5px rgba(100, 100, 150, 0.35), 2px 3px 10px rgba(0, 0, 0, 0.15);
 }
 
+/* Large round nucleus - high N:C ratio, clumped chromatin */
 .preview-cell.lymphocyte::before {
   content: '';
   position: absolute;
-  top: 12%;
-  left: 12%;
-  width: 76%;
-  height: 76%;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
   border-radius: 50%;
   background: radial-gradient(
-    ellipse at 35% 35%,
-    rgba(60, 40, 100, 0.75) 0%,
-    rgba(50, 30, 80, 0.8) 100%
+    ellipse at 38% 38%,
+    rgba(70, 50, 110, 0.85) 0%,
+    rgba(55, 35, 90, 0.95) 100%
   );
 }
 
 /* Normal Monocyte - largest WBC, kidney-shaped nucleus */
+/* Monocyte - largest WBC, folded kidney-bean nucleus, gray-blue cytoplasm
+   Size: 17-20µm, fine azurophilic granules, ground-glass appearance */
 .preview-cell.monocyte {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: radial-gradient(
-    ellipse at 40% 40%,
-    rgba(200, 210, 225, 0.95) 0%,
-    rgba(180, 190, 210, 0.9) 50%,
-    rgba(165, 175, 195, 0.85) 100%
-  );
+  background:
+    /* Fine azurophilic granules - sparse, dust-like */
+    radial-gradient(circle at 8% 12%, rgba(140, 120, 160, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 15% 8%, rgba(135, 115, 155, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 22% 15%, rgba(145, 125, 165, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 10% 22%, rgba(140, 120, 160, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 75% 10%, rgba(135, 115, 155, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 82% 18%, rgba(145, 125, 165, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 78% 25%, rgba(140, 120, 160, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 85% 12%, rgba(135, 115, 155, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 70% 72%, rgba(145, 125, 165, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 78% 78%, rgba(140, 120, 160, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 85% 75%, rgba(135, 115, 155, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 72% 85%, rgba(145, 125, 165, 0.6) 0.5px, transparent 0.5px),
+    /* Base cytoplasm - gray-blue ground-glass */
+    radial-gradient(
+      ellipse at 40% 40%,
+      rgba(195, 205, 220, 0.95) 0%,
+      rgba(175, 185, 205, 0.9) 50%,
+      rgba(160, 170, 190, 0.85) 100%
+    );
   position: relative;
-  box-shadow: inset 0 0 10px rgba(100, 110, 140, 0.4), 2px 3px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 0 8px rgba(100, 110, 140, 0.35), 2px 3px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Kidney bean-shaped nucleus - offset from center with indentation */
+/* Kidney bean-shaped nucleus - more folded/convoluted than metamyelocyte */
 .preview-cell.monocyte::before {
   content: '';
   position: absolute;
-  top: 20%;
-  left: 10%;
-  width: 55%;
-  height: 50%;
-  border-radius: 70% 30% 30% 70% / 60% 60% 40% 40%;
-  background: rgba(70, 50, 100, 0.75);
-  transform: rotate(-15deg);
+  top: 18%;
+  left: 12%;
+  width: 42px;
+  height: 38px;
+  border-radius: 68% 32% 35% 65% / 58% 55% 45% 42%;
+  background: radial-gradient(
+    ellipse at 40% 45%,
+    rgba(80, 60, 115, 0.85) 0%,
+    rgba(60, 40, 90, 0.95) 100%
+  );
+  transform: rotate(-12deg);
 }
 
-/* Second lobe of kidney bean creating the indented shape */
+/* Second lobe of kidney bean - creating deep indentation */
 .preview-cell.monocyte::after {
   content: '';
   position: absolute;
-  top: 35%;
-  left: 35%;
-  width: 40%;
-  height: 38%;
-  border-radius: 30% 70% 70% 30% / 40% 40% 60% 60%;
-  background: rgba(70, 50, 100, 0.75);
-  transform: rotate(-15deg);
+  top: 32%;
+  left: 38%;
+  width: 30px;
+  height: 28px;
+  border-radius: 32% 68% 65% 35% / 42% 45% 55% 58%;
+  background: radial-gradient(
+    ellipse at 60% 45%,
+    rgba(80, 60, 115, 0.85) 0%,
+    rgba(60, 40, 90, 0.95) 100%
+  );
+  transform: rotate(-12deg);
 }
 
 /* Normal Eosinophil - bilobed nucleus, dense red-orange granules */
@@ -832,6 +890,26 @@
     radial-gradient(circle at 38% 75%, rgba(215, 85, 50, 0.9) 1px, transparent 1.4px),
     radial-gradient(circle at 55% 72%, rgba(230, 85, 50, 0.9) 1px, transparent 1.4px),
     radial-gradient(circle at 60% 75%, rgba(215, 80, 60, 0.9) 1px, transparent 1.4px),
+    /* Center area granules - filling the middle */
+    radial-gradient(circle at 40% 35%, rgba(220, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 45% 38%, rgba(225, 90, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 50% 35%, rgba(230, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 55% 38%, rgba(215, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 42% 42%, rgba(220, 75, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 48% 45%, rgba(225, 90, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 52% 42%, rgba(230, 80, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 58% 45%, rgba(215, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 40% 48%, rgba(220, 90, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 46% 52%, rgba(225, 75, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 50% 48%, rgba(230, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 54% 52%, rgba(215, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 44% 55%, rgba(220, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 50% 58%, rgba(225, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 56% 55%, rgba(230, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 48% 62%, rgba(215, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 52% 58%, rgba(220, 80, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 46% 32%, rgba(225, 85, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 54% 32%, rgba(230, 90, 55, 0.9) 1px, transparent 1.4px),
     /* Base cytoplasm - pale pink */
     radial-gradient(
       ellipse at 50% 50%,
@@ -843,37 +921,36 @@
   box-shadow: inset 0 0 8px rgba(180, 100, 80, 0.3), 2px 3px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Eosinophil multilobulated nucleus - irregular left lobe */
+/* Eosinophil bilobed nucleus - thin spectacle shape (scales with cell) */
+/* Bilobed nucleus - two small lobes with thin filament */
 .preview-cell.eosinophil::before {
-  content: '';
-  position: absolute;
-  top: 32%;
-  left: 15%;
-  width: 24%;
-  height: 30%;
-  border-radius: 45% 55% 42% 58%;
-  background: rgba(80, 50, 120, 0.8);
-  transform: rotate(-18deg);
-  box-shadow:
-    6px 14px 0 -5px rgba(80, 50, 120, 0.8),
-    -3px 18px 0 -6px rgba(80, 50, 120, 0.75);
+  display: none;
 }
-
-/* Eosinophil multilobulated nucleus - irregular right lobes */
 .preview-cell.eosinophil::after {
   content: '';
   position: absolute;
-  top: 35%;
-  left: 50%;
-  width: 22%;
-  height: 26%;
-  border-radius: 55% 45% 48% 52%;
-  background: rgba(80, 50, 120, 0.8);
-  transform: rotate(15deg);
-  box-shadow:
-    -14px 4px 0 -9px rgba(80, 50, 120, 0.7),
-    8px 12px 0 -5px rgba(80, 50, 120, 0.8),
-    15px 5px 0 -6px rgba(80, 50, 120, 0.75);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 35% 45%,
+    rgba(95, 65, 130, 0.8) 0%,
+    rgba(70, 45, 110, 0.9) 100%
+  );
+  /* Thin bilobed nucleus - two small lobes with very thin filament */
+  clip-path: polygon(
+    /* Left lobe - small oval */
+    12% 52%, 10% 42%, 14% 34%, 24% 32%, 32% 38%, 30% 48%, 28% 54%,
+    /* Very thin connecting filament */
+    32% 50%, 38% 48%, 44% 50%, 50% 48%, 56% 50%,
+    /* Right lobe - small oval */
+    60% 42%, 66% 34%, 76% 32%, 84% 38%, 86% 48%, 82% 56%, 74% 58%, 64% 54%,
+    /* Return through filament */
+    56% 54%, 50% 52%, 44% 54%, 38% 52%, 32% 54%,
+    /* Close left lobe */
+    24% 58%, 16% 56%
+  );
 }
 
 /* Normal Basophil - bilobed nucleus, dense dark blue-purple granules */
@@ -927,17 +1004,35 @@
   box-shadow: inset 0 0 8px rgba(60, 40, 100, 0.4), 2px 3px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Basophil nucleus - bilobed, visible behind granules */
+/* Basophil bilobed nucleus - thin S-shape partially obscured by granules */
 .preview-cell.basophil::before {
+  display: none;
+}
+.preview-cell.basophil::after {
   content: '';
   position: absolute;
-  top: 28%;
-  left: 20%;
-  width: 28%;
-  height: 35%;
-  border-radius: 50%;
-  background: rgba(30, 15, 60, 0.85);
-  box-shadow: 22px 8px 0 -3px rgba(30, 15, 60, 0.85);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 40% 45%,
+    rgba(50, 30, 85, 0.75) 0%,
+    rgba(30, 15, 65, 0.85) 100%
+  );
+  /* Thin bilobed S-shaped nucleus - partially obscured by granules */
+  clip-path: polygon(
+    /* Left lobe - small */
+    15% 48%, 14% 40%, 18% 34%, 26% 33%, 32% 38%, 30% 46%, 28% 50%,
+    /* Thin S-curve filament */
+    32% 48%, 38% 44%, 46% 46%, 54% 52%, 62% 48%,
+    /* Right lobe - small */
+    66% 42%, 72% 36%, 80% 38%, 84% 46%, 82% 54%, 76% 58%, 68% 56%,
+    /* Return path */
+    62% 54%, 54% 58%, 46% 54%, 38% 52%, 32% 54%,
+    /* Close left lobe */
+    26% 56%, 18% 54%
+  );
 }
 
 /* Band Neutrophil - same as normal but horseshoe/band-shaped nucleus */
@@ -972,7 +1067,7 @@
   box-shadow: inset 0 0 6px rgba(180, 140, 160, 0.3), 2px 3px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Band-shaped (horseshoe) nucleus - not segmented */
+/* Band-shaped (horseshoe/C-shaped) nucleus - not segmented yet */
 .preview-cell.band-neutrophil::before {
   content: '';
   position: absolute;
@@ -980,11 +1075,17 @@
   left: 25%;
   width: 50%;
   height: 40%;
-  background: rgba(60, 30, 90, 0.8);
   border-radius: 50% 50% 50% 50% / 100% 100% 0% 0%;
-  border: 4px solid rgba(60, 30, 90, 0.8);
+  border: 5px solid transparent;
   border-bottom: none;
-  background: transparent;
+  background:
+    linear-gradient(rgba(75, 55, 115, 0.9), rgba(55, 30, 90, 0.95)) padding-box,
+    linear-gradient(rgba(75, 55, 115, 0.9), rgba(55, 30, 90, 0.95)) border-box;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
   box-sizing: border-box;
 }
 
@@ -1034,35 +1135,47 @@
 
 /* Hypersegmented nucleus - 6+ lobes connected by thin filaments */
 .preview-cell.hypersegmented::before {
-  content: '';
-  position: absolute;
-  top: 25%;
-  left: 10%;
-  width: 18%;
-  height: 22%;
-  border-radius: 45% 55% 50% 50%;
-  background: rgba(60, 30, 90, 0.8);
-  box-shadow:
-    12px 2px 0 -2px rgba(60, 30, 90, 0.8),
-    24px 5px 0 -1px rgba(60, 30, 90, 0.8),
-    36px 2px 0 -2px rgba(60, 30, 90, 0.8),
-    48px 6px 0 -1px rgba(60, 30, 90, 0.8),
-    58px 0 0 -2px rgba(60, 30, 90, 0.8);
+  display: none;
 }
-
 .preview-cell.hypersegmented::after {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 15%;
-  width: 16%;
-  height: 20%;
-  border-radius: 50% 50% 45% 55%;
-  background: rgba(60, 30, 90, 0.8);
-  box-shadow:
-    14px -4px 0 -2px rgba(60, 30, 90, 0.8),
-    28px 0 0 -1px rgba(60, 30, 90, 0.8),
-    42px -2px 0 -2px rgba(60, 30, 90, 0.8);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 40% 35%,
+    rgba(75, 55, 115, 0.85) 0%,
+    rgba(55, 30, 90, 0.95) 100%
+  );
+  /* 6 lobes in two rows - top row (4) and bottom row (2) with thin bridges */
+  clip-path: polygon(
+    /* Lobe 1 - top left */
+    5% 38%, 3% 28%, 8% 18%, 16% 16%, 22% 24%, 20% 34%,
+    /* Bridge to lobe 2 */
+    22% 30%, 26% 28%, 30% 30%,
+    /* Lobe 2 - top center-left */
+    28% 22%, 32% 12%, 40% 10%, 48% 14%, 50% 24%, 48% 32%,
+    /* Bridge to lobe 3 */
+    50% 28%, 54% 26%, 58% 28%,
+    /* Lobe 3 - top center-right */
+    56% 18%, 62% 10%, 70% 12%, 76% 20%, 74% 30%,
+    /* Bridge to lobe 4 */
+    76% 26%, 80% 24%, 84% 28%,
+    /* Lobe 4 - top right */
+    82% 20%, 88% 14%, 95% 22%, 96% 34%, 90% 42%, 84% 38%,
+    /* Bridge down to bottom row */
+    86% 44%, 82% 48%, 78% 52%,
+    /* Lobe 5 - bottom right */
+    82% 56%, 88% 62%, 86% 74%, 76% 78%, 68% 72%, 70% 62%,
+    /* Bridge to lobe 6 */
+    66% 66%, 60% 68%, 54% 66%,
+    /* Lobe 6 - bottom left */
+    58% 72%, 52% 80%, 40% 82%, 30% 76%, 32% 64%, 40% 58%,
+    /* Connect back up to lobe 1 */
+    36% 54%, 28% 50%, 20% 48%, 14% 44%, 8% 42%
+  );
 }
 
 /* Toxic Granulation - normal neutrophil with coarse dark toxic granules */
@@ -1104,36 +1217,30 @@
   box-shadow: inset 0 0 6px rgba(180, 140, 160, 0.3), 2px 3px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Multilobulated nucleus like normal neutrophil */
+/* Segmented nucleus - 4 lobes with thin bridges */
 .preview-cell.toxic-granulation::before {
-  content: '';
-  position: absolute;
-  top: 28%;
-  left: 18%;
-  width: 26%;
-  height: 32%;
-  border-radius: 45% 55% 40% 60%;
-  background: rgba(60, 30, 90, 0.8);
-  transform: rotate(-15deg);
-  box-shadow:
-    8px 18px 0 -4px rgba(60, 30, 90, 0.8),
-    -2px 22px 0 -6px rgba(60, 30, 90, 0.75);
+  display: none;
 }
-
 .preview-cell.toxic-granulation::after {
   content: '';
   position: absolute;
-  top: 30%;
-  left: 48%;
-  width: 24%;
-  height: 28%;
-  border-radius: 55% 45% 50% 50%;
-  background: rgba(60, 30, 90, 0.8);
-  transform: rotate(12deg);
-  box-shadow:
-    -12px 6px 0 -8px rgba(60, 30, 90, 0.7),
-    10px 15px 0 -5px rgba(60, 30, 90, 0.8),
-    18px 8px 0 -6px rgba(60, 30, 90, 0.75);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 30% 40%,
+    rgba(75, 55, 115, 0.88) 0%,
+    rgba(55, 30, 90, 0.95) 100%
+  );
+  clip-path: polygon(
+    8% 58%, 5% 42%, 10% 28%, 22% 25%, 32% 35%, 30% 50%, 28% 60%,
+    30% 52%, 34% 48%, 38% 52%,
+    42% 38%, 46% 22%, 54% 20%, 62% 26%, 65% 42%, 62% 55%,
+    64% 52%, 68% 48%, 72% 52%,
+    76% 38%, 82% 28%, 92% 32%, 95% 48%, 90% 62%, 78% 68%, 70% 60%,
+    62% 65%, 52% 72%, 48% 74%, 38% 70%, 28% 65%
+  );
 }
 
 /* Döhle Bodies - normal neutrophil with pale blue cytoplasmic inclusions */
@@ -1169,61 +1276,61 @@
   box-shadow: inset 0 0 6px rgba(180, 140, 160, 0.3), 2px 3px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Multilobulated nucleus like normal neutrophil */
+/* Segmented nucleus - 4 lobes with thin bridges */
 .preview-cell.dohle-bodies::before {
-  content: '';
-  position: absolute;
-  top: 28%;
-  left: 18%;
-  width: 26%;
-  height: 32%;
-  border-radius: 45% 55% 40% 60%;
-  background: rgba(60, 30, 90, 0.8);
-  transform: rotate(-15deg);
-  box-shadow:
-    8px 18px 0 -4px rgba(60, 30, 90, 0.8),
-    -2px 22px 0 -6px rgba(60, 30, 90, 0.75);
+  display: none;
 }
-
 .preview-cell.dohle-bodies::after {
   content: '';
   position: absolute;
-  top: 30%;
-  left: 48%;
-  width: 24%;
-  height: 28%;
-  border-radius: 55% 45% 50% 50%;
-  background: rgba(60, 30, 90, 0.8);
-  transform: rotate(12deg);
-  box-shadow:
-    -12px 6px 0 -8px rgba(60, 30, 90, 0.7),
-    10px 15px 0 -5px rgba(60, 30, 90, 0.8),
-    18px 8px 0 -6px rgba(60, 30, 90, 0.75);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 30% 40%,
+    rgba(75, 55, 115, 0.88) 0%,
+    rgba(55, 30, 90, 0.95) 100%
+  );
+  clip-path: polygon(
+    8% 58%, 5% 42%, 10% 28%, 22% 25%, 32% 35%, 30% 50%, 28% 60%,
+    30% 52%, 34% 48%, 38% 52%,
+    42% 38%, 46% 22%, 54% 20%, 62% 26%, 65% 42%, 62% 55%,
+    64% 52%, 68% 48%, 72% 52%,
+    76% 38%, 82% 28%, 92% 32%, 95% 48%, 90% 62%, 78% 68%, 70% 60%,
+    62% 65%, 52% 72%, 48% 74%, 38% 70%, 28% 65%
+  );
 }
 
-/* Atypical Lymphocyte */
+/* Atypical Lymphocyte - reactive/activated, larger with abundant cytoplasm
+   Size: 15-25µm, scalloped edges from molding around RBCs */
 .preview-cell.atypical-lymph {
   width: 80px;
   height: 75px;
   border-radius: 45% 55% 50% 50%;
   background: radial-gradient(
     ellipse at 40% 40%,
-    rgba(130, 160, 200, 0.95) 0%,
-    rgba(100, 130, 180, 0.9) 100%
+    rgba(140, 165, 210, 0.95) 0%,
+    rgba(110, 140, 190, 0.9) 100%
   );
   position: relative;
-  box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 0 6px rgba(80, 100, 140, 0.3), 2px 3px 10px rgba(0, 0, 0, 0.15);
 }
 
+/* Eccentric irregular nucleus with visible chromatin */
 .preview-cell.atypical-lymph::before {
   content: '';
   position: absolute;
-  top: 35%;
-  left: 30%;
-  width: 30px;
-  height: 28px;
-  background: #3d1a5c;
-  border-radius: 50%;
+  top: 32%;
+  left: 28%;
+  width: 32px;
+  height: 30px;
+  background: radial-gradient(
+    ellipse at 40% 40%,
+    rgba(75, 55, 115, 0.85) 0%,
+    rgba(55, 30, 90, 0.95) 100%
+  );
+  border-radius: 55% 45% 50% 50%;
 }
 
 /* Blast Cell - high N:C ratio (nucleus ~80-90% of cell) */
@@ -1310,31 +1417,66 @@
     );
 }
 
-/* Promyelocyte with Auer Rod - large nucleus, abundant azurophilic granules, Auer rod in cytoplasm */
+/* Promyelocyte with Auer Rods - dense azurophilic granules */
 .preview-cell.auer-rod {
   width: 82px;
   height: 78px;
-  /* Irregular amoeboid shape - 75% more irregular */
   border-radius: 59% 41% 54% 46% / 46% 59% 41% 54%;
-  /* Cytoplasm packed with azurophilic (primary) granules - more numerous, half-size */
+  /* Dense azurophilic granules - 5x density throughout cytoplasm */
   background:
-    /* More numerous, half-size granules */
-    radial-gradient(circle at 12% 22%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 25% 18%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
-    radial-gradient(circle at 18% 35%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 82% 25%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 75% 32%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
-    radial-gradient(circle at 88% 40%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 15% 75%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 22% 82%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
-    radial-gradient(circle at 28% 70%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 78% 72%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 85% 78%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
-    radial-gradient(circle at 72% 85%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 30% 28%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
-    radial-gradient(circle at 70% 22%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
-    radial-gradient(circle at 25% 65%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
-    radial-gradient(circle at 75% 68%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
+    radial-gradient(circle at 5% 12%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 8% 8%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 12% 15%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 15% 10%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 18% 18%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 22% 12%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 25% 8%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 28% 15%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 8% 22%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 12% 28%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 5% 32%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 18% 25%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 22% 32%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 28% 28%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 72% 8%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 75% 12%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 78% 8%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 82% 15%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 85% 10%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 88% 18%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 92% 12%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 75% 22%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 78% 28%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 82% 25%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 85% 32%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    /* Bottom-center granules - cleared from Auer rod area */
+    radial-gradient(circle at 42% 68%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 45% 72%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 48% 68%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 52% 75%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 55% 70%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 58% 78%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 62% 72%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 65% 68%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 42% 82%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 45% 88%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 72% 68%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 75% 72%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 78% 68%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 82% 75%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 85% 70%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 88% 78%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 75% 82%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 78% 88%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 82% 85%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 32% 12%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 62% 12%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 32% 88%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 62% 88%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 5% 45%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 8% 52%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 92% 45%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 88% 52%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
     /* Base cytoplasm - slightly basophilic (bluish) */
     radial-gradient(
       ellipse at 40% 40%,
@@ -1343,6 +1485,7 @@
     );
   position: relative;
   box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
 }
 
 /* Large irregular nucleus (promyelocyte stage) */
@@ -1359,25 +1502,151 @@
     rgba(90, 70, 130, 0.85) 0%,
     rgba(74, 26, 107, 0.95) 100%
   );
-  /* Irregular nucleus - 75% more irregular */
   border-radius: 54% 46% 59% 41% / 46% 54% 46% 54%;
 }
 
-/* Auer rod - needle-like inclusion in cytoplasm */
+/* Auer rod in cytosol */
 .preview-cell.auer-rod::after {
   content: '';
   position: absolute;
-  top: 70%;
-  left: 16%;
-  width: 28px;
+  top: 72%;
+  left: 10%;
+  width: 24px;
   height: 5px;
   background: linear-gradient(90deg,
     rgba(200, 80, 100, 0.95) 0%,
     rgba(180, 60, 80, 0.95) 50%,
     rgba(160, 50, 70, 0.9) 100%);
   border-radius: 2px;
-  transform: rotate(-25deg);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transform: rotate(-15deg);
+}
+
+/* Myelocyte - round eccentric nucleus, primary granules
+   Intermediate between blast and metamyelocyte
+   Size: ~18-20µm, nucleus ~60% of cell, off-center */
+.preview-cell.myelocyte {
+  width: 70px;
+  height: 68px;
+  border-radius: 52% 48% 55% 45% / 48% 52% 48% 52%;
+  background:
+    /* Primary granules - azurophilic, less dense than promyelocyte */
+    radial-gradient(circle at 8% 15%, rgba(130, 50, 90, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 15% 10%, rgba(135, 55, 95, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 22% 18%, rgba(125, 45, 85, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 12% 25%, rgba(130, 50, 90, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 75% 12%, rgba(135, 55, 95, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 82% 20%, rgba(125, 45, 85, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 78% 28%, rgba(130, 50, 90, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 85% 15%, rgba(135, 55, 95, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 70% 75%, rgba(125, 45, 85, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 78% 82%, rgba(130, 50, 90, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 85% 78%, rgba(135, 55, 95, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 72% 88%, rgba(125, 45, 85, 0.85) 0.8px, transparent 0.8px),
+    /* Base cytoplasm - blue-gray */
+    radial-gradient(
+      ellipse at 40% 40%,
+      rgba(175, 190, 215, 0.95) 0%,
+      rgba(155, 170, 200, 0.9) 100%
+    );
+  position: relative;
+}
+
+/* Round eccentric nucleus - off-center, still large but condensing */
+.preview-cell.myelocyte::before {
+  content: '';
+  position: absolute;
+  top: 22%;
+  left: 18%;
+  transform: translate(-10%, -5%);
+  width: 40px;
+  height: 38px;
+  background: radial-gradient(
+    ellipse at 45% 45%,
+    rgba(95, 75, 135, 0.85) 0%,
+    rgba(70, 40, 100, 0.95) 100%
+  );
+  border-radius: 55% 45% 48% 52% / 50% 55% 45% 50%;
+}
+
+/* Nucleoli - 1-2 visible (smaller than blast) */
+.preview-cell.myelocyte::after {
+  content: '';
+  position: absolute;
+  top: 30%;
+  left: 28%;
+  width: 7px;
+  height: 7px;
+  background: rgba(200, 180, 220, 0.9);
+  border-radius: 50%;
+  box-shadow: 10px 5px 0 -1px rgba(200, 180, 220, 0.85);
+}
+
+/* Metamyelocyte - kidney/indented nucleus, secondary granules
+   Nucleus shows clear indentation (kidney-bean shape)
+   Size: ~15-18µm, nucleus ~50% of cell */
+.preview-cell.metamyelocyte {
+  width: 62px;
+  height: 60px;
+  border-radius: 50% 50% 52% 48% / 48% 50% 50% 52%;
+  background:
+    /* Secondary (specific) granules - finer, pink-tan */
+    radial-gradient(circle at 8% 12%, rgba(180, 140, 130, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 14% 8%, rgba(175, 135, 125, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 20% 15%, rgba(185, 145, 135, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 10% 22%, rgba(180, 140, 130, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 72% 10%, rgba(175, 135, 125, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 78% 18%, rgba(185, 145, 135, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 85% 12%, rgba(180, 140, 130, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 75% 25%, rgba(175, 135, 125, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 68% 72%, rgba(185, 145, 135, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 75% 78%, rgba(180, 140, 130, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 82% 75%, rgba(175, 135, 125, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 70% 85%, rgba(185, 145, 135, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 78% 88%, rgba(180, 140, 130, 0.8) 0.6px, transparent 0.6px),
+    /* Primary granules (fewer remaining) */
+    radial-gradient(circle at 18% 75%, rgba(130, 50, 90, 0.75) 0.7px, transparent 0.7px),
+    radial-gradient(circle at 25% 82%, rgba(125, 45, 85, 0.75) 0.7px, transparent 0.7px),
+    /* Base cytoplasm - pink-tan */
+    radial-gradient(
+      ellipse at 40% 40%,
+      rgba(215, 200, 195, 0.95) 0%,
+      rgba(195, 180, 175, 0.9) 100%
+    );
+  position: relative;
+}
+
+/* Kidney-bean shaped nucleus - key distinguishing feature */
+.preview-cell.metamyelocyte::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 15%;
+  width: 31px;
+  height: 27px;
+  border-radius: 65% 35% 35% 65% / 55% 55% 45% 45%;
+  background: radial-gradient(
+    ellipse at 40% 45%,
+    rgba(85, 65, 120, 0.85) 0%,
+    rgba(65, 35, 95, 0.95) 100%
+  );
+  transform: rotate(-10deg);
+}
+
+/* Second part of kidney-bean creating indentation */
+.preview-cell.metamyelocyte::after {
+  content: '';
+  position: absolute;
+  top: 32%;
+  left: 38%;
+  width: 22px;
+  height: 19px;
+  border-radius: 35% 65% 65% 35% / 45% 45% 55% 55%;
+  background: radial-gradient(
+    ellipse at 60% 45%,
+    rgba(85, 65, 120, 0.85) 0%,
+    rgba(65, 35, 95, 0.95) 100%
+  );
+  transform: rotate(-10deg);
 }
 
 /* =================================================================
@@ -1580,5 +1849,15 @@
 
   .cell-preview {
     height: 100px;
+  }
+
+  /* Compact footer on mobile */
+  .guide-footer {
+    padding: 15px 10px;
+    font-size: 0.7rem;
+  }
+
+  .guide-footer p {
+    margin: 2px 0;
   }
 }

@@ -1,6 +1,22 @@
+import { useState } from 'react';
 import './MorphologyGuide.css';
 
 function MorphologyGuide() {
+  // All sections start collapsed
+  const [expandedSections, setExpandedSections] = useState({
+    rbc: false,
+    nrbc: false,
+    wbc: false,
+    plt: false,
+  });
+
+  const toggleSection = (section) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
   const rbcMorphologies = [
     {
       id: 'normal-rbc',
@@ -258,8 +274,24 @@ function MorphologyGuide() {
       name: 'Promyelocyte with Auer Rod',
       aka: 'Auer body',
       description: 'Immature myeloid cell with azurophilic granules and pink/red needle-like Auer rod in cytoplasm',
-      conditions: ['AML (diagnostic)', 'APL (faggot cells with multiple rods)', 'MDS-EB'],
+      conditions: ['AML (diagnostic)', 'APL (bundled Auer rods)', 'MDS-EB'],
       className: 'auer-rod',
+    },
+    {
+      id: 'myelocyte',
+      name: 'Myelocyte',
+      aka: 'Intermediate granulocyte',
+      description: 'Round eccentric nucleus, primary granules present, intermediate between promyelocyte and metamyelocyte',
+      conditions: ['CML', 'Severe infection (left shift)', 'Myeloproliferative neoplasms', 'Recovery from agranulocytosis'],
+      className: 'myelocyte',
+    },
+    {
+      id: 'metamyelocyte',
+      name: 'Metamyelocyte',
+      aka: 'Juvenile granulocyte',
+      description: 'Kidney/indented nucleus (not yet band-shaped), secondary granules, nearly mature form',
+      conditions: ['CML', 'Severe infection (left shift)', 'Myeloproliferative neoplasms', 'Leukemoid reaction'],
+      className: 'metamyelocyte',
     },
   ];
 
@@ -338,111 +370,135 @@ function MorphologyGuide() {
 
       <div className="guide-content">
         {/* RBC Morphologies */}
-        <section className="morphology-section">
-          <h2 className="section-title rbc-title">Red Blood Cell Morphologies</h2>
-          <div className="morphology-grid">
-            {rbcMorphologies.map((morph) => (
-              <div key={morph.id} className="morphology-card">
-                <div className="cell-preview">
-                  <div className={`preview-cell ${morph.className}`}></div>
-                </div>
-                <div className="card-content">
-                  <h3>{morph.name}</h3>
-                  <p className="aka">{morph.aka}</p>
-                  <p className="description">{morph.description}</p>
-                  <div className="conditions">
-                    <strong>Associated with:</strong>
-                    <ul>
-                      {morph.conditions.map((cond, i) => (
-                        <li key={i}>{cond}</li>
-                      ))}
-                    </ul>
+        <section className={`morphology-section ${expandedSections.rbc ? 'expanded' : 'collapsed'}`}>
+          <button className="section-toggle" onClick={() => toggleSection('rbc')}>
+            <span className="toggle-icon">{expandedSections.rbc ? '▼' : '▶'}</span>
+            <h2 className="section-title rbc-title">Red Blood Cell Morphologies</h2>
+            <span className="section-count">{rbcMorphologies.length} types</span>
+          </button>
+          {expandedSections.rbc && (
+            <div className="morphology-grid">
+              {rbcMorphologies.map((morph) => (
+                <div key={morph.id} className="morphology-card">
+                  <div className="cell-preview">
+                    <div className={`preview-cell ${morph.className}`}></div>
+                  </div>
+                  <div className="card-content">
+                    <h3>{morph.name}</h3>
+                    <p className="aka">{morph.aka}</p>
+                    <p className="description">{morph.description}</p>
+                    <div className="conditions">
+                      <strong>Associated with:</strong>
+                      <ul>
+                        {morph.conditions.map((cond, i) => (
+                          <li key={i}>{cond}</li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* nRBC Morphologies - after RBC, before WBC */}
+        <section className={`morphology-section ${expandedSections.nrbc ? 'expanded' : 'collapsed'}`}>
+          <button className="section-toggle" onClick={() => toggleSection('nrbc')}>
+            <span className="toggle-icon">{expandedSections.nrbc ? '▼' : '▶'}</span>
+            <h2 className="section-title nrbc-title">Nucleated RBC Stages</h2>
+            <span className="section-count">{nrbcMorphologies.length} types</span>
+          </button>
+          {expandedSections.nrbc && (
+            <div className="morphology-grid">
+              {nrbcMorphologies.map((morph) => (
+                <div key={morph.id} className="morphology-card">
+                  <div className="cell-preview">
+                    <div className={`preview-cell ${morph.className}`}></div>
+                  </div>
+                  <div className="card-content">
+                    <h3>{morph.name}</h3>
+                    <p className="aka">{morph.aka}</p>
+                    <p className="description">{morph.description}</p>
+                    <div className="conditions">
+                      <strong>Associated with:</strong>
+                      <ul>
+                        {morph.conditions.map((cond, i) => (
+                          <li key={i}>{cond}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* WBC Morphologies */}
-        <section className="morphology-section">
-          <h2 className="section-title wbc-title">White Blood Cell Morphologies</h2>
-          <div className="morphology-grid">
-            {wbcMorphologies.map((morph) => (
-              <div key={morph.id} className="morphology-card">
-                <div className="cell-preview">
-                  <div className={`preview-cell ${morph.className}`}></div>
-                </div>
-                <div className="card-content">
-                  <h3>{morph.name}</h3>
-                  <p className="aka">{morph.aka}</p>
-                  <p className="description">{morph.description}</p>
-                  <div className="conditions">
-                    <strong>Associated with:</strong>
-                    <ul>
-                      {morph.conditions.map((cond, i) => (
-                        <li key={i}>{cond}</li>
-                      ))}
-                    </ul>
+        <section className={`morphology-section ${expandedSections.wbc ? 'expanded' : 'collapsed'}`}>
+          <button className="section-toggle" onClick={() => toggleSection('wbc')}>
+            <span className="toggle-icon">{expandedSections.wbc ? '▼' : '▶'}</span>
+            <h2 className="section-title wbc-title">White Blood Cell Morphologies</h2>
+            <span className="section-count">{wbcMorphologies.length} types</span>
+          </button>
+          {expandedSections.wbc && (
+            <div className="morphology-grid">
+              {wbcMorphologies.map((morph) => (
+                <div key={morph.id} className="morphology-card">
+                  <div className="cell-preview">
+                    <div className={`preview-cell ${morph.className}`}></div>
+                  </div>
+                  <div className="card-content">
+                    <h3>{morph.name}</h3>
+                    <p className="aka">{morph.aka}</p>
+                    <p className="description">{morph.description}</p>
+                    <div className="conditions">
+                      <strong>Associated with:</strong>
+                      <ul>
+                        {morph.conditions.map((cond, i) => (
+                          <li key={i}>{cond}</li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* Platelet Morphologies */}
-        <section className="morphology-section">
-          <h2 className="section-title plt-title">Platelet Morphologies</h2>
-          <div className="morphology-grid">
-            {plateletMorphologies.map((morph) => (
-              <div key={morph.id} className="morphology-card">
-                <div className="cell-preview">
-                  <div className={`preview-cell ${morph.className}`}></div>
-                </div>
-                <div className="card-content">
-                  <h3>{morph.name}</h3>
-                  <p className="aka">{morph.aka}</p>
-                  <p className="description">{morph.description}</p>
-                  <div className="conditions">
-                    <strong>Associated with:</strong>
-                    <ul>
-                      {morph.conditions.map((cond, i) => (
-                        <li key={i}>{cond}</li>
-                      ))}
-                    </ul>
+        <section className={`morphology-section ${expandedSections.plt ? 'expanded' : 'collapsed'}`}>
+          <button className="section-toggle" onClick={() => toggleSection('plt')}>
+            <span className="toggle-icon">{expandedSections.plt ? '▼' : '▶'}</span>
+            <h2 className="section-title plt-title">Platelet Morphologies</h2>
+            <span className="section-count">{plateletMorphologies.length} types</span>
+          </button>
+          {expandedSections.plt && (
+            <div className="morphology-grid">
+              {plateletMorphologies.map((morph) => (
+                <div key={morph.id} className="morphology-card">
+                  <div className="cell-preview">
+                    <div className={`preview-cell ${morph.className}`}></div>
+                  </div>
+                  <div className="card-content">
+                    <h3>{morph.name}</h3>
+                    <p className="aka">{morph.aka}</p>
+                    <p className="description">{morph.description}</p>
+                    <div className="conditions">
+                      <strong>Associated with:</strong>
+                      <ul>
+                        {morph.conditions.map((cond, i) => (
+                          <li key={i}>{cond}</li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* nRBC Morphologies */}
-        <section className="morphology-section">
-          <h2 className="section-title nrbc-title">Nucleated RBC Stages</h2>
-          <div className="morphology-grid">
-            {nrbcMorphologies.map((morph) => (
-              <div key={morph.id} className="morphology-card">
-                <div className="cell-preview">
-                  <div className={`preview-cell ${morph.className}`}></div>
-                </div>
-                <div className="card-content">
-                  <h3>{morph.name}</h3>
-                  <p className="aka">{morph.aka}</p>
-                  <p className="description">{morph.description}</p>
-                  <div className="conditions">
-                    <strong>Associated with:</strong>
-                    <ul>
-                      {morph.conditions.map((cond, i) => (
-                        <li key={i}>{cond}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
       </div>
 

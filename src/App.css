@@ -144,6 +144,8 @@ a {
   backdrop-filter: blur(10px);
   z-index: 1000;
   box-shadow: var(--shadow);
+  /* Account for iPhone notch/dynamic island */
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 .header-container {
@@ -350,8 +352,8 @@ a {
 
 @media (max-width: 768px) {
   .microscope-link {
-    /* Top left on mobile - above hero content */
-    top: calc(env(safe-area-inset-top, 0px) + 70px);
+    /* Top left on mobile - below header with breathing room */
+    top: calc(env(safe-area-inset-top, 0px) + 75px);
     bottom: auto;
     left: 10px;
     right: auto;
@@ -418,6 +420,27 @@ a {
   will-change: transform;
   contain: layout style;
   backface-visibility: hidden;
+}
+
+/* Override contain for WBCs that use clip-path nuclei */
+.floating-cell.neutrophil,
+.floating-cell.neutrophil-3lobe,
+.floating-cell.band-neutrophil,
+.floating-cell.hypersegmented,
+.floating-cell.toxic-granulation,
+.floating-cell.dohle-bodies,
+.floating-cell.eosinophil,
+.floating-cell.eosinophil-3lobe,
+.floating-cell.basophil,
+.floating-cell.lymphocyte,
+.floating-cell.monocyte,
+.floating-cell.atypical-lymph,
+.floating-cell.blast,
+.floating-cell.smudge-cell,
+.floating-cell.auer-rod,
+.floating-cell.myelocyte,
+.floating-cell.metamyelocyte {
+  contain: none;
 }
 
 /* RBC - Biconcave disc appearance (donut-like when viewed from above)
@@ -518,133 +541,147 @@ a {
   box-shadow: inset 0 0 6px rgba(180, 140, 160, 0.3);
 }
 
-/* Multilobulated nucleus - irregular left lobe */
+/* Segmented nucleus - 4 lobes with thin bridges */
 .floating-cell.neutrophil::before {
-  content: '';
-  position: absolute;
-  top: 28%;
-  left: 18%;
-  width: 26%;
-  height: 32%;
-  border-radius: 45% 55% 40% 60%;
-  background: rgba(60, 30, 90, 0.8);
-  transform: rotate(-15deg);
-  /* Additional lobe extending down */
-  box-shadow:
-    8px 18px 0 -4px rgba(60, 30, 90, 0.8),
-    -2px 22px 0 -6px rgba(60, 30, 90, 0.75);
+  display: none;
 }
-
-/* Multilobulated nucleus - irregular right lobes with connections */
 .floating-cell.neutrophil::after {
   content: '';
   position: absolute;
-  top: 30%;
-  left: 48%;
-  width: 24%;
-  height: 28%;
-  border-radius: 55% 45% 50% 50%;
-  background: rgba(60, 30, 90, 0.8);
-  transform: rotate(12deg);
-  /* Multiple lobes with thin chromatin bridges */
-  box-shadow:
-    -12px 6px 0 -8px rgba(60, 30, 90, 0.7),
-    10px 15px 0 -5px rgba(60, 30, 90, 0.8),
-    18px 8px 0 -6px rgba(60, 30, 90, 0.75),
-    6px 22px 0 -7px rgba(60, 30, 90, 0.7);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 30% 40%,
+    rgba(75, 55, 115, 0.88) 0%,
+    rgba(55, 30, 90, 0.95) 100%
+  );
+  clip-path: polygon(
+    8% 58%, 5% 42%, 10% 28%, 22% 25%, 32% 35%, 30% 50%, 28% 60%,
+    30% 52%, 34% 48%, 38% 52%,
+    42% 38%, 46% 22%, 54% 20%, 62% 26%, 65% 42%, 62% 55%,
+    64% 52%, 68% 48%, 72% 52%,
+    76% 38%, 82% 28%, 92% 32%, 95% 48%, 90% 62%, 78% 68%, 70% 60%,
+    62% 65%, 52% 72%, 48% 74%, 38% 70%, 28% 65%
+  );
 }
 
 /* Neutrophil 3-lobe variant nucleus */
 .floating-cell.neutrophil-3lobe::before {
-  content: '';
-  position: absolute;
-  top: 25%;
-  left: 12%;
-  width: 22%;
-  height: 28%;
-  border-radius: 50% 45% 45% 55%;
-  background: rgba(60, 30, 90, 0.8);
-  transform: rotate(-20deg);
-  /* Third lobe connection */
-  box-shadow: 12px 20px 0 -6px rgba(60, 30, 90, 0.8);
+  display: none;
 }
 .floating-cell.neutrophil-3lobe::after {
   content: '';
   position: absolute;
-  top: 28%;
-  left: 42%;
-  width: 20%;
-  height: 24%;
-  border-radius: 45% 55% 50% 50%;
-  background: rgba(60, 30, 90, 0.8);
-  transform: rotate(5deg);
-  /* Two more lobes with bridges */
-  box-shadow:
-    -14px 5px 0 -9px rgba(60, 30, 90, 0.7),
-    22px 2px 0 -4px rgba(60, 30, 90, 0.8),
-    20px 18px 0 -6px rgba(60, 30, 90, 0.75);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 35% 40%,
+    rgba(75, 55, 115, 0.88) 0%,
+    rgba(55, 30, 90, 0.95) 100%
+  );
+  clip-path: polygon(
+    10% 55%, 5% 38%, 12% 22%, 28% 20%, 38% 32%, 35% 48%,
+    38% 46%, 42% 42%, 46% 46%,
+    52% 34%, 60% 22%, 75% 24%, 85% 38%, 82% 55%, 72% 62%,
+    70% 64%, 66% 68%, 62% 72%,
+    58% 78%, 46% 88%, 32% 85%, 26% 72%, 35% 62%,
+    32% 58%, 26% 55%, 20% 55%
+  );
 }
 
-/* Lymphocyte - large round nucleus, thin cytoplasm rim */
+/* Lymphocyte - small cell with high N:C ratio, round dense nucleus
+   Size: 7-12µm (small lymphocyte), thin rim of blue cytoplasm */
 .floating-cell.lymphocyte {
   background: radial-gradient(
     ellipse at 40% 40%,
-    rgba(200, 210, 240, 0.95) 0%,
-    rgba(180, 190, 220, 0.9) 100%
+    rgba(195, 205, 235, 0.95) 0%,
+    rgba(175, 185, 215, 0.9) 100%
   );
-  box-shadow: inset 0 0 6px rgba(100, 100, 150, 0.4);
+  box-shadow: inset 0 0 5px rgba(100, 100, 150, 0.35);
+  position: relative;
 }
 
+/* Large round nucleus - high N:C ratio, clumped chromatin */
 .floating-cell.lymphocyte::before {
   content: '';
   position: absolute;
-  top: 12%;
-  left: 12%;
-  width: 76%;
-  height: 76%;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
   border-radius: 50%;
   background: radial-gradient(
-    ellipse at 35% 35%,
-    rgba(60, 40, 100, 0.75) 0%,
-    rgba(50, 30, 80, 0.8) 100%
+    ellipse at 38% 38%,
+    rgba(70, 50, 110, 0.85) 0%,
+    rgba(55, 35, 90, 0.95) 100%
   );
 }
 
 /* Monocyte - kidney-bean shaped nucleus, gray-blue cytoplasm */
+/* Monocyte - largest WBC, folded kidney-bean nucleus, gray-blue cytoplasm
+   Size: 17-20µm, fine azurophilic granules, ground-glass appearance */
 .floating-cell.monocyte {
-  background: radial-gradient(
-    ellipse at 40% 40%,
-    rgba(200, 210, 225, 0.95) 0%,
-    rgba(180, 190, 210, 0.9) 50%,
-    rgba(165, 175, 195, 0.85) 100%
-  );
-  box-shadow: inset 0 0 10px rgba(100, 110, 140, 0.4);
+  background:
+    /* Fine azurophilic granules - sparse, dust-like */
+    radial-gradient(circle at 8% 12%, rgba(140, 120, 160, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 15% 8%, rgba(135, 115, 155, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 22% 15%, rgba(145, 125, 165, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 10% 22%, rgba(140, 120, 160, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 75% 10%, rgba(135, 115, 155, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 82% 18%, rgba(145, 125, 165, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 78% 25%, rgba(140, 120, 160, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 85% 12%, rgba(135, 115, 155, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 70% 72%, rgba(145, 125, 165, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 78% 78%, rgba(140, 120, 160, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 85% 75%, rgba(135, 115, 155, 0.6) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 72% 85%, rgba(145, 125, 165, 0.6) 0.5px, transparent 0.5px),
+    /* Base cytoplasm - gray-blue ground-glass */
+    radial-gradient(
+      ellipse at 40% 40%,
+      rgba(195, 205, 220, 0.95) 0%,
+      rgba(175, 185, 205, 0.9) 50%,
+      rgba(160, 170, 190, 0.85) 100%
+    );
+  box-shadow: inset 0 0 8px rgba(100, 110, 140, 0.35);
+  position: relative;
 }
 
-/* Kidney bean-shaped nucleus - offset from center with indentation */
+/* Kidney bean-shaped nucleus - more folded/convoluted than metamyelocyte */
 .floating-cell.monocyte::before {
   content: '';
   position: absolute;
-  top: 20%;
-  left: 10%;
-  width: 55%;
-  height: 50%;
-  border-radius: 70% 30% 30% 70% / 60% 60% 40% 40%;
-  background: rgba(70, 50, 100, 0.75);
-  transform: rotate(-15deg);
+  top: 18%;
+  left: 12%;
+  width: 52%;
+  height: 48%;
+  border-radius: 68% 32% 35% 65% / 58% 55% 45% 42%;
+  background: radial-gradient(
+    ellipse at 40% 45%,
+    rgba(80, 60, 115, 0.85) 0%,
+    rgba(60, 40, 90, 0.95) 100%
+  );
+  transform: rotate(-12deg);
 }
 
-/* Second lobe of kidney bean creating the indented shape */
+/* Second lobe of kidney bean - creating deep indentation */
 .floating-cell.monocyte::after {
   content: '';
   position: absolute;
-  top: 35%;
-  left: 35%;
-  width: 40%;
-  height: 38%;
-  border-radius: 30% 70% 70% 30% / 40% 40% 60% 60%;
-  background: rgba(70, 50, 100, 0.75);
-  transform: rotate(-15deg);
+  top: 32%;
+  left: 38%;
+  width: 38%;
+  height: 35%;
+  border-radius: 32% 68% 65% 35% / 42% 45% 55% 58%;
+  background: radial-gradient(
+    ellipse at 60% 45%,
+    rgba(80, 60, 115, 0.85) 0%,
+    rgba(60, 40, 90, 0.95) 100%
+  );
+  transform: rotate(-12deg);
 }
 
 /* Eosinophil - multilobulated nucleus, dense small bright red/orange granules */
@@ -783,6 +820,26 @@ a {
     radial-gradient(circle at 60% 58%, rgba(225, 85, 60, 0.9) 1px, transparent 1.4px),
     radial-gradient(circle at 38% 65%, rgba(230, 90, 55, 0.9) 1px, transparent 1.4px),
     radial-gradient(circle at 55% 65%, rgba(215, 75, 50, 0.9) 1px, transparent 1.4px),
+    /* Center area granules - filling the middle */
+    radial-gradient(circle at 40% 35%, rgba(220, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 45% 38%, rgba(225, 90, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 50% 35%, rgba(230, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 55% 38%, rgba(215, 85, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 42% 42%, rgba(220, 75, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 48% 45%, rgba(225, 90, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 52% 42%, rgba(230, 80, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 58% 45%, rgba(215, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 40% 48%, rgba(220, 90, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 46% 52%, rgba(225, 75, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 50% 48%, rgba(230, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 54% 52%, rgba(215, 80, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 44% 55%, rgba(220, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 50% 58%, rgba(225, 85, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 56% 55%, rgba(230, 75, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 48% 62%, rgba(215, 90, 55, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 52% 58%, rgba(220, 80, 50, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 46% 32%, rgba(225, 85, 60, 0.9) 1px, transparent 1.4px),
+    radial-gradient(circle at 54% 32%, rgba(230, 90, 55, 0.9) 1px, transparent 1.4px),
     /* Base cytoplasm - pale pink */
     radial-gradient(
         ellipse at 50% 50%,
@@ -793,70 +850,68 @@ a {
   box-shadow: inset 0 0 8px rgba(180, 100, 80, 0.3);
 }
 
-/* Eosinophil multilobulated nucleus - irregular left lobe */
+/* Eosinophil bilobed nucleus - thin spectacle shape (scales with cell) */
 .floating-cell.eosinophil::before {
-  content: '';
-  position: absolute;
-  top: 32%;
-  left: 15%;
-  width: 24%;
-  height: 30%;
-  border-radius: 45% 55% 42% 58%;
-  background: rgba(80, 50, 120, 0.8);
-  transform: rotate(-18deg);
-  /* Additional lobe bulging */
-  box-shadow:
-    6px 14px 0 -5px rgba(80, 50, 120, 0.8),
-    -3px 18px 0 -6px rgba(80, 50, 120, 0.75);
+  display: none;
 }
-
-/* Eosinophil multilobulated nucleus - irregular right lobes */
+/* Bilobed nucleus - two small lobes with thin filament */
 .floating-cell.eosinophil::after {
   content: '';
   position: absolute;
-  top: 35%;
-  left: 50%;
-  width: 22%;
-  height: 26%;
-  border-radius: 55% 45% 48% 52%;
-  background: rgba(80, 50, 120, 0.8);
-  transform: rotate(15deg);
-  /* Multiple lobes with chromatin bridges */
-  box-shadow:
-    -14px 4px 0 -9px rgba(80, 50, 120, 0.7),
-    8px 12px 0 -5px rgba(80, 50, 120, 0.8),
-    15px 5px 0 -6px rgba(80, 50, 120, 0.75);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 35% 45%,
+    rgba(95, 65, 130, 0.8) 0%,
+    rgba(70, 45, 110, 0.9) 100%
+  );
+  /* Thin bilobed nucleus - two small lobes with very thin filament */
+  clip-path: polygon(
+    /* Left lobe - small oval */
+    12% 52%, 10% 42%, 14% 34%, 24% 32%, 32% 38%, 30% 48%, 28% 54%,
+    /* Very thin connecting filament */
+    32% 50%, 38% 48%, 44% 50%, 50% 48%, 56% 50%,
+    /* Right lobe - small oval */
+    60% 42%, 66% 34%, 76% 32%, 84% 38%, 86% 48%, 82% 56%, 74% 58%, 64% 54%,
+    /* Return through filament */
+    56% 54%, 50% 52%, 44% 54%, 38% 52%, 32% 54%,
+    /* Close left lobe */
+    24% 58%, 16% 56%
+  );
 }
 
-/* Eosinophil 3-lobe variant nucleus */
+/* Eosinophil 3-lobe variant nucleus - thin tri-lobed (scales with cell) */
 .floating-cell.eosinophil-3lobe::before {
-  content: '';
-  position: absolute;
-  top: 28%;
-  left: 10%;
-  width: 20%;
-  height: 26%;
-  border-radius: 48% 52% 45% 55%;
-  background: rgba(80, 50, 120, 0.8);
-  transform: rotate(-22deg);
-  /* Third lobe connection */
-  box-shadow: 10px 18px 0 -5px rgba(80, 50, 120, 0.8);
+  display: none;
 }
 .floating-cell.eosinophil-3lobe::after {
   content: '';
   position: absolute;
-  top: 32%;
-  left: 40%;
-  width: 18%;
-  height: 22%;
-  border-radius: 50% 50% 48% 52%;
-  background: rgba(80, 50, 120, 0.8);
-  transform: rotate(8deg);
-  /* Two more lobes with bridges */
-  box-shadow:
-    -12px 3px 0 -8px rgba(80, 50, 120, 0.7),
-    20px 0 0 -4px rgba(80, 50, 120, 0.8),
-    18px 14px 0 -5px rgba(80, 50, 120, 0.75);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(80, 50, 120, 0.75);
+  /* Thin 3-lobed nucleus with very thin filaments */
+  clip-path: polygon(
+    /* Left lobe - small */
+    8% 50%, 6% 42%, 10% 36%, 18% 34%, 24% 40%, 22% 48%, 20% 52%,
+    /* Thin filament to center */
+    24% 50%, 30% 48%, 36% 50%,
+    /* Center lobe - small */
+    38% 44%, 42% 38%, 50% 36%, 58% 40%, 60% 48%, 56% 54%,
+    /* Thin filament to right */
+    60% 50%, 66% 48%, 72% 50%,
+    /* Right lobe - small */
+    74% 44%, 80% 38%, 88% 40%, 92% 48%, 90% 56%, 82% 58%, 76% 54%,
+    /* Return path */
+    72% 54%, 66% 52%, 60% 54%,
+    56% 58%, 50% 60%, 44% 58%, 38% 56%,
+    36% 54%, 30% 52%, 24% 54%,
+    18% 56%, 12% 54%
+  );
 }
 
 /* Basophil - super rare (<1%), dark blue-purple granules with visible nucleus behind */
@@ -943,17 +998,36 @@ a {
   box-shadow: inset 0 0 8px rgba(60, 40, 100, 0.4);
 }
 
-/* Basophil nucleus - bilobed, visible behind granules */
+/* Basophil bilobed nucleus - thin S-shape behind granules (scales with cell) */
+/* Bilobed S-shaped nucleus - partially obscured by dense granules */
 .floating-cell.basophil::before {
+  display: none;
+}
+.floating-cell.basophil::after {
   content: '';
   position: absolute;
-  top: 28%;
-  left: 20%;
-  width: 28%;
-  height: 35%;
-  border-radius: 50%;
-  background: rgba(30, 15, 60, 0.85);
-  box-shadow: 22px 8px 0 -3px rgba(30, 15, 60, 0.85);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 40% 45%,
+    rgba(50, 30, 85, 0.75) 0%,
+    rgba(30, 15, 65, 0.85) 100%
+  );
+  /* Thin bilobed S-shaped nucleus - partially obscured by granules */
+  clip-path: polygon(
+    /* Left lobe - small */
+    15% 48%, 14% 40%, 18% 34%, 26% 33%, 32% 38%, 30% 46%, 28% 50%,
+    /* Thin S-curve filament */
+    32% 48%, 38% 44%, 46% 46%, 54% 52%, 62% 48%,
+    /* Right lobe - small */
+    66% 42%, 72% 36%, 80% 38%, 84% 46%, 82% 54%, 76% 58%, 68% 56%,
+    /* Return path */
+    62% 54%, 54% 58%, 46% 54%, 38% 52%, 32% 54%,
+    /* Close left lobe */
+    26% 56%, 18% 54%
+  );
 }
 
 /* Platelet - tiny purple-ish fragments, irregular shape */
@@ -2631,6 +2705,46 @@ a {
   .insight-title {
     font-size: 1.05rem;
   }
+
+  /* Research Tools mobile - center cards */
+  .research-tools {
+    padding: 60px 15px;
+  }
+
+  .tools-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    max-width: 100%;
+    padding: 0 5px;
+  }
+
+  .tool-card {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 400px;
+    width: 100%;
+  }
+
+  /* Footer mobile - wrap links */
+  .footer {
+    padding: 30px 15px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 30px);
+  }
+
+  .footer-social {
+    flex-wrap: wrap;
+    gap: 15px 20px;
+    justify-content: center;
+    padding: 0 10px;
+  }
+
+  .social-link {
+    font-size: 0.9rem;
+  }
+
+  .footer-text {
+    font-size: 0.8rem;
+  }
 }
 
 /* ==========================================
@@ -3134,5 +3248,492 @@ a {
     display: block;
     text-align: center;
     margin-bottom: 10px;
+  }
+}
+
+/* =================================================================
+   DEVICE-SPECIFIC BREAKPOINTS
+   ================================================================= */
+
+/* iPhone 14 Pro Max, 13 Pro Max, 12 Pro Max (430px) */
+@media (max-width: 430px) {
+  .hero-name {
+    font-size: 1.6rem;
+  }
+
+  .hero-title {
+    font-size: 1rem;
+  }
+
+  .hero-description {
+    font-size: 0.82rem;
+    padding: 0 5px;
+  }
+
+  .hero-profile-image,
+  .profile-flip-container {
+    width: 110px;
+    height: 110px;
+  }
+
+  .hero-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero-buttons .btn {
+    padding: 7px 12px;
+    font-size: 0.75rem;
+  }
+
+  /* Publication metrics */
+  .publication-metrics {
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 0 10px;
+  }
+
+  .metric-value {
+    font-size: 1.8rem;
+  }
+
+  .metric-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+  }
+
+  /* Footer */
+  .footer-social {
+    gap: 12px 18px;
+  }
+
+  .social-link {
+    font-size: 0.85rem;
+  }
+
+  /* CV adjustments */
+  .cv-container {
+    padding: 12px 10px;
+  }
+
+  .cv-entry {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .cv-years {
+    min-width: unset;
+    font-size: 0.75rem;
+  }
+}
+
+/* iPhone 14/13/12, iPhone 14/13/12 Pro (390-393px) */
+@media (max-width: 393px) {
+  .hero-content {
+    margin-top: 30px;
+    padding: 12px 15px;
+  }
+
+  .hero-name {
+    font-size: 1.5rem;
+  }
+
+  .hero-title {
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+
+  .hero-description {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+  }
+
+  .hero-greeting {
+    font-size: 0.9rem;
+    margin-top: 10px;
+  }
+
+  .hero-profile-image,
+  .profile-flip-container {
+    width: 100px;
+    height: 100px;
+  }
+
+  .hero-buttons .btn {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+  }
+
+  .microscope-link {
+    /* Keep consistent top position - only scale padding/size */
+    padding: 6px 8px;
+  }
+
+  .microscope-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .microscope-label {
+    font-size: 0.55rem;
+  }
+
+  /* Publication metrics */
+  .publication-metrics {
+    gap: 15px;
+    padding: 0 8px;
+  }
+
+  .metric-value {
+    font-size: 1.6rem;
+  }
+
+  .metric-label {
+    font-size: 0.75rem;
+  }
+
+  /* Footer */
+  .footer-social {
+    gap: 10px 15px;
+  }
+
+  .social-link {
+    font-size: 0.8rem;
+  }
+
+  /* CV adjustments */
+  .cv-header h1 {
+    font-size: 10pt;
+  }
+
+  .cv-header h2 {
+    font-size: 8.5pt;
+  }
+
+  .cv-metrics {
+    font-size: 7pt;
+  }
+}
+
+/* iPhone SE (2nd/3rd gen), iPhone 8, Samsung Galaxy S (375px) */
+@media (max-width: 375px) {
+  .hero-content {
+    margin-top: 25px;
+    padding: 10px 12px;
+  }
+
+  .hero-name {
+    font-size: 1.35rem;
+  }
+
+  .hero-title {
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+  }
+
+  .hero-description {
+    font-size: 0.75rem;
+    line-height: 1.45;
+    margin-bottom: 12px;
+  }
+
+  .hero-greeting {
+    font-size: 0.85rem;
+    margin-top: 8px;
+  }
+
+  .hero-profile-image,
+  .profile-flip-container {
+    width: 90px;
+    height: 90px;
+  }
+
+  .hero-buttons {
+    gap: 6px;
+  }
+
+  .hero-buttons .btn {
+    padding: 5px 8px;
+    font-size: 0.65rem;
+  }
+
+  .microscope-link {
+    /* Keep consistent top position - only scale padding/size */
+    padding: 5px 7px;
+    gap: 4px;
+  }
+
+  .microscope-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .microscope-label {
+    font-size: 0.5rem;
+  }
+
+  /* Publication metrics */
+  .publication-metrics {
+    gap: 12px;
+    padding: 0 5px;
+  }
+
+  .metric-value {
+    font-size: 1.4rem;
+  }
+
+  .metric-label {
+    font-size: 0.65rem;
+    letter-spacing: 0;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 25px 10px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 25px);
+  }
+
+  .footer-social {
+    gap: 8px 12px;
+  }
+
+  .social-link {
+    font-size: 0.75rem;
+  }
+
+  .footer-text {
+    font-size: 0.7rem;
+  }
+
+  /* CV adjustments */
+  .cv-container {
+    padding: 10px 8px;
+    font-size: 7.5pt;
+  }
+
+  .cv-header h1 {
+    font-size: 9pt;
+  }
+
+  .cv-header h2 {
+    font-size: 8pt;
+  }
+
+  .cv-section h3 {
+    font-size: 8pt;
+  }
+
+  .cv-pub-details {
+    font-size: 7pt;
+  }
+}
+
+/* Small Android phones, older iPhones (360px) */
+@media (max-width: 360px) {
+  .hero-content {
+    margin-top: 22px;
+    padding: 8px 10px;
+  }
+
+  .hero-name {
+    font-size: 1.25rem;
+  }
+
+  .hero-title {
+    font-size: 0.8rem;
+  }
+
+  .hero-description {
+    font-size: 0.7rem;
+  }
+
+  .hero-profile-image,
+  .profile-flip-container {
+    width: 85px;
+    height: 85px;
+  }
+
+  .hero-buttons .btn {
+    padding: 5px 7px;
+    font-size: 0.6rem;
+  }
+
+  /* Publication metrics */
+  .publication-metrics {
+    gap: 10px;
+    padding: 0 3px;
+  }
+
+  .metric-value {
+    font-size: 1.25rem;
+  }
+
+  .metric-label {
+    font-size: 0.6rem;
+  }
+
+  /* Footer */
+  .footer-social {
+    gap: 6px 10px;
+  }
+
+  .social-link {
+    font-size: 0.7rem;
+  }
+}
+
+/* iPhone SE 1st gen, very small screens (320px) */
+@media (max-width: 320px) {
+  .hero-content {
+    margin-top: 18px;
+    padding: 6px 8px;
+  }
+
+  .hero-name {
+    font-size: 1.1rem;
+  }
+
+  .hero-title {
+    font-size: 0.7rem;
+    margin-bottom: 8px;
+  }
+
+  .hero-description {
+    font-size: 0.65rem;
+    margin-bottom: 10px;
+  }
+
+  .hero-greeting {
+    font-size: 0.75rem;
+  }
+
+  .hero-profile-image,
+  .profile-flip-container {
+    width: 75px;
+    height: 75px;
+  }
+
+  .hero-buttons {
+    gap: 4px;
+  }
+
+  .hero-buttons .btn {
+    padding: 4px 6px;
+    font-size: 0.55rem;
+  }
+
+  .microscope-link {
+    /* Keep consistent top position - only scale padding/size */
+    padding: 4px 6px;
+    gap: 3px;
+  }
+
+  .microscope-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .microscope-label {
+    font-size: 0.45rem;
+  }
+
+  /* Publication metrics - very compact */
+  .publication-metrics {
+    gap: 8px;
+    padding: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .metric-value {
+    font-size: 1.1rem;
+  }
+
+  .metric-label {
+    font-size: 0.5rem;
+  }
+
+  /* Footer - very compact */
+  .footer {
+    padding: 20px 8px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+  }
+
+  .footer-social {
+    gap: 5px 8px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .social-link {
+    font-size: 0.65rem;
+  }
+
+  .footer-text {
+    font-size: 0.6rem;
+  }
+
+  /* CV - extremely compact */
+  .cv-container {
+    padding: 8px 6px;
+    font-size: 7pt;
+  }
+
+  .cv-header h1 {
+    font-size: 8pt;
+  }
+
+  .cv-header h2 {
+    font-size: 7pt;
+  }
+
+  .cv-section h3 {
+    font-size: 7pt;
+    margin-bottom: 6px;
+  }
+
+  .cv-entry {
+    margin-bottom: 8px;
+  }
+
+  .cv-pub-details {
+    font-size: 6.5pt;
+  }
+}
+
+/* Landscape mode for phones */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-content {
+    margin-top: 10px;
+    padding: 8px 20px;
+  }
+
+  .hero-profile-image,
+  .profile-flip-container {
+    width: 70px;
+    height: 70px;
+  }
+
+  .hero-name {
+    font-size: 1.3rem;
+  }
+
+  .hero-title {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+  }
+
+  .hero-description {
+    font-size: 0.75rem;
+    margin-bottom: 10px;
+  }
+
+  .hero-greeting {
+    display: none;
+  }
+
+  .microscope-link {
+    top: calc(env(safe-area-inset-top, 0px) + 10px);
   }
 }

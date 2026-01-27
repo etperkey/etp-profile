@@ -211,17 +211,23 @@ function BloodSmearBackground({
       } else if (morphType === 'polychromasia') {
         size = rbcMeanSize * 1.15; // Larger (reticulocytes)
       } else if (morphType === 'schistocyte') {
-        size = rbcMeanSize * 0.8; // Fragment, but not too small
+        size = rbcMeanSize * 1.1; // Slightly larger so fragment shape is visible
       } else if (morphType === 'teardrop') {
-        size = rbcMeanSize * 0.9;
+        size = rbcMeanSize * 1.0;
       } else if (morphType === 'rouleaux') {
-        size = rbcMeanSize * 0.9; // Base size for rouleaux
+        size = rbcMeanSize * 1.2; // Larger base size for visible stacks
+      } else if (morphType === 'burr-cell') {
+        size = rbcMeanSize * 1.3; // Larger so spicules are visible
+      } else if (morphType === 'acanthocyte') {
+        size = rbcMeanSize * 1.3; // Larger so irregular spicules are visible
+      } else if (morphType === 'bite-cell') {
+        size = rbcMeanSize * 1.1; // Slightly larger so bite is visible
       }
 
-      // Random rotation for rouleaux stacks (different orientations)
-      const rotation = morphType === 'rouleaux' ? Math.floor(Math.random() * 360) : 0;
-      // Random stack size for rouleaux (3-8 cells)
-      const stackSize = morphType === 'rouleaux' ? 3 + Math.floor(Math.random() * 6) : 0;
+      // Random rotation for all cells (different orientations)
+      const rotation = Math.floor(Math.random() * 360);
+      // Random stack size for rouleaux (3-5 cells for compact stacks)
+      const stackSize = morphType === 'rouleaux' ? 3 + Math.floor(Math.random() * 3) : 0;
 
       cellArray.push({
         id: i,
@@ -403,6 +409,40 @@ function BloodSmearBackground({
         duration: 25 + Math.random() * 35,
         delay: Math.random() * -30,
         opacity: 0.35 + Math.random() * 0.1,
+      });
+    }
+
+    // Add myelocytes - intermediate between blast and metamyelocyte
+    // Size: ~18-20µm, slightly smaller than promyelocyte
+    const numMyelocytes = Math.round(totalWBCs * (wbcMorphs.myelocyte || 0) / 100);
+    for (let i = 0; i < numMyelocytes; i++) {
+      const size = RBC_BASE_SIZE * 1.7 + wideGaussian() * (RBC_BASE_SIZE * 0.35);
+      cellArray.push({
+        id: cellId++,
+        type: 'myelocyte',
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: size,
+        duration: 25 + Math.random() * 35,
+        delay: Math.random() * -30,
+        opacity: 0.33 + Math.random() * 0.1,
+      });
+    }
+
+    // Add metamyelocytes - kidney-shaped nucleus, nearly mature
+    // Size: ~15-18µm, smaller than myelocyte
+    const numMetamyelocytes = Math.round(totalWBCs * (wbcMorphs.metamyelocyte || 0) / 100);
+    for (let i = 0; i < numMetamyelocytes; i++) {
+      const size = RBC_BASE_SIZE * 1.5 + wideGaussian() * (RBC_BASE_SIZE * 0.3);
+      cellArray.push({
+        id: cellId++,
+        type: 'metamyelocyte',
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: size,
+        duration: 25 + Math.random() * 35,
+        delay: Math.random() * -30,
+        opacity: 0.32 + Math.random() * 0.1,
       });
     }
 

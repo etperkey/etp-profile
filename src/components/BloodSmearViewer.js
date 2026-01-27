@@ -137,6 +137,7 @@ function BloodSmearViewer() {
   const [showPltPanel, setShowPltPanel] = useState(false); // PLT panel collapsed by default
   const [showWbcPanel, setShowWbcPanel] = useState(false); // WBC panel collapsed by default
   const [showMorphPanel, setShowMorphPanel] = useState(false); // Morphology panel collapsed by default
+  const [showMobileInfo, setShowMobileInfo] = useState(false); // Mobile info dropdown
 
   // RBC Morphology percentages (percentage of RBCs showing this morphology)
   const [rbcMorphologies, setRbcMorphologies] = useState({
@@ -167,6 +168,8 @@ function BloodSmearViewer() {
     blast: 0,
     smudgeCell: 0,
     auerRod: 0,
+    myelocyte: 0,
+    metamyelocyte: 0,
   });
 
   // PLT Morphology percentages
@@ -356,102 +359,12 @@ function BloodSmearViewer() {
     return { label: 'Marked Thrombocytosis', color: '#ef4444' };
   };
 
-  // Calculate cell percentages based on actual counts
-  const totalCellsPerUL = rbcPerUL + pltPerUL + wbcPerUL;
-  const rbcPercent = ((rbcPerUL / totalCellsPerUL) * 100).toFixed(1);
-  const pltPercent = ((pltPerUL / totalCellsPerUL) * 100).toFixed(1);
-  const wbcTotalPercent = ((wbcPerUL / totalCellsPerUL) * 100).toFixed(2);
-
   // Calculate absolute WBC counts for each cell type
   const getAbsoluteWbcCount = (type) => {
     const total = Object.values(wbcDifferential).reduce((a, b) => a + b, 0);
     const percent = total > 0 ? wbcDifferential[type] / total : 0;
     return Math.round(wbcPerUL * percent);
   };
-
-  // Format large numbers for display
-  const formatCount = (count) => {
-    if (count >= 1000000) return `${(count / 1000000).toFixed(2)}M`;
-    if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
-    return count.toString();
-  };
-
-  // Cell types with dynamic percentages and absolute counts
-  const cellTypes = [
-    {
-      type: 'rbc',
-      name: 'RBC (Erythrocyte)',
-      percent: `${rbcPercent}%`,
-      desc: 'of all cells',
-      absoluteCount: rbcPerUL,
-      absoluteDisplay: `${formatCount(rbcPerUL)}/µL`,
-      dynamic: true,
-    },
-    {
-      type: 'platelet',
-      name: 'Platelet',
-      percent: `${pltPercent}%`,
-      desc: 'of all cells',
-      absoluteCount: pltPerUL,
-      absoluteDisplay: `${formatCount(pltPerUL)}/µL`,
-      dynamic: true,
-    },
-    {
-      type: 'wbc-header',
-      name: 'WBCs (Total)',
-      percent: `${wbcTotalPercent}%`,
-      desc: 'of all cells',
-      absoluteCount: wbcPerUL,
-      absoluteDisplay: `${formatCount(wbcPerUL)}/µL`,
-      dynamic: true,
-      isHeader: true,
-    },
-    {
-      type: 'neutrophil',
-      name: 'Neutrophil',
-      percent: `${getNormalizedPercent('neutrophil')}%`,
-      desc: 'of WBCs',
-      absoluteCount: getAbsoluteWbcCount('neutrophil'),
-      absoluteDisplay: `${formatCount(getAbsoluteWbcCount('neutrophil'))}/µL`,
-      dynamic: true,
-    },
-    {
-      type: 'lymphocyte',
-      name: 'Lymphocyte',
-      percent: `${getNormalizedPercent('lymphocyte')}%`,
-      desc: 'of WBCs',
-      absoluteCount: getAbsoluteWbcCount('lymphocyte'),
-      absoluteDisplay: `${formatCount(getAbsoluteWbcCount('lymphocyte'))}/µL`,
-      dynamic: true,
-    },
-    {
-      type: 'monocyte',
-      name: 'Monocyte',
-      percent: `${getNormalizedPercent('monocyte')}%`,
-      desc: 'of WBCs',
-      absoluteCount: getAbsoluteWbcCount('monocyte'),
-      absoluteDisplay: `${formatCount(getAbsoluteWbcCount('monocyte'))}/µL`,
-      dynamic: true,
-    },
-    {
-      type: 'eosinophil',
-      name: 'Eosinophil',
-      percent: `${getNormalizedPercent('eosinophil')}%`,
-      desc: 'of WBCs',
-      absoluteCount: getAbsoluteWbcCount('eosinophil'),
-      absoluteDisplay: `${formatCount(getAbsoluteWbcCount('eosinophil'))}/µL`,
-      dynamic: true,
-    },
-    {
-      type: 'basophil',
-      name: 'Basophil',
-      percent: `${getNormalizedPercent('basophil')}%`,
-      desc: 'of WBCs',
-      absoluteCount: getAbsoluteWbcCount('basophil'),
-      absoluteDisplay: `${formatCount(getAbsoluteWbcCount('basophil'))}/µL`,
-      dynamic: true,
-    },
-  ];
 
   // =================================================================
   // RBC INDICES STATUS AND PRESETS
@@ -506,229 +419,403 @@ function BloodSmearViewer() {
     return (rbcInMillions * mcv / 10).toFixed(1);
   }, [rbcPerUL, mcv]);
 
-  // Calculate absolute nRBC count
-  const absoluteNrbcCount = useMemo(() => {
-    // nRBC per 100 RBCs converted to per µL
-    return Math.round((nrbcPer100RBC / 100) * rbcPerUL);
-  }, [nrbcPer100RBC, rbcPerUL]);
-
-  // Clinical anemia presets
-  // Each preset sets RBC count, MCV, RDW, nRBC, and associated morphologies
-  // nRBC values: normally 0, elevated in marrow stress/hemolysis/infiltration
-  const anemiaPresets = [
+  // Clinical presets - organized by primary cell line affected
+  const morphologyPresets = [
+    // === NORMAL ===
     {
       name: 'Normal',
-      desc: 'Healthy blood',
-      rbc: 5000000,
-      mcv: 90,
-      rdw: 13,
-      plt: 250000,
-      nrbc: 0,
-      rbcMorph: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
-      wbcMorph: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      pltMorph: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
+      desc: 'Healthy blood - no abnormal morphology',
+      rbcCount: 5000000, mcv: 90, rdw: 13, nrbc: 0,
+      pltCount: 250000,
+      wbcCount: 7500,
+      wbcDiff: { neutrophil: 60, lymphocyte: 30, monocyte: 5, eosinophil: 3, basophil: 2 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
     },
+    // === RBC DISORDERS ===
     {
       name: 'IDA',
-      desc: 'Iron Deficiency Anemia - reactive thrombocytosis',
-      rbc: 3500000,
-      mcv: 68,
-      rdw: 19,
-      plt: 380000, // Reactive thrombocytosis common in IDA
-      nrbc: 0,
-      rbcMorph: { spherocyte: 0, targetCell: 10, schistocyte: 0, sickleCell: 0, teardrop: 5, elliptocyte: 15, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
-      wbcMorph: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      pltMorph: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
-    },
-    {
-      name: 'Thalassemia',
-      desc: 'Thalassemia Minor/Intermedia',
-      rbc: 5500000,
-      mcv: 65,
-      rdw: 14,
-      plt: 280000,
-      nrbc: 3,
-      rbcMorph: { spherocyte: 0, targetCell: 25, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 5, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 10, pappenheimer: 0, polychromasia: 5 },
-      wbcMorph: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      pltMorph: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
-    },
-    {
-      name: 'B12/Folate',
-      desc: 'Megaloblastic Anemia - pancytopenia',
-      rbc: 2800000,
-      mcv: 115,
-      rdw: 18,
-      plt: 100000, // Thrombocytopenia common
-      nrbc: 2,
-      rbcMorph: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 5, elliptocyte: 15, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 10, basophilicStippling: 5, pappenheimer: 0, polychromasia: 5 },
-      wbcMorph: { bandNeutrophil: 0, hypersegmented: 30, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      pltMorph: { giantPlatelet: 5, plateletClump: 0, hypogranular: 10 },
-    },
-    {
-      name: 'Hemolytic',
-      desc: 'Hemolytic Anemia',
-      rbc: 3200000,
-      mcv: 105,
-      rdw: 20,
-      plt: 200000,
-      nrbc: 8,
-      rbcMorph: { spherocyte: 20, targetCell: 0, schistocyte: 5, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 25 },
-      wbcMorph: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      pltMorph: { giantPlatelet: 5, plateletClump: 0, hypogranular: 0 },
-    },
-    {
-      name: 'MDS',
-      desc: 'Myelodysplastic Syndrome - cytopenias',
-      rbc: 3000000,
-      mcv: 108,
-      rdw: 22,
-      plt: 80000, // Often thrombocytopenic
-      nrbc: 5,
-      rbcMorph: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 5, elliptocyte: 10, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 5, rouleaux: 0, howellJolly: 5, basophilicStippling: 10, pappenheimer: 5, polychromasia: 5 },
-      wbcMorph: { bandNeutrophil: 5, hypersegmented: 10, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 5, smudgeCell: 0, auerRod: 0 },
-      pltMorph: { giantPlatelet: 15, plateletClump: 0, hypogranular: 20 },
-    },
-    {
-      name: 'Myelophthisis',
-      desc: 'Bone marrow infiltration - pancytopenia',
-      rbc: 3000000,
-      mcv: 95,
-      rdw: 20,
-      plt: 60000, // Thrombocytopenic
-      nrbc: 15,
-      rbcMorph: { spherocyte: 0, targetCell: 5, schistocyte: 5, sickleCell: 0, teardrop: 30, elliptocyte: 10, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 5, pappenheimer: 0, polychromasia: 10 },
-      wbcMorph: { bandNeutrophil: 15, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 5, smudgeCell: 0, auerRod: 0 },
-      pltMorph: { giantPlatelet: 20, plateletClump: 5, hypogranular: 0 },
-    },
-    {
-      name: 'Thal Major',
-      desc: 'Thalassemia Major (severe)',
-      rbc: 2500000,
-      mcv: 60,
-      rdw: 25,
-      plt: 120000,
-      nrbc: 20,
-      rbcMorph: { spherocyte: 0, targetCell: 35, schistocyte: 5, sickleCell: 0, teardrop: 10, elliptocyte: 10, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 5, basophilicStippling: 20, pappenheimer: 5, polychromasia: 20 },
-      wbcMorph: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      pltMorph: { giantPlatelet: 5, plateletClump: 0, hypogranular: 0 },
-    },
-  ];
-
-  // Morphology presets - clinical scenarios with characteristic findings
-  // Platelet morphologies: giantPlatelet (compensatory production, MPN), plateletClump (activation, paraprotein), hypogranular (MDS, dysfunction)
-  const morphologyPresets = [
-    {
-      name: 'Normal',
-      desc: 'No abnormal morphology',
-      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
-      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
+      desc: 'Iron deficiency anemia - microcytic, high RDW',
+      rbcCount: 3800000, mcv: 70, rdw: 19, nrbc: 0,
+      pltCount: 420000,
+      wbcCount: 7000,
+      wbcDiff: { neutrophil: 60, lymphocyte: 30, monocyte: 5, eosinophil: 3, basophil: 2 },
+      rbc: { spherocyte: 0, targetCell: 10, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 20, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 5 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
       plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
     },
     {
-      name: 'Sickle Cell',
-      desc: 'Sickle cell disease with polychromasia',
-      rbc: { spherocyte: 0, targetCell: 15, schistocyte: 0, sickleCell: 25, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 5, basophilicStippling: 0, pappenheimer: 0, polychromasia: 20 },
-      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 10, plateletClump: 0, hypogranular: 0 }, // Functional asplenia → compensatory large PLT
+      name: 'Thal Minor',
+      desc: 'Thalassemia minor - microcytic, normal RDW, high RBC',
+      rbcCount: 5800000, mcv: 68, rdw: 14, nrbc: 1,
+      pltCount: 260000,
+      wbcCount: 7500,
+      wbcDiff: { neutrophil: 60, lymphocyte: 30, monocyte: 5, eosinophil: 3, basophil: 2 },
+      rbc: { spherocyte: 0, targetCell: 25, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 5, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 5, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
     },
     {
-      name: 'MAHA/TTP',
-      desc: 'Microangiopathic hemolytic anemia with schistocytes',
-      rbc: { spherocyte: 5, targetCell: 0, schistocyte: 25, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 15 },
-      wbc: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 25, plateletClump: 0, hypogranular: 0 }, // Large young PLT from rapid turnover
-    },
-    {
-      name: 'Liver Disease',
-      desc: 'Target cells, acanthocytes, stomatocytes',
-      rbc: { spherocyte: 0, targetCell: 20, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 15, stomatocyte: 10, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
-      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 5, plateletClump: 0, hypogranular: 10 }, // Hypogranular from TPO dysfunction
-    },
-    {
-      name: 'Myelofibrosis',
-      desc: 'Teardrop cells, nRBCs (set in RBC panel)',
-      rbc: { spherocyte: 0, targetCell: 5, schistocyte: 5, sickleCell: 0, teardrop: 30, elliptocyte: 10, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 5, pappenheimer: 0, polychromasia: 10 },
-      wbc: { bandNeutrophil: 10, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 5, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 30, plateletClump: 10, hypogranular: 5 }, // MPN: giant/bizarre PLT + clumps
-    },
-    {
-      name: 'Sepsis',
-      desc: 'Toxic changes, left shift, Döhle bodies',
-      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 5, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 5, acanthocyte: 0, stomatocyte: 0, rouleaux: 10, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
-      wbc: { bandNeutrophil: 25, hypersegmented: 0, toxicGranulation: 40, dohleBodies: 20, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 15, plateletClump: 5, hypogranular: 10 }, // DIC: activation + consumption + dysfunction
+      name: 'ACD',
+      desc: 'Anemia of chronic disease - normocytic',
+      rbcCount: 3800000, mcv: 85, rdw: 14, nrbc: 0,
+      pltCount: 320000,
+      wbcCount: 8000,
+      wbcDiff: { neutrophil: 60, lymphocyte: 30, monocyte: 6, eosinophil: 3, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
     },
     {
       name: 'B12/Folate',
-      desc: 'Megaloblastic anemia with hypersegmented neutrophils',
-      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 5, elliptocyte: 15, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 10, basophilicStippling: 5, pappenheimer: 0, polychromasia: 5 },
-      wbc: { bandNeutrophil: 0, hypersegmented: 30, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 10, plateletClump: 0, hypogranular: 15 }, // Megaloblastic: large dysplastic PLT
+      desc: 'Megaloblastic anemia - macrocytic',
+      rbcCount: 2800000, mcv: 115, rdw: 18, nrbc: 2,
+      pltCount: 100000,
+      wbcCount: 3500,
+      wbcDiff: { neutrophil: 55, lymphocyte: 35, monocyte: 6, eosinophil: 3, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 5, elliptocyte: 25, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 10, basophilicStippling: 5, pappenheimer: 0, polychromasia: 5 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 35, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 15, plateletClump: 0, hypogranular: 15 },
     },
     {
-      name: 'Viral (Mono)',
-      desc: 'Atypical lymphocytes (EBV/CMV)',
-      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
-      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 40, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 5, plateletClump: 0, hypogranular: 0 }, // Mild: immune-mediated consumption
+      name: 'Sickle Cell',
+      desc: 'Sickle cell disease - functional asplenia',
+      rbcCount: 3200000, mcv: 95, rdw: 20, nrbc: 5,
+      pltCount: 350000,
+      wbcCount: 12000,
+      wbcDiff: { neutrophil: 65, lymphocyte: 25, monocyte: 7, eosinophil: 2, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 15, schistocyte: 0, sickleCell: 25, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 10, basophilicStippling: 0, pappenheimer: 0, polychromasia: 20 },
+      wbc: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 10, plateletClump: 0, hypogranular: 0 },
     },
     {
-      name: 'CLL',
-      desc: 'Chronic lymphocytic leukemia with smudge cells',
-      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 5, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
-      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 10, blast: 0, smudgeCell: 35, auerRod: 0 },
-      plt: { giantPlatelet: 0, plateletClump: 5, hypogranular: 0 }, // Some clumping from Ig coating
-    },
-    {
-      name: 'AML',
-      desc: 'Acute myeloid leukemia with blasts and Auer rods',
-      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 5 },
-      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 50, smudgeCell: 0, auerRod: 15 },
-      plt: { giantPlatelet: 10, plateletClump: 0, hypogranular: 25 }, // Dysplastic: hypogranular + some large
+      name: 'Spherocytosis',
+      desc: 'Hereditary spherocytosis - chronic hemolysis',
+      rbcCount: 3500000, mcv: 82, rdw: 17, nrbc: 0,
+      pltCount: 280000,
+      wbcCount: 8000,
+      wbcDiff: { neutrophil: 60, lymphocyte: 30, monocyte: 5, eosinophil: 3, basophil: 2 },
+      rbc: { spherocyte: 35, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 20 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
     },
     {
       name: 'G6PD Crisis',
-      desc: 'Bite cells, blister cells from oxidative stress',
-      rbc: { spherocyte: 5, targetCell: 0, schistocyte: 5, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 25, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 15 },
-      wbc: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 5, plateletClump: 0, hypogranular: 0 }, // Compensatory from hemolysis
+      desc: 'Oxidative hemolysis - bite cells, Heinz bodies',
+      rbcCount: 2500000, mcv: 100, rdw: 22, nrbc: 5,
+      pltCount: 280000,
+      wbcCount: 12000,
+      wbcDiff: { neutrophil: 70, lymphocyte: 20, monocyte: 7, eosinophil: 2, basophil: 1 },
+      rbc: { spherocyte: 5, targetCell: 0, schistocyte: 5, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 30, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 20 },
+      wbc: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 5, plateletClump: 0, hypogranular: 0 },
     },
     {
-      name: 'Multiple Myeloma',
-      desc: 'Rouleaux formation from paraprotein',
-      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 40, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
-      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 0, plateletClump: 15, hypogranular: 5 }, // Paraprotein causes PLT clumping + dysfunction
+      name: 'MAHA/TTP',
+      desc: 'Microangiopathic hemolytic anemia - schistocytes',
+      rbcCount: 2800000, mcv: 95, rdw: 22, nrbc: 3,
+      pltCount: 25000,
+      wbcCount: 9000,
+      wbcDiff: { neutrophil: 70, lymphocyte: 20, monocyte: 7, eosinophil: 2, basophil: 1 },
+      rbc: { spherocyte: 5, targetCell: 0, schistocyte: 30, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 20 },
+      wbc: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 30, plateletClump: 0, hypogranular: 0 },
+    },
+    {
+      name: 'Lead Poisoning',
+      desc: 'Basophilic stippling - impaired heme synthesis',
+      rbcCount: 3800000, mcv: 78, rdw: 16, nrbc: 0,
+      pltCount: 250000,
+      wbcCount: 7000,
+      wbcDiff: { neutrophil: 60, lymphocyte: 30, monocyte: 5, eosinophil: 3, basophil: 2 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 40, pappenheimer: 0, polychromasia: 10 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
+    },
+    {
+      name: 'Polycythemia',
+      desc: 'Elevated RBC count - erythrocytosis',
+      rbcCount: 7000000, mcv: 88, rdw: 13, nrbc: 0,
+      pltCount: 280000,
+      wbcCount: 9000,
+      wbcDiff: { neutrophil: 62, lymphocyte: 28, monocyte: 6, eosinophil: 3, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
+    },
+    {
+      name: 'AIHA (Warm)',
+      desc: 'Warm autoimmune hemolytic anemia - DAT positive',
+      rbcCount: 3000000, mcv: 105, rdw: 20, nrbc: 3,
+      pltCount: 200000,
+      wbcCount: 10000,
+      wbcDiff: { neutrophil: 60, lymphocyte: 30, monocyte: 6, eosinophil: 3, basophil: 1 },
+      rbc: { spherocyte: 25, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 25 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
+    },
+    {
+      name: 'Elliptocytosis',
+      desc: 'Hereditary elliptocytosis - membrane defect',
+      rbcCount: 4200000, mcv: 88, rdw: 15, nrbc: 0,
+      pltCount: 250000,
+      wbcCount: 7500,
+      wbcDiff: { neutrophil: 60, lymphocyte: 30, monocyte: 5, eosinophil: 3, basophil: 2 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 40, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 5, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 5 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
+    },
+    {
+      name: 'Uremia',
+      desc: 'Renal failure - burr cells (echinocytes)',
+      rbcCount: 3200000, mcv: 90, rdw: 15, nrbc: 0,
+      pltCount: 180000,
+      wbcCount: 7000,
+      wbcDiff: { neutrophil: 65, lymphocyte: 25, monocyte: 6, eosinophil: 3, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 35, acanthocyte: 5, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 5, plateletClump: 0, hypogranular: 10 },
+    },
+    {
+      name: 'Post-splenectomy',
+      desc: 'Asplenia - Howell-Jolly bodies, targets',
+      rbcCount: 5200000, mcv: 90, rdw: 14, nrbc: 0,
+      pltCount: 450000,
+      wbcCount: 12000,
+      wbcDiff: { neutrophil: 55, lymphocyte: 35, monocyte: 6, eosinophil: 3, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 15, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 5, stomatocyte: 0, rouleaux: 0, howellJolly: 20, basophilicStippling: 5, pappenheimer: 5, polychromasia: 0 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 10, plateletClump: 5, hypogranular: 0 },
+    },
+    // === WBC DISORDERS ===
+    {
+      name: 'Leukocytosis',
+      desc: 'Elevated WBC - bacterial infection pattern',
+      rbcCount: 4800000, mcv: 90, rdw: 13, nrbc: 0,
+      pltCount: 280000,
+      wbcCount: 22000,
+      wbcDiff: { neutrophil: 78, lymphocyte: 15, monocyte: 5, eosinophil: 1, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 15, hypersegmented: 0, toxicGranulation: 10, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
+    },
+    {
+      name: 'Lymphocytosis',
+      desc: 'Viral infection - lymphocyte predominant',
+      rbcCount: 4800000, mcv: 90, rdw: 13, nrbc: 0,
+      pltCount: 200000,
+      wbcCount: 15000,
+      wbcDiff: { neutrophil: 25, lymphocyte: 70, monocyte: 3, eosinophil: 1, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 15, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
+    },
+    {
+      name: 'Eosinophilia',
+      desc: 'Allergic or parasitic - elevated eosinophils',
+      rbcCount: 4800000, mcv: 90, rdw: 13, nrbc: 0,
+      pltCount: 250000,
+      wbcCount: 12000,
+      wbcDiff: { neutrophil: 45, lymphocyte: 25, monocyte: 3, eosinophil: 25, basophil: 2 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
+    },
+    {
+      name: 'Sepsis',
+      desc: 'Bacterial sepsis - toxic changes, left shift',
+      rbcCount: 4000000, mcv: 88, rdw: 15, nrbc: 2,
+      pltCount: 90000,
+      wbcCount: 28000,
+      wbcDiff: { neutrophil: 85, lymphocyte: 8, monocyte: 5, eosinophil: 1, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 8, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 5, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 30, hypersegmented: 0, toxicGranulation: 45, dohleBodies: 25, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 20, plateletClump: 5, hypogranular: 15 },
+    },
+    {
+      name: 'Viral (Mono)',
+      desc: 'Infectious mononucleosis - atypical lymphocytosis',
+      rbcCount: 4800000, mcv: 90, rdw: 13, nrbc: 0,
+      pltCount: 150000,
+      wbcCount: 15000,
+      wbcDiff: { neutrophil: 25, lymphocyte: 65, monocyte: 8, eosinophil: 1, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 45, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 5, plateletClump: 0, hypogranular: 0 },
+    },
+    {
+      name: 'CLL',
+      desc: 'Chronic lymphocytic leukemia - smudge cells',
+      rbcCount: 4200000, mcv: 92, rdw: 14, nrbc: 0,
+      pltCount: 120000,
+      wbcCount: 85000,
+      wbcDiff: { neutrophil: 15, lymphocyte: 80, monocyte: 3, eosinophil: 1, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 10, blast: 0, smudgeCell: 40, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 5, hypogranular: 0 },
+    },
+    {
+      name: 'AML',
+      desc: 'Acute myeloid leukemia - blasts, Auer rods',
+      rbcCount: 2800000, mcv: 95, rdw: 16, nrbc: 3,
+      pltCount: 35000,
+      wbcCount: 45000,
+      wbcDiff: { neutrophil: 20, lymphocyte: 15, monocyte: 5, eosinophil: 0, basophil: 0 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 5 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 55, smudgeCell: 0, auerRod: 20, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 10, plateletClump: 0, hypogranular: 30 },
+    },
+    {
+      name: 'APL',
+      desc: 'Acute promyelocytic leukemia - t(15;17), DIC',
+      rbcCount: 3000000, mcv: 92, rdw: 15, nrbc: 2,
+      pltCount: 20000,
+      wbcCount: 12000,
+      wbcDiff: { neutrophil: 15, lymphocyte: 20, monocyte: 5, eosinophil: 0, basophil: 0 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 18, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 5, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 12 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 30, smudgeCell: 0, auerRod: 45, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 20, plateletClump: 5, hypogranular: 25 },
+    },
+    {
+      name: 'ALL',
+      desc: 'Acute lymphoblastic leukemia - lymphoid blasts',
+      rbcCount: 3000000, mcv: 92, rdw: 15, nrbc: 2,
+      pltCount: 30000,
+      wbcCount: 35000,
+      wbcDiff: { neutrophil: 15, lymphocyte: 25, monocyte: 3, eosinophil: 0, basophil: 0 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 5 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 55, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 10, plateletClump: 0, hypogranular: 20 },
+    },
+    {
+      name: 'CML',
+      desc: 'Chronic myeloid leukemia - Ph+, full myeloid spectrum',
+      rbcCount: 3800000, mcv: 90, rdw: 14, nrbc: 2,
+      pltCount: 450000,
+      wbcCount: 150000,
+      wbcDiff: { neutrophil: 55, lymphocyte: 10, monocyte: 5, eosinophil: 8, basophil: 12 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 5, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 5, pappenheimer: 0, polychromasia: 5 },
+      wbc: { bandNeutrophil: 20, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 5, smudgeCell: 0, auerRod: 0, myelocyte: 15, metamyelocyte: 12 },
+      plt: { giantPlatelet: 25, plateletClump: 15, hypogranular: 5 },
+    },
+    {
+      name: 'Chemo Neutropenia',
+      desc: 'Post-chemotherapy - severe neutropenia',
+      rbcCount: 3200000, mcv: 98, rdw: 15, nrbc: 0,
+      pltCount: 65000,
+      wbcCount: 1800,
+      wbcDiff: { neutrophil: 25, lymphocyte: 65, monocyte: 8, eosinophil: 1, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 5 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 5, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 10, plateletClump: 0, hypogranular: 5 },
+    },
+    // === PLT DISORDERS ===
+    {
+      name: 'Thrombocytosis',
+      desc: 'Reactive thrombocytosis - post-surgery/inflammation',
+      rbcCount: 4800000, mcv: 90, rdw: 13, nrbc: 0,
+      pltCount: 550000,
+      wbcCount: 10000,
+      wbcDiff: { neutrophil: 65, lymphocyte: 25, monocyte: 6, eosinophil: 3, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 5, plateletClump: 5, hypogranular: 0 },
     },
     {
       name: 'ITP',
-      desc: 'Immune thrombocytopenic purpura',
+      desc: 'Immune thrombocytopenia - large platelets',
+      rbcCount: 4800000, mcv: 90, rdw: 13, nrbc: 0,
+      pltCount: 15000,
+      wbcCount: 7500,
+      wbcDiff: { neutrophil: 60, lymphocyte: 30, monocyte: 5, eosinophil: 3, basophil: 2 },
       rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
-      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 35, plateletClump: 0, hypogranular: 0 }, // Large young PLT from rapid turnover
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 40, plateletClump: 0, hypogranular: 0 },
+    },
+    // === MULTI-LINEAGE DISORDERS ===
+    {
+      name: 'Myelofibrosis',
+      desc: 'Primary myelofibrosis - leukoerythroblastic picture',
+      rbcCount: 3000000, mcv: 95, rdw: 22, nrbc: 15,
+      pltCount: 450000,
+      wbcCount: 25000,
+      wbcDiff: { neutrophil: 70, lymphocyte: 15, monocyte: 8, eosinophil: 4, basophil: 3 },
+      rbc: { spherocyte: 0, targetCell: 5, schistocyte: 5, sickleCell: 0, teardrop: 35, elliptocyte: 10, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 5, pappenheimer: 0, polychromasia: 15 },
+      wbc: { bandNeutrophil: 15, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 8, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 35, plateletClump: 15, hypogranular: 5 },
+    },
+    {
+      name: 'ET/PV',
+      desc: 'MPN - thrombocytosis/erythrocytosis',
+      rbcCount: 6500000, mcv: 85, rdw: 14, nrbc: 0,
+      pltCount: 650000,
+      wbcCount: 15000,
+      wbcDiff: { neutrophil: 70, lymphocyte: 20, monocyte: 5, eosinophil: 3, basophil: 2 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 5, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 5, pappenheimer: 0, polychromasia: 5 },
+      wbc: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 40, plateletClump: 20, hypogranular: 5 },
+    },
+    {
+      name: 'Liver Disease',
+      desc: 'Cirrhosis - target cells, acanthocytes',
+      rbcCount: 3500000, mcv: 100, rdw: 16, nrbc: 0,
+      pltCount: 80000,
+      wbcCount: 4500,
+      wbcDiff: { neutrophil: 55, lymphocyte: 35, monocyte: 6, eosinophil: 3, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 25, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 15, stomatocyte: 10, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 5, plateletClump: 0, hypogranular: 15 },
+    },
+    {
+      name: 'Multiple Myeloma',
+      desc: 'Plasma cell neoplasm - rouleaux, anemia',
+      rbcCount: 3200000, mcv: 95, rdw: 15, nrbc: 0,
+      pltCount: 180000,
+      wbcCount: 5500,
+      wbcDiff: { neutrophil: 50, lymphocyte: 40, monocyte: 6, eosinophil: 3, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 45, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 0, plateletClump: 15, hypogranular: 5 },
     },
     {
       name: 'DIC',
       desc: 'Disseminated intravascular coagulation',
-      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 20, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 5, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 10 },
-      wbc: { bandNeutrophil: 15, hypersegmented: 0, toxicGranulation: 20, dohleBodies: 10, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 20, plateletClump: 10, hypogranular: 15 }, // Consumption + dysfunction + activation
+      rbcCount: 3500000, mcv: 92, rdw: 18, nrbc: 3,
+      pltCount: 45000,
+      wbcCount: 18000,
+      wbcDiff: { neutrophil: 80, lymphocyte: 12, monocyte: 5, eosinophil: 2, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 25, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 8, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 12 },
+      wbc: { bandNeutrophil: 20, hypersegmented: 0, toxicGranulation: 25, dohleBodies: 15, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 25, plateletClump: 10, hypogranular: 20 },
     },
     {
-      name: 'ET/PV',
-      desc: 'Essential Thrombocythemia / Polycythemia Vera',
-      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 5, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 5, pappenheimer: 0, polychromasia: 5 },
-      wbc: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
-      plt: { giantPlatelet: 35, plateletClump: 15, hypogranular: 5 }, // MPN: bizarre giant PLT + clumps
+      name: 'Pancytopenia',
+      desc: 'Bone marrow failure - all lines low',
+      rbcCount: 2800000, mcv: 100, rdw: 16, nrbc: 0,
+      pltCount: 40000,
+      wbcCount: 2500,
+      wbcDiff: { neutrophil: 35, lymphocyte: 55, monocyte: 8, eosinophil: 1, basophil: 1 },
+      rbc: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 5 },
+      wbc: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0, myelocyte: 0, metamyelocyte: 0 },
+      plt: { giantPlatelet: 15, plateletClump: 0, hypogranular: 0 },
     },
   ];
 
   // Apply a morphology preset
   const applyMorphologyPreset = (preset) => {
-    setRbcMorphologies(preset.rbc);
-    setWbcMorphologies(preset.wbc);
-    setPltMorphologies(preset.plt);
+    // Set cell counts and indices
+    if (preset.rbcCount !== undefined) setRbcPerUL(preset.rbcCount);
+    if (preset.mcv !== undefined) setMcv(preset.mcv);
+    if (preset.rdw !== undefined) setRdw(preset.rdw);
+    if (preset.nrbc !== undefined) setNrbcPer100RBC(preset.nrbc);
+    if (preset.pltCount !== undefined) setPltPerUL(preset.pltCount);
+    if (preset.wbcCount !== undefined) setWbcPerUL(preset.wbcCount);
+    if (preset.wbcDiff) setWbcDifferential(preset.wbcDiff);
+    // Set morphologies
+    if (preset.rbc) setRbcMorphologies(preset.rbc);
+    if (preset.wbc) setWbcMorphologies(preset.wbc);
+    if (preset.plt) setPltMorphologies(preset.plt);
   };
 
   // Update a single RBC morphology
@@ -747,32 +834,12 @@ function BloodSmearViewer() {
     }));
   };
 
-  // Platelet presets with morphologies
-  const plateletPresets = [
-    { value: 250000, label: 'Normal', desc: '250K/µL', morph: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 } },
-    { value: 25000, label: 'ITP', desc: 'Immune Thrombocytopenic Purpura', morph: { giantPlatelet: 30, plateletClump: 0, hypogranular: 0 } },
-    { value: 50000, label: 'Moderate ↓', desc: 'Moderate thrombocytopenia', morph: { giantPlatelet: 10, plateletClump: 0, hypogranular: 0 } },
-    { value: 500000, label: 'Reactive', desc: 'Reactive thrombocytosis', morph: { giantPlatelet: 5, plateletClump: 5, hypogranular: 0 } },
-    { value: 700000, label: 'ET', desc: 'Essential Thrombocythemia', morph: { giantPlatelet: 25, plateletClump: 10, hypogranular: 5 } },
-  ];
-
-  // Apply platelet preset (count + morphology)
-  const applyPlateletPreset = (preset) => {
-    setPltPerUL(preset.value);
-    if (preset.morph) setPltMorphologies(preset.morph);
-  };
-
-  // Apply an anemia preset (includes morphologies)
-  const applyAnemiaPreset = (preset) => {
-    setRbcPerUL(preset.rbc);
-    setMcv(preset.mcv);
-    setPltPerUL(preset.plt);
-    setRdw(preset.rdw);
-    setNrbcPer100RBC(preset.nrbc);
-    // Also set morphologies if provided
-    if (preset.rbcMorph) setRbcMorphologies(preset.rbcMorph);
-    if (preset.wbcMorph) setWbcMorphologies(preset.wbcMorph);
-    if (preset.pltMorph) setPltMorphologies(preset.pltMorph);
+  // Update a single PLT morphology
+  const updatePltMorphology = (key, value) => {
+    setPltMorphologies((prev) => ({
+      ...prev,
+      [key]: Math.max(0, Math.min(100, value)),
+    }));
   };
 
   // Get nRBC status label
@@ -781,27 +848,6 @@ function BloodSmearViewer() {
     if (nrbcPer100RBC <= 5) return { label: 'Present', color: '#f59e0b' };
     if (nrbcPer100RBC <= 15) return { label: 'Elevated', color: '#f97316' };
     return { label: 'Markedly Elevated', color: '#ef4444' };
-  };
-
-  // =================================================================
-  // WBC COUNT AND DIFFERENTIAL
-  // =================================================================
-
-  // WBC count presets with clinical context
-  const wbcPresets = [
-    { value: 2500, label: 'Leukopenia', desc: '2,500/µL', morph: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 } },
-    { value: 7500, label: 'Normal', desc: '7,500/µL', morph: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 } },
-    { value: 15000, label: 'Mild ↑', desc: '15,000/µL - bacterial infection', morph: { bandNeutrophil: 15, hypersegmented: 0, toxicGranulation: 5, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 } },
-    { value: 30000, label: 'Leukocytosis', desc: '30,000/µL - severe infection', morph: { bandNeutrophil: 25, hypersegmented: 0, toxicGranulation: 20, dohleBodies: 10, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 } },
-    { value: 75000, label: 'Marked ↑', desc: '75,000/µL - leukemoid reaction', morph: { bandNeutrophil: 35, hypersegmented: 0, toxicGranulation: 30, dohleBodies: 15, atypicalLymph: 0, blast: 5, smudgeCell: 0, auerRod: 0 } },
-    { value: 150000, label: 'CLL', desc: '150,000/µL - CLL (smudge cells)', morph: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 40, auerRod: 0 } },
-    { value: 500000, label: 'Blast Crisis', desc: '500,000/µL - acute leukemia', morph: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 60, smudgeCell: 0, auerRod: 10 } },
-  ];
-
-  // Apply WBC preset (count + morphology)
-  const applyWbcPreset = (preset) => {
-    setWbcPerUL(preset.value);
-    if (preset.morph) setWbcMorphologies(preset.morph);
   };
 
   // Get WBC status label
@@ -813,39 +859,6 @@ function BloodSmearViewer() {
     if (wbcPerUL <= 100000) return { label: 'Marked Leukocytosis', color: '#ef4444' };
     return { label: 'Leukemia Range', color: '#dc2626' };
   };
-
-  // WBC differential presets with clinical scenarios
-  const differentialPresets = [
-    {
-      name: 'Normal',
-      diff: { neutrophil: 60, lymphocyte: 30, monocyte: 5, eosinophil: 3, basophil: 2 },
-    },
-    {
-      name: 'Bacterial Infection',
-      desc: 'Neutrophilia',
-      diff: { neutrophil: 85, lymphocyte: 10, monocyte: 3, eosinophil: 1, basophil: 1 },
-    },
-    {
-      name: 'Viral Infection',
-      desc: 'Lymphocytosis',
-      diff: { neutrophil: 30, lymphocyte: 60, monocyte: 6, eosinophil: 3, basophil: 1 },
-    },
-    {
-      name: 'Parasitic/Allergy',
-      desc: 'Eosinophilia',
-      diff: { neutrophil: 45, lymphocyte: 25, monocyte: 5, eosinophil: 23, basophil: 2 },
-    },
-    {
-      name: 'Chronic Inflammation',
-      desc: 'Monocytosis',
-      diff: { neutrophil: 50, lymphocyte: 25, monocyte: 18, eosinophil: 5, basophil: 2 },
-    },
-    {
-      name: 'CML',
-      desc: 'Left shift + basophilia',
-      diff: { neutrophil: 55, lymphocyte: 15, monocyte: 10, eosinophil: 8, basophil: 12 },
-    },
-  ];
 
   // Update a single differential value
   const updateDifferential = (type, value) => {
@@ -945,46 +958,6 @@ function BloodSmearViewer() {
         {currentZoom > 1 && <p className="pan-hint">Drag to pan the field</p>}
       </div>
 
-      {/* Cell Types Legend - always visible */}
-      <div className="cell-types-panel">
-        <h3>Cell Types</h3>
-
-        {/* Hemoglobin Summary */}
-        <div className="hgb-summary">
-          <span className="hgb-label">Hgb</span>
-          <span className="hgb-value" style={{ color: getHgbStatus().color }}>
-            {hemoglobin} g/dL
-          </span>
-          <span className="hgb-status" style={{ color: getHgbStatus().color }}>
-            {getHgbStatus().label}
-          </span>
-        </div>
-
-        <div className="cell-types-list">
-          {cellTypes.map((cell) => (
-            <div
-              key={cell.type}
-              className={`cell-type-item ${cell.isHeader ? 'wbc-header-row' : ''}`}
-            >
-              {!cell.isHeader && <span className={`legend-dot ${cell.type}`}></span>}
-              {cell.isHeader && <span className="wbc-header-icon">┌</span>}
-              <div className="cell-type-info">
-                <span className={`cell-type-name ${cell.isHeader ? 'header-name' : ''}`}>
-                  {cell.name}
-                </span>
-                <span className={`cell-type-percent ${cell.dynamic ? 'dynamic' : ''}`}>
-                  <span className={cell.dynamic ? 'dynamic-value' : ''}>{cell.percent}</span>{' '}
-                  <span className="cell-type-desc">{cell.desc}</span>
-                </span>
-                <span className="cell-type-absolute">
-                  {cell.absoluteDisplay}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Indices Panels Container - stacked in top left */}
       <div className="indices-panels-container">
         {/* RBC Indices Control - collapsible panel */}
@@ -993,39 +966,15 @@ function BloodSmearViewer() {
           <span className="toggle-icon">{showRbcPanel ? '▼' : '▶'}</span>
           <span>RBC</span>
           <span className="panel-summary" style={{ color: getHgbStatus().color }}>
-            Hgb {hemoglobin}
+            Hgb {hemoglobin} g/dL
           </span>
         </button>
 
         {showRbcPanel && (
           <div className="panel-content">
-            {/* Anemia Presets */}
-            <div className="anemia-presets">
-              {anemiaPresets.map((preset) => (
-                <button
-                  key={preset.name}
-                  className={`anemia-preset-btn ${
-                    rbcPerUL === preset.rbc && mcv === preset.mcv && rdw === preset.rdw && pltPerUL === preset.plt && nrbcPer100RBC === preset.nrbc
-                      ? 'active'
-                      : ''
-                  }`}
-                  onClick={() => applyAnemiaPreset(preset)}
-                  title={preset.desc}
-                >
-                  {preset.name}
-                </button>
-              ))}
-            </div>
-
             {/* RBC Count */}
             <div className="rbc-index-row">
-              <div className="rbc-index-header">
-                <span className="rbc-index-label">RBC</span>
-                <span className="rbc-index-value">{(rbcPerUL / 1000000).toFixed(1)}M/µL</span>
-                <span className="rbc-index-status" style={{ color: getRbcStatus().color }}>
-                  {getRbcStatus().label}
-                </span>
-              </div>
+              <span className="rbc-index-label">RBC</span>
               <input
                 type="range"
                 min="2000000"
@@ -1035,51 +984,45 @@ function BloodSmearViewer() {
                 onChange={(e) => setRbcPerUL(Number(e.target.value))}
                 className="rbc-slider"
               />
+              <span className="rbc-index-value">{(rbcPerUL / 1000000).toFixed(1)}<span className="unit">M/µL</span></span>
+              <span className="rbc-index-status" style={{ color: getRbcStatus().color }}>
+                {getRbcStatus().label}
+              </span>
             </div>
 
-            {/* Hemoglobin - Calculated from RBC × MCV × MCHC */}
+            {/* Hemoglobin */}
             <div className="rbc-index-row calculated-row">
-              <div className="rbc-index-header">
-                <span className="rbc-index-label">Hgb</span>
-                <span className="rbc-index-value">{hemoglobin} g/dL</span>
-                <span className="rbc-index-status" style={{ color: getHgbStatus().color }}>
-                  {getHgbStatus().label}
-                </span>
-              </div>
+              <span className="rbc-index-label">Hgb</span>
               <div className="calculated-bar">
                 <div
                   className="calculated-fill hgb-fill"
                   style={{ width: `${Math.min(100, (parseFloat(hemoglobin) / 17) * 100)}%` }}
                 />
               </div>
+              <span className="rbc-index-value">{hemoglobin}<span className="unit">g/dL</span></span>
+              <span className="rbc-index-status" style={{ color: getHgbStatus().color }}>
+                {getHgbStatus().label}
+              </span>
             </div>
 
-            {/* Hematocrit - Calculated from RBC × MCV */}
+            {/* Hematocrit */}
             <div className="rbc-index-row calculated-row">
-              <div className="rbc-index-header">
-                <span className="rbc-index-label">Hct</span>
-                <span className="rbc-index-value">{hematocrit}%</span>
-                <span className="rbc-index-status" style={{ color: getHgbStatus().color }}>
-                  {parseFloat(hematocrit) < 36 ? 'Low' : parseFloat(hematocrit) <= 50 ? 'Normal' : 'High'}
-                </span>
-              </div>
+              <span className="rbc-index-label">Hct</span>
               <div className="calculated-bar">
                 <div
                   className="calculated-fill hct-fill"
                   style={{ width: `${Math.min(100, (parseFloat(hematocrit) / 50) * 100)}%` }}
                 />
               </div>
+              <span className="rbc-index-value">{hematocrit}%</span>
+              <span className="rbc-index-status" style={{ color: getHgbStatus().color }}>
+                {parseFloat(hematocrit) < 36 ? 'Low' : parseFloat(hematocrit) <= 50 ? 'Normal' : 'High'}
+              </span>
             </div>
 
             {/* MCV */}
             <div className="rbc-index-row">
-              <div className="rbc-index-header">
-                <span className="rbc-index-label">MCV</span>
-                <span className="rbc-index-value">{mcv} fL</span>
-                <span className="rbc-index-status" style={{ color: getMcvStatus().color }}>
-                  {getMcvStatus().label}
-                </span>
-              </div>
+              <span className="rbc-index-label">MCV</span>
               <input
                 type="range"
                 min="60"
@@ -1089,17 +1032,15 @@ function BloodSmearViewer() {
                 onChange={(e) => setMcv(Number(e.target.value))}
                 className="rbc-slider mcv-slider"
               />
+              <span className="rbc-index-value">{mcv} fL</span>
+              <span className="rbc-index-status" style={{ color: getMcvStatus().color }}>
+                {getMcvStatus().label}
+              </span>
             </div>
 
             {/* RDW */}
             <div className="rbc-index-row">
-              <div className="rbc-index-header">
-                <span className="rbc-index-label">RDW</span>
-                <span className="rbc-index-value">{rdw}%</span>
-                <span className="rbc-index-status" style={{ color: getRdwStatus().color }}>
-                  {getRdwStatus().label}
-                </span>
-              </div>
+              <span className="rbc-index-label">RDW</span>
               <input
                 type="range"
                 min="10"
@@ -1109,18 +1050,15 @@ function BloodSmearViewer() {
                 onChange={(e) => setRdw(Number(e.target.value))}
                 className="rbc-slider rdw-slider"
               />
+              <span className="rbc-index-value">{rdw}%</span>
+              <span className="rbc-index-status" style={{ color: getRdwStatus().color }}>
+                {getRdwStatus().label}
+              </span>
             </div>
 
-            {/* nRBC - Nucleated RBCs */}
+            {/* nRBC */}
             <div className="rbc-index-row nrbc-row">
-              <div className="rbc-index-header">
-                <span className="rbc-index-label nrbc-label">nRBC</span>
-                <span className="rbc-index-value">{nrbcPer100RBC}/100</span>
-                <span className="rbc-index-absolute">({formatCount(absoluteNrbcCount)}/µL)</span>
-                <span className="rbc-index-status" style={{ color: getNrbcStatus().color }}>
-                  {getNrbcStatus().label}
-                </span>
-              </div>
+              <span className="rbc-index-label nrbc-label">nRBC</span>
               <input
                 type="range"
                 min="0"
@@ -1130,9 +1068,47 @@ function BloodSmearViewer() {
                 onChange={(e) => setNrbcPer100RBC(Number(e.target.value))}
                 className="rbc-slider nrbc-slider"
               />
+              <span className="rbc-index-value">{nrbcPer100RBC}/100</span>
+              <span className="rbc-index-status" style={{ color: getNrbcStatus().color }}>
+                {getNrbcStatus().label}
+              </span>
             </div>
 
-            <p className="rbc-reference">Normal: nRBC 0/100 RBCs</p>
+            {/* RBC Morphologies */}
+            <div className="morph-section">
+              <h4 className="morph-section-title rbc-morph-title">RBC Morphology</h4>
+              <div className="morph-sliders">
+                {[
+                  { key: 'spherocyte', label: 'Spherocyte' },
+                  { key: 'targetCell', label: 'Target Cell' },
+                  { key: 'schistocyte', label: 'Schistocyte' },
+                  { key: 'sickleCell', label: 'Sickle Cell' },
+                  { key: 'teardrop', label: 'Teardrop' },
+                  { key: 'elliptocyte', label: 'Elliptocyte' },
+                  { key: 'biteCell', label: 'Bite Cell' },
+                  { key: 'burrCell', label: 'Burr Cell' },
+                  { key: 'acanthocyte', label: 'Acanthocyte' },
+                  { key: 'stomatocyte', label: 'Stomatocyte' },
+                  { key: 'rouleaux', label: 'Rouleaux' },
+                  { key: 'howellJolly', label: 'Howell-Jolly' },
+                  { key: 'basophilicStippling', label: 'Baso Stippling' },
+                  { key: 'polychromasia', label: 'Polychromasia' },
+                ].map((morph) => (
+                  <div key={morph.key} className="morph-slider-row">
+                    <span className="morph-label">{morph.label}</span>
+                    <input
+                      type="range"
+                      min="0"
+                      max="50"
+                      value={rbcMorphologies[morph.key]}
+                      onChange={(e) => updateRbcMorphology(morph.key, Number(e.target.value))}
+                      className="morph-slider rbc-morph-slider"
+                    />
+                    <span className="morph-percent">{rbcMorphologies[morph.key]}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -1143,18 +1119,15 @@ function BloodSmearViewer() {
           <span className="toggle-icon">{showPltPanel ? '▼' : '▶'}</span>
           <span>PLT</span>
           <span className="panel-summary" style={{ color: getPltStatus().color }}>
-            {(pltPerUL / 1000).toFixed(0)}K
+            {(pltPerUL / 1000).toFixed(0)}K/µL
           </span>
         </button>
 
         {showPltPanel && (
           <div className="panel-content">
-            <div className="plt-current">
-              <span className="plt-value">{(pltPerUL / 1000).toFixed(0)}K/µL</span>
-              <span className="plt-status" style={{ color: getPltStatus().color }}>
-                {getPltStatus().label}
-              </span>
-            </div>
+            <span className="panel-status" style={{ color: getPltStatus().color }}>
+              {getPltStatus().label}
+            </span>
             <input
               type="range"
               min="10000"
@@ -1164,19 +1137,31 @@ function BloodSmearViewer() {
               onChange={(e) => setPltPerUL(Number(e.target.value))}
               className="plt-slider"
             />
-            <div className="plt-presets">
-              {plateletPresets.map((preset) => (
-                <button
-                  key={preset.label}
-                  className={`plt-preset-btn ${pltPerUL === preset.value ? 'active' : ''}`}
-                  onClick={() => applyPlateletPreset(preset)}
-                  title={preset.desc}
-                >
-                  {preset.label}
-                </button>
-              ))}
+
+            {/* PLT Morphologies */}
+            <div className="morph-section">
+              <h4 className="morph-section-title plt-morph-title">PLT Morphology</h4>
+              <div className="morph-sliders">
+                {[
+                  { key: 'giantPlatelet', label: 'Giant PLT' },
+                  { key: 'plateletClump', label: 'PLT Clump' },
+                  { key: 'hypogranular', label: 'Hypogranular' },
+                ].map((morph) => (
+                  <div key={morph.key} className="morph-slider-row">
+                    <span className="morph-label">{morph.label}</span>
+                    <input
+                      type="range"
+                      min="0"
+                      max="50"
+                      value={pltMorphologies[morph.key]}
+                      onChange={(e) => updatePltMorphology(morph.key, Number(e.target.value))}
+                      className="morph-slider plt-morph-slider"
+                    />
+                    <span className="morph-percent">{pltMorphologies[morph.key]}%</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <p className="plt-reference">Normal: 150-400K/µL</p>
           </div>
         )}
       </div>
@@ -1187,18 +1172,15 @@ function BloodSmearViewer() {
           <span className="toggle-icon">{showWbcPanel ? '▼' : '▶'}</span>
           <span>WBC</span>
           <span className="panel-summary" style={{ color: getWbcStatus().color }}>
-            {(wbcPerUL / 1000).toFixed(1)}K
+            {(wbcPerUL / 1000).toFixed(1)}K/µL
           </span>
         </button>
 
         {showWbcPanel && (
           <div className="panel-content">
-            <div className="wbc-current">
-              <span className="wbc-value">{wbcPerUL.toLocaleString()}/µL</span>
-              <span className="wbc-status" style={{ color: getWbcStatus().color }}>
-                {getWbcStatus().label}
-              </span>
-            </div>
+            <span className="panel-status" style={{ color: getWbcStatus().color }}>
+              {getWbcStatus().label}
+            </span>
             <input
               type="range"
               min="1000"
@@ -1208,37 +1190,10 @@ function BloodSmearViewer() {
               onChange={(e) => setWbcPerUL(Number(e.target.value))}
               className="wbc-slider"
             />
-            <div className="wbc-presets">
-              {wbcPresets.map((preset) => (
-                <button
-                  key={preset.value}
-                  className={`wbc-preset-btn ${wbcPerUL === preset.value ? 'active' : ''}`}
-                  onClick={() => applyWbcPreset(preset)}
-                  title={preset.desc}
-                >
-                  {preset.label}
-                </button>
-              ))}
-            </div>
-            <p className="wbc-reference">Normal: 5,000-10,000/µL</p>
 
             {/* WBC Differential Control */}
             <div className="differential-section">
               <h4>WBC Differential</h4>
-              <div className="differential-presets">
-                {differentialPresets.map((preset) => (
-                  <button
-                    key={preset.name}
-                    className={`diff-preset-btn ${
-                      JSON.stringify(wbcDifferential) === JSON.stringify(preset.diff) ? 'active' : ''
-                    }`}
-                    onClick={() => setWbcDifferential(preset.diff)}
-                    title={preset.desc || preset.name}
-                  >
-                    {preset.name}
-                  </button>
-                ))}
-              </div>
 
               <div className="differential-sliders">
                 {[
@@ -1262,6 +1217,39 @@ function BloodSmearViewer() {
                       style={{ accentColor: cell.color }}
                     />
                     <span className="diff-percent">{getNormalizedPercent(cell.key)}%</span>
+                    <span className="diff-absolute">{(getAbsoluteWbcCount(cell.key) / 1000).toFixed(1)}K</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* WBC Morphologies */}
+            <div className="morph-section">
+              <h4 className="morph-section-title wbc-morph-title">WBC Morphology</h4>
+              <div className="morph-sliders">
+                {[
+                  { key: 'bandNeutrophil', label: 'Band Neut' },
+                  { key: 'hypersegmented', label: 'Hyperseg' },
+                  { key: 'toxicGranulation', label: 'Toxic Gran' },
+                  { key: 'dohleBodies', label: 'Döhle Bodies' },
+                  { key: 'atypicalLymph', label: 'Atypical Lymph' },
+                  { key: 'blast', label: 'Blast' },
+                  { key: 'smudgeCell', label: 'Smudge Cell' },
+                  { key: 'auerRod', label: 'Promyelocyte' },
+                  { key: 'myelocyte', label: 'Myelocyte' },
+                  { key: 'metamyelocyte', label: 'Metamyelo' },
+                ].map((morph) => (
+                  <div key={morph.key} className="morph-slider-row">
+                    <span className="morph-label">{morph.label}</span>
+                    <input
+                      type="range"
+                      min="0"
+                      max="50"
+                      value={wbcMorphologies[morph.key]}
+                      onChange={(e) => updateWbcMorphology(morph.key, Number(e.target.value))}
+                      className="morph-slider wbc-morph-slider"
+                    />
+                    <span className="morph-percent">{wbcMorphologies[morph.key]}%</span>
                   </div>
                 ))}
               </div>
@@ -1270,14 +1258,15 @@ function BloodSmearViewer() {
         )}
         </div>
 
-        {/* Morphology Control - collapsible panel */}
+        {/* Clinical Cases - collapsible panel */}
         <div className={`morph-control-panel ${showMorphPanel ? 'expanded' : 'collapsed'}`}>
           <button className="panel-toggle morph-toggle" onClick={() => setShowMorphPanel(!showMorphPanel)}>
             <span className="toggle-icon">{showMorphPanel ? '▼' : '▶'}</span>
-            <span>Morphology</span>
+            <span>Cases</span>
             <span className="panel-summary morph-summary">
               {Object.values(rbcMorphologies).some(v => v > 0) ||
-               Object.values(wbcMorphologies).some(v => v > 0) ? '•' : ''}
+               Object.values(wbcMorphologies).some(v => v > 0) ||
+               Object.values(pltMorphologies).some(v => v > 0) ? '•' : ''}
             </span>
           </button>
 
@@ -1300,72 +1289,6 @@ function BloodSmearViewer() {
                     {preset.name}
                   </button>
                 ))}
-              </div>
-
-              {/* RBC Morphologies */}
-              <div className="morph-section">
-                <h4 className="morph-section-title rbc-morph-title">RBC Morphology</h4>
-                <div className="morph-sliders">
-                  {[
-                    { key: 'spherocyte', label: 'Spherocyte' },
-                    { key: 'targetCell', label: 'Target Cell' },
-                    { key: 'schistocyte', label: 'Schistocyte' },
-                    { key: 'sickleCell', label: 'Sickle Cell' },
-                    { key: 'teardrop', label: 'Teardrop' },
-                    { key: 'elliptocyte', label: 'Elliptocyte' },
-                    { key: 'biteCell', label: 'Bite Cell' },
-                    { key: 'burrCell', label: 'Burr Cell' },
-                    { key: 'acanthocyte', label: 'Acanthocyte' },
-                    { key: 'stomatocyte', label: 'Stomatocyte' },
-                    { key: 'rouleaux', label: 'Rouleaux' },
-                    { key: 'howellJolly', label: 'Howell-Jolly' },
-                    { key: 'basophilicStippling', label: 'Baso Stippling' },
-                    { key: 'polychromasia', label: 'Polychromasia' },
-                  ].map((morph) => (
-                    <div key={morph.key} className="morph-slider-row">
-                      <span className="morph-label">{morph.label}</span>
-                      <input
-                        type="range"
-                        min="0"
-                        max="50"
-                        value={rbcMorphologies[morph.key]}
-                        onChange={(e) => updateRbcMorphology(morph.key, Number(e.target.value))}
-                        className="morph-slider rbc-morph-slider"
-                      />
-                      <span className="morph-percent">{rbcMorphologies[morph.key]}%</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* WBC Morphologies */}
-              <div className="morph-section">
-                <h4 className="morph-section-title wbc-morph-title">WBC Morphology</h4>
-                <div className="morph-sliders">
-                  {[
-                    { key: 'bandNeutrophil', label: 'Band Neut' },
-                    { key: 'hypersegmented', label: 'Hyperseg' },
-                    { key: 'toxicGranulation', label: 'Toxic Gran' },
-                    { key: 'dohleBodies', label: 'Döhle Bodies' },
-                    { key: 'atypicalLymph', label: 'Atypical Lymph' },
-                    { key: 'blast', label: 'Blast' },
-                    { key: 'smudgeCell', label: 'Smudge Cell' },
-                    { key: 'auerRod', label: 'Auer Rod' },
-                  ].map((morph) => (
-                    <div key={morph.key} className="morph-slider-row">
-                      <span className="morph-label">{morph.label}</span>
-                      <input
-                        type="range"
-                        min="0"
-                        max="50"
-                        value={wbcMorphologies[morph.key]}
-                        onChange={(e) => updateWbcMorphology(morph.key, Number(e.target.value))}
-                        className="morph-slider wbc-morph-slider"
-                      />
-                      <span className="morph-percent">{wbcMorphologies[morph.key]}%</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
           )}
@@ -1439,8 +1362,28 @@ function BloodSmearViewer() {
         <p>Interactive visualization of blood cell morphology</p>
       </div>
 
-      {/* Copyright notice */}
-      <div className="viewer-copyright">
+      {/* Mobile info button */}
+      <div
+        className={`mobile-info-button ${showMobileInfo ? 'expanded' : ''}`}
+        onClick={() => setShowMobileInfo(!showMobileInfo)}
+        role="button"
+        aria-expanded={showMobileInfo}
+        aria-label="Peripheral Blood Smear information"
+        tabIndex={0}
+        onKeyDown={(e) => e.key === 'Enter' && setShowMobileInfo(!showMobileInfo)}
+      >
+        <span className="mobile-info-title">Peripheral Blood Smear {showMobileInfo ? '▲' : '▼'}</span>
+        {showMobileInfo && (
+          <div className="mobile-info-content">
+            <p>Created by Eric Perkey, MD-PhD</p>
+            <p>© {new Date().getFullYear()} All Rights Reserved</p>
+            <p className="mobile-info-hint">More features on desktop</p>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop copyright notice */}
+      <div className="viewer-copyright desktop-only">
         <p>Created by Eric Perkey, MD-PhD</p>
         <p>© {new Date().getFullYear()} All Rights Reserved</p>
       </div>

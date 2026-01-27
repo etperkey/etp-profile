@@ -6,6 +6,7 @@
   height: 100vh;
   background: linear-gradient(135deg, #fdf6f0 0%, #fef9f5 50%, #fff5ee 100%);
   overflow: hidden;
+  font-family: 'Rajdhani', sans-serif;
 }
 
 .blood-smear-viewer .blood-smear-background {
@@ -186,7 +187,7 @@
   animation-play-state: paused !important;
 }
 
-/* Cell Types panel - always visible, right side */
+/* Cell Types panel - collapsible, right side */
 .cell-types-panel {
   position: fixed;
   top: 80px;
@@ -194,10 +195,38 @@
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(15px);
   border-radius: 12px;
-  padding: 16px 20px;
+  padding: 6px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   z-index: 100;
   max-width: 260px;
+}
+
+.cell-types-panel.expanded {
+  padding: 6px 12px 12px 12px;
+}
+
+.cell-types-panel .panel-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.cell-types-panel .panel-toggle:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.cell-types-panel .panel-content {
+  padding-top: 8px;
 }
 
 .cell-types-panel h3 {
@@ -344,6 +373,13 @@
   border-top: 1px solid #e5e7eb;
 }
 
+.panel-status {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
 /* =================================================================
    INDICES PANELS CONTAINER - stacked vertically in top left
    ================================================================= */
@@ -403,16 +439,16 @@
 .anemia-presets {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin-bottom: 14px;
+  gap: 2px;
+  margin-bottom: 5px;
 }
 
 .anemia-preset-btn {
-  padding: 4px 8px;
-  font-size: 0.7rem;
+  padding: 2px 4px;
+  font-size: 0.5rem;
   background: #f3f4f6;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: 2px;
   cursor: pointer;
   transition: all 0.2s;
   color: #4b5563;
@@ -428,68 +464,79 @@
 }
 
 .rbc-index-row {
-  margin-bottom: 12px;
-}
-
-.rbc-index-header {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
+  align-items: center;
+  gap: 6px;
   margin-bottom: 4px;
 }
 
 .rbc-index-label {
-  font-size: 0.85rem;
+  font-size: 0.65rem;
   font-weight: 600;
   color: #c44444;
-  min-width: 35px;
-}
-
-.rbc-index-value {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #1a1a2e;
-}
-
-.rbc-index-status {
-  font-size: 0.7rem;
-  font-weight: 600;
-  margin-left: auto;
-}
-
-.rbc-index-absolute {
-  font-size: 0.7rem;
-  color: #059669;
-  font-family: 'Monaco', 'Consolas', monospace;
+  min-width: 28px;
+  line-height: 1;
 }
 
 .rbc-slider {
-  width: 100%;
-  height: 5px;
-  border-radius: 3px;
+  flex: 1;
+  max-width: 55px;
+  height: 3px;
+  border-radius: 1.5px;
   background: #fecaca;
   outline: none;
   -webkit-appearance: none;
 }
 
+.rbc-index-value {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1;
+  min-width: 38px;
+}
+
+.rbc-index-value .unit {
+  font-size: 0.5rem;
+  font-weight: 500;
+  color: #6b7280;
+  margin-left: 1px;
+}
+
+.rbc-index-status {
+  font-size: 0.55rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.rbc-index-absolute {
+  font-size: 0.5rem;
+  color: #059669;
+  font-family: 'Monaco', 'Consolas', monospace;
+}
+
+.rbc-index-header {
+  display: none;
+}
+
 .rbc-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: linear-gradient(135deg, #c44444, #e88a8a);
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .rbc-slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: linear-gradient(135deg, #c44444, #e88a8a);
   cursor: pointer;
   border: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .mcv-slider {
@@ -521,31 +568,40 @@
 }
 
 .nrbc-row {
-  padding-top: 8px;
-  margin-top: 4px;
+  padding-top: 2px;
+  margin-top: 1px;
   border-top: 1px dashed #e5e7eb;
 }
 
 /* Calculated values (Hgb, Hct) - read-only display */
 .calculated-row {
-  margin-bottom: 10px;
-  opacity: 0.9;
+  margin-bottom: 3px;
+  margin-left: 12px;
+  opacity: 0.75;
 }
 
 .calculated-row .rbc-index-label {
-  color: #6b7280;
+  color: #9ca3af;
   font-weight: 500;
+  font-size: 0.55rem;
+  font-style: italic;
 }
 
 .calculated-row .rbc-index-value {
-  font-size: 0.95rem;
+  font-size: 0.55rem;
+  color: #6b7280;
+}
+
+.calculated-row .rbc-index-status {
+  font-size: 0.5rem;
 }
 
 .calculated-bar {
-  width: 100%;
-  height: 6px;
+  flex: 1;
+  max-width: 80px;
+  height: 3px;
   background: #f3f4f6;
-  border-radius: 3px;
+  border-radius: 1.5px;
   overflow: hidden;
 }
 
@@ -568,8 +624,8 @@
 }
 
 .rbc-reference {
-  margin: 8px 0 0 0;
-  font-size: 0.65rem;
+  margin: 2px 0 0 0;
+  font-size: 0.5rem;
   color: #9ca3af;
   text-align: center;
 }
@@ -824,18 +880,19 @@
 .diff-slider-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .diff-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  width: 40px;
+  width: 32px;
   flex-shrink: 0;
 }
 
 .diff-slider {
   flex: 1;
+  max-width: 45px;
   height: 4px;
   border-radius: 2px;
   background: #e5e7eb;
@@ -862,12 +919,22 @@
 }
 
 .diff-percent {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 600;
   color: #1a1a2e;
-  width: 32px;
+  width: 24px;
   text-align: right;
   flex-shrink: 0;
+}
+
+.diff-absolute {
+  font-size: 0.55rem;
+  font-weight: 500;
+  color: #6b7280;
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+  font-family: 'Monaco', 'Consolas', monospace;
 }
 
 /* Performance Stats panel - collapsible, bottom right */
@@ -1147,6 +1214,67 @@
   text-shadow: 0 1px 5px rgba(255, 255, 255, 0.8);
 }
 
+/* =================================================================
+   MOBILE INFO BUTTON
+   ================================================================= */
+
+.mobile-info-button {
+  display: none; /* Hidden on desktop */
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  padding: 6px 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mobile-info-button:active {
+  transform: translateX(-50%) scale(0.98);
+}
+
+.mobile-info-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #b91c1c;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mobile-info-content {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.mobile-info-content p {
+  margin: 2px 0;
+  font-size: 0.5rem;
+  color: #6b7280;
+  line-height: 1.3;
+}
+
+.mobile-info-content p:first-child {
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.mobile-info-hint {
+  margin-top: 4px !important;
+  font-style: italic;
+  opacity: 0.7;
+}
+
 /* Mobile adjustments */
 @media (max-width: 768px) {
   /* Enable touch scrolling on smear container */
@@ -1198,94 +1326,210 @@
     display: none;
   }
 
-  /* Indices panels - horizontal scrollable bar at bottom */
+  /* Indices panels - horizontal at bottom */
   .indices-panels-container {
     position: fixed;
     top: auto;
-    bottom: 20px;
-    left: 0;
-    right: 0;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+    left: 8px;
+    right: 8px;
     flex-direction: row;
-    gap: 3px;
-    padding: 3px 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    padding: 0;
     max-height: none;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(5px);
+    overflow: visible;
+    background: transparent;
   }
 
   .indices-panels-container::-webkit-scrollbar {
     display: none;
   }
 
-  /* Compact control panels for mobile - tiny to fit iPhone */
+  /* Control panels for mobile - compact cards at bottom */
   .rbc-control-panel,
   .wbc-control-panel,
   .plt-control-panel,
   .morphology-control-panel {
-    min-width: 70px;
-    max-width: 80px;
-    padding: 4px 5px;
-    font-size: 0.4rem;
+    min-width: auto;
+    max-width: none;
+    width: auto;
+    min-height: auto;
+    padding: 0;
     flex-shrink: 0;
-    border-radius: 6px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  }
+
+  /* Collapsed state - compact toggle */
+  .rbc-control-panel.collapsed,
+  .wbc-control-panel.collapsed,
+  .plt-control-panel.collapsed {
+    width: 70px;
+  }
+
+  .morphology-control-panel.collapsed {
+    width: 55px;
+  }
+
+  /* Expanded state - show presets and controls */
+  .rbc-control-panel.expanded {
+    width: 160px;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+
+  .wbc-control-panel.expanded,
+  .plt-control-panel.expanded {
+    width: 130px;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+
+  .morphology-control-panel.expanded {
+    width: 110px;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+
+  /* Panel toggle button on mobile */
+  .panel-toggle {
+    padding: 8px 10px;
+    font-size: 0.7rem;
+    gap: 4px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .panel-toggle .toggle-icon {
+    font-size: 0.6rem;
+    width: 10px;
+  }
+
+  .panel-summary {
+    font-size: 0.65rem;
+    margin-left: 0;
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  .panel-content {
+    margin-top: 6px;
+    padding: 6px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(0,0,0,0.1);
   }
 
   .rbc-control-panel h3,
   .wbc-control-panel h3,
   .plt-control-panel h3,
   .morphology-control-panel h3 {
-    font-size: 0.45rem;
-    margin-bottom: 3px;
-    letter-spacing: -0.3px;
+    font-size: 0.65rem;
+    margin-bottom: 0;
+    letter-spacing: -0.2px;
+    text-align: center;
+    display: none;
   }
 
-  /* Compact presets */
+  /* Compact presets - grid layout */
   .anemia-presets,
   .wbc-presets,
   .plt-presets,
-  .morphology-presets {
-    gap: 1px;
+  .morph-presets {
+    gap: 3px;
     flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    padding: 4px;
   }
 
   .anemia-preset-btn,
   .wbc-preset-btn,
   .plt-preset-btn,
-  .morphology-preset-btn {
-    padding: 1px 3px;
-    font-size: 0.38rem;
-    border-radius: 2px;
-    letter-spacing: -0.3px;
+  .morph-preset-btn {
+    padding: 4px 6px;
+    font-size: 0.55rem;
+    border-radius: 4px;
+    letter-spacing: -0.1px;
+    text-align: center;
+    flex: 1 1 45%;
+    min-width: 0;
   }
 
-  /* Hide detailed controls on mobile - just show presets */
+  /* Hide some detailed controls on mobile - but keep RBC sliders */
   .rbc-indices-grid,
   .differential-section,
   .plt-slider-section,
-  .morphology-sliders,
+  .morph-sliders,
   .nrbc-section,
   .rbc-slider-section,
-  .wbc-slider-section {
+  .wbc-slider-section,
+  .plt-current,
+  .wbc-current,
+  .morph-section {
     display: none;
   }
 
   /* Hide value displays on mobile to save space */
   .rbc-value,
   .wbc-value,
-  .plt-value {
-    font-size: 0.5rem;
-    display: none;
-  }
-
+  .plt-value,
   .rbc-reference,
   .wbc-reference,
   .plt-reference {
-    font-size: 0.4rem;
-    display: none; /* Hide references on mobile */
+    display: none;
+  }
+
+  /* Show RBC sliders when panel is expanded */
+  .rbc-control-panel.expanded .rbc-index-row {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .rbc-control-panel.expanded .rbc-index-row.calculated-row,
+  .rbc-control-panel.expanded .rbc-index-row.nrbc-row {
+    display: none;
+  }
+
+  .rbc-control-panel.expanded .rbc-index-header {
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+
+  .rbc-control-panel.expanded .rbc-index-label {
+    font-size: 0.6rem;
+    min-width: 28px;
+  }
+
+  .rbc-control-panel.expanded .rbc-index-value {
+    font-size: 0.7rem;
+  }
+
+  .rbc-control-panel.expanded .rbc-index-status {
+    font-size: 0.5rem;
+  }
+
+  .rbc-control-panel.expanded .rbc-slider {
+    height: 4px;
+  }
+
+  .rbc-control-panel.expanded .rbc-slider::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+  }
+
+  .rbc-control-panel.expanded .rbc-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
   }
 
   /* Cell types panel - hide on mobile, too crowded */
@@ -1298,38 +1542,19 @@
     display: none;
   }
 
-  /* Title - top center, smaller */
+  /* Hide title on mobile - replaced by mobile info button */
   .viewer-title {
-    bottom: auto;
-    top: calc(env(safe-area-inset-top, 0px) + 75px);
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    text-align: center;
-    pointer-events: none;
-    white-space: nowrap;
+    display: none;
   }
 
-  .viewer-title h1 {
-    font-size: 0.8rem;
-    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.95);
+  /* Hide desktop copyright on mobile */
+  .viewer-copyright.desktop-only {
+    display: none;
   }
 
-  .viewer-title p {
-    font-size: 0.5rem;
-    text-shadow: 0 1px 8px rgba(255, 255, 255, 0.95);
-  }
-
-  /* Copyright - bottom center */
-  .viewer-copyright {
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-  }
-
-  .viewer-copyright p {
-    font-size: 0.55rem;
+  /* Mobile info button - top center */
+  .mobile-info-button {
+    display: flex;
   }
 }
 
@@ -1378,7 +1603,20 @@
 }
 
 .morph-toggle {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #ffffff !important;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 8px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.morph-toggle .toggle-icon {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.morph-toggle span {
+  color: #ffffff;
 }
 
 .morph-summary {
@@ -1453,19 +1691,20 @@
 .morph-slider-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   padding: 2px 0;
 }
 
 .morph-label {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: #4b5563;
-  width: 85px;
+  width: 70px;
   flex-shrink: 0;
 }
 
 .morph-slider {
   flex: 1;
+  max-width: 45px;
   height: 4px;
   -webkit-appearance: none;
   appearance: none;
@@ -1492,9 +1731,9 @@
 }
 
 .morph-percent {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   color: #6b7280;
-  width: 28px;
+  width: 24px;
   text-align: right;
   font-family: monospace;
 }
@@ -1503,19 +1742,31 @@
    RBC MORPHOLOGY CELL STYLES (floating cells in smear)
    ================================================================= */
 
-/* Override contain property for cells that need overflow */
+/* Override contain property for cells that need overflow or use clip-path */
 .floating-cell.rouleaux,
 .floating-cell.smudge-cell,
 .floating-cell.sickle-cell,
 .floating-cell.stomatocyte,
 .floating-cell.howell-jolly,
+.floating-cell.neutrophil,
+.floating-cell.neutrophil-3lobe,
 .floating-cell.band-neutrophil,
 .floating-cell.hypersegmented,
 .floating-cell.toxic-granulation,
 .floating-cell.dohle-bodies,
+.floating-cell.eosinophil,
+.floating-cell.eosinophil-3lobe,
+.floating-cell.basophil,
 .floating-cell.atypical-lymph,
 .floating-cell.blast,
-.floating-cell.auer-rod {
+.floating-cell.auer-rod,
+.floating-cell.myelocyte,
+.floating-cell.metamyelocyte,
+.floating-cell.elliptocyte,
+.floating-cell.bite-cell,
+.floating-cell.burr-cell,
+.floating-cell.acanthocyte,
+.floating-cell.schistocyte {
   contain: none !important;
   overflow: visible !important;
 }
@@ -1582,12 +1833,16 @@
     8% 58%
   ) !important;
   border-radius: 0 !important;
+  transform: rotate(var(--cell-rotation, 0deg)) !important;
+  animation: none !important;
 }
 
 /* Sickle cell - crescent shape */
 .floating-cell.sickle-cell {
   background: transparent !important;
   position: relative;
+  transform: rotate(var(--cell-rotation, 0deg)) !important;
+  animation: none !important;
 }
 
 .floating-cell.sickle-cell::before {
@@ -1621,6 +1876,8 @@
     rgba(180, 70, 70, 0.9) 100%
   ) !important;
   border-radius: 50% 50% 50% 50% / 30% 30% 70% 70% !important;
+  transform: rotate(var(--cell-rotation, 0deg)) !important;
+  animation: none !important;
 }
 
 /* Elliptocyte - oval/elongated RBC */
@@ -1633,11 +1890,20 @@
     rgba(200, 80, 80, 0.95) 65%,
     rgba(180, 60, 60, 0.9) 100%
   ) !important;
-  border-radius: 50% / 25% !important;
+  border-radius: 50% !important;
+  transform: rotate(var(--cell-rotation, 0deg)) scaleX(1.5) scaleY(0.7) !important;
+  animation: none !important;
 }
 
 /* Bite cell - large semicircular bite removed by splenic macrophages */
 .floating-cell.bite-cell {
+  background: radial-gradient(
+    ellipse at 45% 50%,
+    rgba(255, 200, 200, 0.9) 0%,
+    rgba(200, 90, 90, 0.95) 40%,
+    rgba(180, 70, 70, 0.9) 100%
+  ) !important;
+  border-radius: 50% !important;
   clip-path: polygon(
     0% 0%, 100% 0%, 100% 100%, 0% 100%,
     0% 75%,
@@ -1648,10 +1914,11 @@
     20% 32%,
     0% 25%
   ) !important;
-  border-radius: 50% !important;
+  transform: rotate(var(--cell-rotation, 0deg)) !important;
+  animation: none !important;
 }
 
-/* Burr cell - echinocyte with evenly spaced short spicules all around */
+/* Burr cell - echinocyte with evenly spaced spicules, slightly rounded tips */
 .floating-cell.burr-cell {
   background: radial-gradient(
     ellipse at 50% 50%,
@@ -1660,18 +1927,24 @@
     rgba(190, 70, 70, 0.95) 60%,
     rgba(180, 60, 60, 0.9) 100%
   ) !important;
-  /* 16 evenly spaced spicules around entire circumference */
+  /* 12 spicules with rounded tips */
   clip-path: polygon(
-    50% 2%, 56% 15%, 67% 5%, 72% 18%,
-    85% 15%, 82% 28%, 95% 33%, 88% 44%,
-    98% 50%, 88% 56%, 95% 67%, 82% 72%,
-    85% 85%, 72% 82%, 67% 95%, 56% 85%,
-    50% 98%, 44% 85%, 33% 95%, 28% 82%,
-    15% 85%, 18% 72%, 5% 67%, 12% 56%,
-    2% 50%, 12% 44%, 5% 33%, 18% 28%,
-    15% 15%, 28% 18%, 33% 5%, 44% 15%
+    46% 5%, 50% 2%, 54% 5%, 58% 25%,
+    70% 8%, 75% 6%, 78% 10%, 72% 28%,
+    90% 22%, 95% 25%, 93% 30%, 75% 42%,
+    95% 46%, 98% 50%, 95% 54%, 75% 58%,
+    93% 70%, 95% 75%, 90% 78%, 72% 72%,
+    78% 90%, 75% 94%, 70% 92%, 58% 75%,
+    54% 95%, 50% 98%, 46% 95%, 42% 75%,
+    30% 92%, 25% 94%, 22% 90%, 28% 72%,
+    10% 78%, 5% 75%, 7% 70%, 25% 58%,
+    5% 54%, 2% 50%, 5% 46%, 25% 42%,
+    7% 30%, 5% 25%, 10% 22%, 28% 28%,
+    22% 10%, 25% 6%, 30% 8%, 42% 25%
   ) !important;
   border-radius: 0 !important;
+  transform: rotate(var(--cell-rotation, 0deg)) !important;
+  animation: none !important;
 }
 
 /* Acanthocyte - spur cell with irregular spicules
@@ -1708,6 +1981,8 @@
     28% 20%, 35% 12%
   ) !important;
   border-radius: 0 !important;
+  transform: rotate(var(--cell-rotation, 0deg)) !important;
+  animation: none !important;
 }
 
 /* Stomatocyte - mouth-shaped pallor */
@@ -1740,6 +2015,7 @@
   transform: rotate(var(--cell-rotation, 0deg)) !important;
   overflow: visible !important;
   position: relative !important;
+  animation: none !important;
 }
 
 /* Individual cells in rouleaux stack - each with biconcave disc appearance */
@@ -1759,29 +2035,39 @@
     rgba(195, 75, 70, 0.9) 85%,
     rgba(210, 90, 85, 0.85) 100%
   );
-  /* Position each cell based on stack index - 30px spacing for minimal overlap */
-  left: calc(var(--stack-index) * 30px);
-  top: calc(var(--stack-index) * 5px);
+  /* Position each cell based on stack index - percentage-based for proper scaling */
+  left: calc(var(--stack-index) * 35%);
+  top: calc(var(--stack-index) * 8%);
   /* Cells in back are slightly dimmer */
-  opacity: calc(1 - (var(--stack-index) * 0.08));
+  opacity: calc(1 - (var(--stack-index) * 0.06));
   /* Stack order - first cell on top */
   z-index: calc(10 - var(--stack-index));
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
 }
 
-/* Howell-Jolly body */
+/* Howell-Jolly body - RBC with dark purple nuclear remnant */
 .floating-cell.howell-jolly {
+  background: radial-gradient(
+    ellipse at 30% 30%,
+    rgba(255, 200, 200, 0.9) 0%,
+    rgba(220, 100, 100, 0.95) 25%,
+    rgba(180, 60, 60, 0.7) 45%,
+    rgba(200, 80, 80, 0.95) 65%,
+    rgba(180, 60, 60, 0.9) 100%
+  ) !important;
   position: relative;
 }
 
 .floating-cell.howell-jolly::after {
   content: '';
   position: absolute;
-  top: 25%;
-  right: 25%;
-  width: 20%;
-  height: 20%;
+  top: 20%;
+  right: 20%;
+  width: 25%;
+  height: 25%;
   background: #4a1a6b;
   border-radius: 50%;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Basophilic stippling */
@@ -1815,111 +2101,320 @@
    WBC MORPHOLOGY CELL STYLES (floating cells in smear)
    ================================================================= */
 
-/* Band neutrophil - horseshoe nucleus */
-.floating-cell.band-neutrophil {
-  background: radial-gradient(
-    ellipse at 40% 40%,
-    rgba(180, 200, 220, 0.95) 0%,
-    rgba(160, 180, 200, 0.9) 100%
-  ) !important;
+/* Normal segmented neutrophil - 4-5 lobes with realistic folded nucleus */
+.floating-cell.neutrophil {
+  background:
+    /* Fine pink/lilac granules scattered throughout cytoplasm */
+    radial-gradient(circle at 5% 8%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 15% 10%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 10% 22%, rgba(65, 35, 95, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 8% 85%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 18% 78%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 85% 8%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 92% 18%, rgba(65, 35, 95, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 88% 82%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 78% 88%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    /* Base cytoplasm - pale pink */
+    radial-gradient(
+      ellipse at 50% 50%,
+      rgba(250, 240, 245, 0.95) 0%,
+      rgba(245, 230, 235, 0.9) 70%,
+      rgba(235, 215, 225, 0.85) 100%
+    ) !important;
   position: relative;
+  box-shadow: inset 0 0 4px rgba(180, 140, 160, 0.3);
 }
 
-.floating-cell.band-neutrophil::before {
+/* Hide the App.css ::before nucleus (uses non-scaling pixel values) */
+.floating-cell.neutrophil::before,
+.floating-cell.neutrophil-3lobe::before {
+  display: none;
+}
+
+/* 3-4 lobed segmented nucleus - covers full cell, clip-path defines shape */
+.floating-cell.neutrophil::after {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 50%;
-  height: 30%;
-  background: #4a1a6b;
-  border-radius: 50% 50% 50% 50% / 100% 100% 0% 0%;
-}
-
-/* Hypersegmented neutrophil */
-.floating-cell.hypersegmented {
-  background: radial-gradient(
-    ellipse at 40% 40%,
-    rgba(180, 200, 220, 0.95) 0%,
-    rgba(160, 180, 200, 0.9) 100%
-  ) !important;
-  position: relative;
-}
-
-.floating-cell.hypersegmented::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 75%;
-  height: 40%;
-  background: #4a1a6b;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(60, 30, 90, 0.9);
+  /* 3 distinct lobes - coordinates are % of full cell */
   clip-path: polygon(
-    0% 50%, 10% 20%, 25% 50%, 35% 15%, 50% 50%, 65% 15%, 75% 50%, 90% 20%, 100% 50%,
-    90% 80%, 75% 50%, 65% 85%, 50% 50%, 35% 85%, 25% 50%, 10% 80%
+    /* Lobe 1 - left */
+    8% 58%, 5% 42%, 10% 28%, 22% 25%, 32% 35%, 30% 50%, 28% 60%,
+    /* Thin bridge */
+    30% 52%, 34% 48%, 38% 52%,
+    /* Lobe 2 - center */
+    42% 38%, 46% 22%, 54% 20%, 62% 26%, 65% 42%, 62% 55%,
+    /* Thin bridge */
+    64% 52%, 68% 48%, 72% 52%,
+    /* Lobe 3 - right */
+    76% 38%, 82% 28%, 92% 32%, 95% 48%, 90% 62%, 78% 68%, 70% 60%,
+    /* Close bottom */
+    62% 65%, 52% 72%, 48% 74%, 38% 70%, 28% 65%
   );
 }
 
-/* Toxic granulation */
-.floating-cell.toxic-granulation {
+/* 3-lobed neutrophil variant */
+.floating-cell.neutrophil-3lobe {
   background:
-    radial-gradient(circle at 25% 30%, #2d1b4e 3px, transparent 3px),
-    radial-gradient(circle at 55% 55%, #2d1b4e 2.5px, transparent 2.5px),
-    radial-gradient(circle at 70% 35%, #2d1b4e 3px, transparent 3px),
-    radial-gradient(circle at 35% 70%, #2d1b4e 2px, transparent 2px),
+    /* Fine pink/lilac granules scattered throughout cytoplasm */
+    radial-gradient(circle at 5% 8%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 15% 10%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 10% 22%, rgba(65, 35, 95, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 8% 85%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 18% 78%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 85% 8%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 92% 18%, rgba(65, 35, 95, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 88% 82%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 78% 88%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    /* Base cytoplasm - pale pink */
     radial-gradient(
-      ellipse at 40% 40%,
-      rgba(180, 200, 220, 0.95) 0%,
-      rgba(160, 180, 200, 0.9) 100%
+      ellipse at 50% 50%,
+      rgba(250, 240, 245, 0.95) 0%,
+      rgba(245, 230, 235, 0.9) 70%,
+      rgba(235, 215, 225, 0.85) 100%
     ) !important;
   position: relative;
+  box-shadow: inset 0 0 4px rgba(180, 140, 160, 0.3);
 }
 
-.floating-cell.toxic-granulation::before {
+/* 3-lobed segmented nucleus - covers full cell, clip-path defines shape */
+.floating-cell.neutrophil-3lobe::after {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 55%;
-  height: 30%;
-  background: #4a1a6b;
-  clip-path: polygon(0% 50%, 30% 20%, 50% 50%, 70% 20%, 100% 50%, 70% 80%, 50% 50%, 30% 80%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(60, 30, 90, 0.9);
+  /* 3 lobes arranged in curved line */
+  clip-path: polygon(
+    /* Lobe 1 - left */
+    10% 55%, 5% 38%, 12% 22%, 28% 20%, 38% 32%, 35% 48%,
+    /* Thin bridge */
+    38% 46%, 42% 42%, 46% 46%,
+    /* Lobe 2 - center-right */
+    52% 34%, 60% 22%, 75% 24%, 85% 38%, 82% 55%, 72% 62%,
+    /* Thin bridge down */
+    70% 64%, 66% 68%, 62% 72%,
+    /* Lobe 3 - bottom */
+    58% 78%, 46% 88%, 32% 85%, 26% 72%, 35% 62%,
+    /* Close back */
+    32% 58%, 26% 55%, 20% 55%
+  );
 }
 
-/* Döhle bodies */
-.floating-cell.dohle-bodies {
-  background: radial-gradient(
-    ellipse at 40% 40%,
-    rgba(180, 200, 220, 0.95) 0%,
-    rgba(160, 180, 200, 0.9) 100%
-  ) !important;
+/* Band neutrophil - horseshoe nucleus with fine granules */
+.floating-cell.band-neutrophil {
+  background:
+    /* Fine pink/lilac granules */
+    radial-gradient(circle at 8% 12%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 18% 8%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 12% 25%, rgba(65, 35, 95, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 8% 45%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 15% 75%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 85% 15%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 90% 40%, rgba(65, 35, 95, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 88% 75%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 45% 88%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    /* Base cytoplasm - pale pink */
+    radial-gradient(
+      ellipse at 50% 50%,
+      rgba(250, 240, 245, 0.95) 0%,
+      rgba(245, 230, 235, 0.9) 70%,
+      rgba(235, 215, 225, 0.85) 100%
+    ) !important;
   position: relative;
+  box-shadow: inset 0 0 4px rgba(180, 140, 160, 0.3);
 }
 
-.floating-cell.dohle-bodies::before {
+/* Band-shaped (horseshoe/C-shaped) nucleus - not segmented yet */
+.floating-cell.band-neutrophil::after {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 55%;
-  height: 30%;
-  background: #4a1a6b;
-  clip-path: polygon(0% 50%, 30% 20%, 50% 50%, 70% 20%, 100% 50%, 70% 80%, 50% 50%, 30% 80%);
+  top: 28%;
+  left: 23%;
+  width: 54%;
+  height: 35%;
+  background: radial-gradient(
+    ellipse at 50% 30%,
+    rgba(75, 55, 115, 0.88) 0%,
+    rgba(55, 30, 90, 0.95) 100%
+  );
+  border-radius: 40%;
+  clip-path: polygon(0% 100%, 0% 40%, 15% 0%, 85% 0%, 100% 40%, 100% 100%, 80% 100%, 80% 60%, 70% 30%, 30% 30%, 20% 60%, 20% 100%);
 }
 
+/* Hypersegmented neutrophil - 6+ nuclear lobes with realistic clip-path */
+.floating-cell.hypersegmented {
+  background:
+    /* Fine pink/lilac granules */
+    radial-gradient(circle at 5% 8%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 15% 10%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 8% 85%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 18% 78%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 85% 8%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 92% 18%, rgba(65, 35, 95, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 88% 82%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 78% 88%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    /* Base cytoplasm - pale pink */
+    radial-gradient(
+      ellipse at 50% 50%,
+      rgba(250, 240, 245, 0.95) 0%,
+      rgba(245, 230, 235, 0.9) 70%,
+      rgba(235, 215, 225, 0.85) 100%
+    ) !important;
+  position: relative;
+  box-shadow: inset 0 0 4px rgba(180, 140, 160, 0.3);
+}
+
+/* 6+ lobed nucleus - stretched out with many segments */
+.floating-cell.hypersegmented::after {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 8%;
+  width: 85%;
+  height: 70%;
+  background: radial-gradient(
+    ellipse at 50% 40%,
+    rgba(75, 55, 115, 0.85) 0%,
+    rgba(60, 30, 90, 0.95) 100%
+  );
+  /* Realistic 6-lobed nucleus with thin connecting filaments */
+  clip-path: polygon(
+    /* Lobe 1 - far left */
+    3% 35%, 0% 25%, 4% 12%, 12% 10%, 18% 18%, 16% 32%,
+    /* Filament to lobe 2 */
+    17% 36%, 19% 38%, 21% 36%,
+    /* Lobe 2 */
+    24% 28%, 28% 15%, 38% 10%, 45% 18%, 42% 32%,
+    /* Filament to lobe 3 */
+    43% 36%, 46% 38%, 49% 35%,
+    /* Lobe 3 */
+    52% 25%, 58% 12%, 68% 10%, 74% 20%, 70% 35%,
+    /* Filament to lobe 4 */
+    71% 40%, 74% 42%, 77% 38%,
+    /* Lobe 4 - far right top */
+    80% 28%, 88% 18%, 97% 22%, 98% 38%, 92% 48%,
+    /* Filament down to lobe 5 */
+    88% 52%, 86% 55%, 88% 58%,
+    /* Lobe 5 - right bottom */
+    92% 65%, 96% 78%, 90% 90%, 78% 88%, 72% 75%,
+    /* Filament to lobe 6 */
+    68% 72%, 64% 74%, 60% 72%,
+    /* Lobe 6 - bottom center */
+    55% 78%, 45% 92%, 32% 90%, 28% 78%, 35% 68%,
+    /* Filament back up to lobe 1 area */
+    32% 62%, 28% 58%, 24% 60%,
+    /* Connect back through bottom */
+    18% 68%, 8% 72%, 2% 60%, 5% 48%,
+    /* Close to lobe 1 */
+    6% 42%
+  );
+}
+
+/* Toxic granulation - coarse dark granules indicating infection/inflammation */
+.floating-cell.toxic-granulation {
+  background:
+    /* Coarse dark toxic granules - larger and darker */
+    radial-gradient(circle at 10% 18%, rgba(45, 27, 78, 0.95) 2px, transparent 2.5px),
+    radial-gradient(circle at 22% 12%, rgba(40, 22, 70, 0.95) 1.5px, transparent 2px),
+    radial-gradient(circle at 15% 32%, rgba(50, 30, 85, 0.95) 2px, transparent 2.5px),
+    radial-gradient(circle at 10% 60%, rgba(45, 27, 78, 0.95) 2px, transparent 2.5px),
+    radial-gradient(circle at 18% 78%, rgba(40, 22, 70, 0.95) 1.5px, transparent 2px),
+    radial-gradient(circle at 80% 15%, rgba(50, 30, 85, 0.95) 2px, transparent 2.5px),
+    radial-gradient(circle at 88% 35%, rgba(45, 27, 78, 0.95) 1.5px, transparent 2px),
+    radial-gradient(circle at 82% 62%, rgba(40, 22, 70, 0.95) 2px, transparent 2.5px),
+    radial-gradient(circle at 78% 82%, rgba(50, 30, 85, 0.95) 1.5px, transparent 2px),
+    /* Fine pink/lilac granules */
+    radial-gradient(circle at 8% 8%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 90% 12%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 45% 88%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    /* Base cytoplasm - pale pink */
+    radial-gradient(
+      ellipse at 50% 50%,
+      rgba(250, 240, 245, 0.95) 0%,
+      rgba(245, 230, 235, 0.9) 70%,
+      rgba(235, 215, 225, 0.85) 100%
+    ) !important;
+  position: relative;
+  box-shadow: inset 0 0 4px rgba(180, 140, 160, 0.3);
+}
+
+/* Multi-lobed nucleus - same as normal neutrophil */
+.floating-cell.toxic-granulation::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 50% 40%,
+    rgba(75, 55, 115, 0.85) 0%,
+    rgba(60, 30, 90, 0.95) 100%
+  );
+  clip-path: polygon(
+    8% 58%, 5% 42%, 10% 28%, 22% 25%, 32% 35%, 30% 50%, 28% 60%,
+    30% 52%, 34% 48%, 38% 52%,
+    42% 38%, 46% 22%, 54% 20%, 62% 26%, 65% 42%, 62% 55%,
+    64% 52%, 68% 48%, 72% 52%,
+    76% 38%, 82% 28%, 92% 32%, 95% 48%, 90% 62%, 78% 68%, 70% 60%,
+    62% 65%, 52% 72%, 48% 74%, 38% 70%, 28% 65%
+  );
+}
+
+/* Döhle bodies - pale blue cytoplasmic inclusions */
+.floating-cell.dohle-bodies {
+  background:
+    /* Döhle bodies - pale blue inclusions */
+    radial-gradient(ellipse 12% 8% at 82% 78%, rgba(140, 175, 220, 0.9) 0%, rgba(140, 175, 220, 0.9) 60%, transparent 70%),
+    radial-gradient(ellipse 10% 6% at 75% 85%, rgba(150, 185, 225, 0.85) 0%, rgba(150, 185, 225, 0.85) 60%, transparent 70%),
+    /* Fine pink/lilac granules */
+    radial-gradient(circle at 8% 12%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 18% 8%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 12% 25%, rgba(65, 35, 95, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 8% 45%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 15% 75%, rgba(70, 40, 100, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 85% 15%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 90% 40%, rgba(65, 35, 95, 0.5) 1px, transparent 1.5px),
+    radial-gradient(circle at 45% 88%, rgba(75, 45, 105, 0.5) 1px, transparent 1.5px),
+    /* Base cytoplasm - pale pink */
+    radial-gradient(
+      ellipse at 50% 50%,
+      rgba(250, 240, 245, 0.95) 0%,
+      rgba(245, 230, 235, 0.9) 70%,
+      rgba(235, 215, 225, 0.85) 100%
+    ) !important;
+  position: relative;
+  box-shadow: inset 0 0 4px rgba(180, 140, 160, 0.3);
+}
+
+/* Multi-lobed nucleus using radial-gradients (scales properly) */
 .floating-cell.dohle-bodies::after {
   content: '';
   position: absolute;
-  bottom: 15%;
-  right: 15%;
-  width: 18%;
-  height: 10%;
-  background: rgba(150, 180, 220, 0.8);
-  border-radius: 50%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 50% 40%,
+    rgba(75, 55, 115, 0.85) 0%,
+    rgba(60, 30, 90, 0.95) 100%
+  );
+  clip-path: polygon(
+    8% 58%, 5% 42%, 10% 28%, 22% 25%, 32% 35%, 30% 50%, 28% 60%,
+    30% 52%, 34% 48%, 38% 52%,
+    42% 38%, 46% 22%, 54% 20%, 62% 26%, 65% 42%, 62% 55%,
+    64% 52%, 68% 48%, 72% 52%,
+    76% 38%, 82% 28%, 92% 32%, 95% 48%, 90% 62%, 78% 68%, 70% 60%,
+    62% 65%, 52% 72%, 48% 74%, 38% 70%, 28% 65%
+  );
 }
 
 /* Atypical lymphocyte */
@@ -1940,7 +2435,11 @@
   left: 30%;
   width: 40%;
   height: 40%;
-  background: #3d1a5c;
+  background: radial-gradient(
+    ellipse at 45% 40%,
+    rgba(85, 55, 120, 0.85) 0%,
+    rgba(61, 26, 92, 0.95) 100%
+  );
   border-radius: 50%;
 }
 
@@ -2013,34 +2512,89 @@
   border-radius: 73% 27% 57% 43% / 59% 29% 71% 41%;
 }
 
-/* Auer rod (promyelocyte) */
+/* Promyelocyte with Auer rods - dense azurophilic granules */
 .floating-cell.auer-rod {
   background:
-    /* More numerous, half-size granules */
-    radial-gradient(circle at 12% 22%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 25% 18%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
-    radial-gradient(circle at 18% 35%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 82% 25%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 75% 32%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
-    radial-gradient(circle at 88% 40%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 15% 75%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 22% 82%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
-    radial-gradient(circle at 28% 70%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 78% 72%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 85% 78%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
-    radial-gradient(circle at 72% 85%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 30% 28%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
-    radial-gradient(circle at 70% 22%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
-    radial-gradient(circle at 25% 65%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
-    radial-gradient(circle at 75% 68%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
+    /* Dense azurophilic granules - 5x density throughout cytoplasm */
+    radial-gradient(circle at 5% 12%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 8% 8%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 12% 15%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 15% 10%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 18% 18%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 22% 12%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 25% 8%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 28% 15%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 8% 22%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 12% 28%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 5% 32%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 18% 25%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 22% 32%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 28% 28%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 72% 8%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 75% 12%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 78% 8%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 82% 15%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 85% 10%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 88% 18%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 92% 12%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 75% 22%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 78% 28%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 82% 25%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 85% 32%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 88% 28%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 92% 22%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    /* Bottom-center granules - cleared from Auer rod area */
+    radial-gradient(circle at 42% 68%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 45% 72%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 48% 68%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 52% 75%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 55% 70%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 58% 78%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 62% 72%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 65% 68%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 42% 82%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 45% 88%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 48% 92%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 52% 85%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 55% 90%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 58% 85%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 72% 68%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 75% 72%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 78% 68%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 82% 75%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 85% 70%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 88% 78%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 92% 72%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 75% 82%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 78% 88%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 82% 85%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 85% 92%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 88% 88%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 92% 82%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    /* Additional center-edge granules */
+    radial-gradient(circle at 32% 12%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 38% 8%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 62% 12%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 68% 8%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 32% 88%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 38% 92%, rgba(135, 55, 95, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 62% 88%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 68% 92%, rgba(145, 65, 105, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 5% 45%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 8% 52%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 12% 48%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 92% 45%, rgba(135, 55, 95, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 88% 52%, rgba(140, 60, 100, 0.9) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 85% 48%, rgba(145, 65, 105, 0.9) 1px, transparent 1px),
     radial-gradient(
       ellipse at 40% 40%,
       rgba(150, 170, 210, 0.95) 0%,
       rgba(130, 150, 190, 0.9) 100%
     ) !important;
-  /* Irregular amoeboid shape - 75% more irregular */
+  /* Irregular amoeboid shape */
   border-radius: 59% 41% 54% 46% / 46% 59% 41% 54% !important;
   position: relative;
+  overflow: hidden;
 }
 
 .floating-cell.auer-rod::before {
@@ -2056,18 +2610,693 @@
     rgba(90, 70, 130, 0.85) 0%,
     rgba(74, 26, 107, 0.95) 100%
   );
-  /* Irregular nucleus - 75% more irregular */
+  /* Irregular nucleus */
   border-radius: 54% 46% 59% 41% / 46% 54% 46% 54%;
 }
 
+/* Auer rod in cytosol */
 .floating-cell.auer-rod::after {
   content: '';
   position: absolute;
-  top: 70%;
-  left: 20%;
-  width: 35%;
-  height: 8%;
+  top: 75%;
+  left: 12%;
+  width: 28%;
+  height: 6%;
   background: linear-gradient(90deg, rgba(200, 80, 100, 0.95), rgba(160, 50, 70, 0.9));
   border-radius: 2px;
-  transform: rotate(-25deg);
+  transform: rotate(-15deg);
+}
+
+/* Myelocyte - round eccentric nucleus, primary granules
+   Intermediate between blast and metamyelocyte
+   Size: ~18-20µm, nucleus ~60% of cell, off-center */
+.floating-cell.myelocyte {
+  background:
+    /* Primary granules - azurophilic, less dense than promyelocyte */
+    radial-gradient(circle at 8% 15%, rgba(130, 50, 90, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 15% 10%, rgba(135, 55, 95, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 22% 18%, rgba(125, 45, 85, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 12% 25%, rgba(130, 50, 90, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 75% 12%, rgba(135, 55, 95, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 82% 20%, rgba(125, 45, 85, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 78% 28%, rgba(130, 50, 90, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 85% 15%, rgba(135, 55, 95, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 70% 75%, rgba(125, 45, 85, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 78% 82%, rgba(130, 50, 90, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 85% 78%, rgba(135, 55, 95, 0.85) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 72% 88%, rgba(125, 45, 85, 0.85) 0.8px, transparent 0.8px),
+    /* Base cytoplasm - blue-gray */
+    radial-gradient(
+      ellipse at 40% 40%,
+      rgba(175, 190, 215, 0.95) 0%,
+      rgba(155, 170, 200, 0.9) 100%
+    ) !important;
+  border-radius: 52% 48% 55% 45% / 48% 52% 48% 52% !important;
+  position: relative;
+}
+
+/* Round eccentric nucleus - off-center, still large but condensing */
+.floating-cell.myelocyte::before {
+  content: '';
+  position: absolute;
+  top: 22%;
+  left: 18%;
+  transform: translate(-10%, -5%);
+  width: 58%;
+  height: 55%;
+  background: radial-gradient(
+    ellipse at 45% 45%,
+    rgba(95, 75, 135, 0.85) 0%,
+    rgba(70, 40, 100, 0.95) 100%
+  );
+  /* Round to slightly oval nucleus */
+  border-radius: 55% 45% 48% 52% / 50% 55% 45% 50%;
+}
+
+/* Nucleoli - 1-2 visible (smaller than blast) */
+.floating-cell.myelocyte::after {
+  content: '';
+  position: absolute;
+  top: 30%;
+  left: 28%;
+  width: 10%;
+  height: 10%;
+  background: rgba(200, 180, 220, 0.9);
+  border-radius: 50%;
+  box-shadow: 10px 5px 0 -1px rgba(200, 180, 220, 0.85);
+}
+
+/* Metamyelocyte - kidney/indented nucleus, secondary granules
+   Nucleus shows clear indentation (kidney-bean shape)
+   Size: ~15-18µm, nucleus ~50% of cell */
+.floating-cell.metamyelocyte {
+  background:
+    /* Secondary (specific) granules - finer, pink-tan */
+    radial-gradient(circle at 8% 12%, rgba(180, 140, 130, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 14% 8%, rgba(175, 135, 125, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 20% 15%, rgba(185, 145, 135, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 10% 22%, rgba(180, 140, 130, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 72% 10%, rgba(175, 135, 125, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 78% 18%, rgba(185, 145, 135, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 85% 12%, rgba(180, 140, 130, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 75% 25%, rgba(175, 135, 125, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 68% 72%, rgba(185, 145, 135, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 75% 78%, rgba(180, 140, 130, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 82% 75%, rgba(175, 135, 125, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 70% 85%, rgba(185, 145, 135, 0.8) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 78% 88%, rgba(180, 140, 130, 0.8) 0.6px, transparent 0.6px),
+    /* Primary granules (fewer remaining) */
+    radial-gradient(circle at 18% 75%, rgba(130, 50, 90, 0.75) 0.7px, transparent 0.7px),
+    radial-gradient(circle at 25% 82%, rgba(125, 45, 85, 0.75) 0.7px, transparent 0.7px),
+    /* Base cytoplasm - pink-tan */
+    radial-gradient(
+      ellipse at 40% 40%,
+      rgba(215, 200, 195, 0.95) 0%,
+      rgba(195, 180, 175, 0.9) 100%
+    ) !important;
+  border-radius: 50% 50% 52% 48% / 48% 50% 50% 52% !important;
+  position: relative;
+}
+
+/* Kidney-bean shaped nucleus - key distinguishing feature */
+.floating-cell.metamyelocyte::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 15%;
+  width: 50%;
+  height: 45%;
+  border-radius: 65% 35% 35% 65% / 55% 55% 45% 45%;
+  background: radial-gradient(
+    ellipse at 40% 45%,
+    rgba(85, 65, 120, 0.85) 0%,
+    rgba(65, 35, 95, 0.95) 100%
+  );
+  transform: rotate(-10deg);
+}
+
+/* Second part of kidney-bean creating indentation */
+.floating-cell.metamyelocyte::after {
+  content: '';
+  position: absolute;
+  top: 32%;
+  left: 38%;
+  width: 35%;
+  height: 32%;
+  border-radius: 35% 65% 65% 35% / 45% 45% 55% 55%;
+  background: radial-gradient(
+    ellipse at 60% 45%,
+    rgba(85, 65, 120, 0.85) 0%,
+    rgba(65, 35, 95, 0.95) 100%
+  );
+  transform: rotate(-10deg);
+}
+
+/* =================================================================
+   DEVICE-SPECIFIC BREAKPOINTS FOR SMEAR VIEWER
+   ================================================================= */
+
+/* iPhone 14 Pro Max, 13 Pro Max, 12 Pro Max (430px) */
+@media (max-width: 430px) {
+  .viewer-back-link,
+  .viewer-morphology-link {
+    padding: 4px 7px;
+    font-size: 0.55rem;
+  }
+
+  .microscope-panel {
+    padding: 3px 6px;
+  }
+
+  .objective-btn {
+    padding: 2px 4px;
+    font-size: 0.5rem;
+  }
+
+  .control-btn {
+    width: 22px;
+    height: 22px;
+    font-size: 0.65rem;
+  }
+
+  .viewer-title h1 {
+    font-size: 0.65rem;
+  }
+
+  .viewer-title p {
+    font-size: 0.4rem;
+  }
+
+  /* Control panels - bottom, horizontal */
+  .rbc-control-panel.collapsed,
+  .wbc-control-panel.collapsed,
+  .plt-control-panel.collapsed {
+    width: 65px;
+  }
+
+  .morphology-control-panel.collapsed {
+    width: 50px;
+  }
+
+  .rbc-control-panel.expanded {
+    width: 150px;
+  }
+
+  .wbc-control-panel.expanded,
+  .plt-control-panel.expanded {
+    width: 120px;
+  }
+
+  .morphology-control-panel.expanded {
+    width: 100px;
+  }
+
+  .panel-toggle {
+    padding: 7px 8px;
+    font-size: 0.65rem;
+  }
+
+  .panel-summary {
+    font-size: 0.6rem;
+  }
+
+  .anemia-preset-btn,
+  .wbc-preset-btn,
+  .plt-preset-btn,
+  .morph-preset-btn {
+    font-size: 0.5rem;
+    padding: 3px 5px;
+  }
+
+  /* RBC slider styling for 430px */
+  .rbc-control-panel.expanded .rbc-index-label {
+    font-size: 0.55rem;
+  }
+
+  .rbc-control-panel.expanded .rbc-index-value {
+    font-size: 0.65rem;
+  }
+}
+
+/* iPhone 14/13/12, iPhone 14/13/12 Pro (390-393px) */
+@media (max-width: 393px) {
+  .viewer-nav-buttons {
+    top: calc(env(safe-area-inset-top, 0px) + 6px);
+    left: 6px;
+    right: 6px;
+    gap: 6px;
+  }
+
+  .viewer-back-link,
+  .viewer-morphology-link {
+    padding: 3px 6px;
+    font-size: 0.5rem;
+  }
+
+  .microscope-panel {
+    top: calc(env(safe-area-inset-top, 0px) + 36px);
+    padding: 3px 5px;
+  }
+
+  .objective-btn {
+    padding: 2px 3px;
+    font-size: 0.45rem;
+  }
+
+  .control-btn {
+    width: 20px;
+    height: 20px;
+    font-size: 0.6rem;
+  }
+
+  .viewer-title {
+    top: calc(env(safe-area-inset-top, 0px) + 75px);
+  }
+
+  .viewer-title h1 {
+    font-size: 0.6rem;
+  }
+
+  .viewer-title p {
+    font-size: 0.38rem;
+  }
+
+  /* Control panels - bottom, horizontal */
+  .indices-panels-container {
+    gap: 5px;
+  }
+
+  .rbc-control-panel.collapsed,
+  .wbc-control-panel.collapsed,
+  .plt-control-panel.collapsed {
+    width: 60px;
+  }
+
+  .morphology-control-panel.collapsed {
+    width: 48px;
+  }
+
+  .rbc-control-panel.expanded {
+    width: 140px;
+  }
+
+  .wbc-control-panel.expanded,
+  .plt-control-panel.expanded {
+    width: 110px;
+  }
+
+  .morphology-control-panel.expanded {
+    width: 95px;
+  }
+
+  .panel-toggle {
+    padding: 6px 7px;
+    font-size: 0.6rem;
+  }
+
+  .panel-summary {
+    font-size: 0.55rem;
+  }
+
+  .anemia-preset-btn,
+  .wbc-preset-btn,
+  .plt-preset-btn,
+  .morph-preset-btn {
+    font-size: 0.48rem;
+    padding: 3px 4px;
+  }
+
+  /* RBC slider styling for 393px */
+  .rbc-control-panel.expanded .rbc-index-label {
+    font-size: 0.5rem;
+  }
+
+  .rbc-control-panel.expanded .rbc-index-value {
+    font-size: 0.6rem;
+  }
+
+}
+
+/* iPhone SE (2nd/3rd gen), iPhone 8, Samsung Galaxy S (375px) */
+@media (max-width: 375px) {
+  .viewer-nav-buttons {
+    top: calc(env(safe-area-inset-top, 0px) + 5px);
+    left: 5px;
+    right: 5px;
+    gap: 5px;
+  }
+
+  .viewer-back-link,
+  .viewer-morphology-link {
+    padding: 3px 5px;
+    font-size: 0.45rem;
+  }
+
+  .microscope-panel {
+    top: calc(env(safe-area-inset-top, 0px) + 32px);
+    padding: 2px 4px;
+  }
+
+  .objective-btn {
+    padding: 2px 3px;
+    font-size: 0.42rem;
+  }
+
+  .control-btn {
+    width: 18px;
+    height: 18px;
+    font-size: 0.55rem;
+  }
+
+  .viewer-title {
+    top: calc(env(safe-area-inset-top, 0px) + 65px);
+    left: 8px;
+    right: 8px;
+  }
+
+  .viewer-title h1 {
+    font-size: 0.55rem;
+  }
+
+  .viewer-title p {
+    font-size: 0.35rem;
+  }
+
+  /* Control panels - bottom, horizontal */
+  .indices-panels-container {
+    gap: 4px;
+    left: 5px;
+    right: 5px;
+  }
+
+  .rbc-control-panel.collapsed,
+  .wbc-control-panel.collapsed,
+  .plt-control-panel.collapsed {
+    width: 55px;
+  }
+
+  .morphology-control-panel.collapsed {
+    width: 44px;
+  }
+
+  .rbc-control-panel.expanded {
+    width: 130px;
+  }
+
+  .wbc-control-panel.expanded,
+  .plt-control-panel.expanded {
+    width: 100px;
+  }
+
+  .morphology-control-panel.expanded {
+    width: 85px;
+  }
+
+  .panel-toggle {
+    padding: 5px 6px;
+    font-size: 0.55rem;
+  }
+
+  .panel-summary {
+    font-size: 0.5rem;
+  }
+
+  .anemia-preset-btn,
+  .wbc-preset-btn,
+  .plt-preset-btn,
+  .morph-preset-btn {
+    font-size: 0.45rem;
+    padding: 3px 3px;
+  }
+
+  /* RBC slider styling for 375px */
+  .rbc-control-panel.expanded .rbc-index-label {
+    font-size: 0.48rem;
+  }
+
+  .rbc-control-panel.expanded .rbc-index-value {
+    font-size: 0.55rem;
+  }
+}
+
+/* Small Android phones (360px) */
+@media (max-width: 360px) {
+  .viewer-nav-buttons {
+    top: calc(env(safe-area-inset-top, 0px) + 4px);
+    gap: 4px;
+  }
+
+  .viewer-back-link,
+  .viewer-morphology-link {
+    padding: 2px 4px;
+    font-size: 0.42rem;
+    border-radius: 5px;
+  }
+
+  .microscope-panel {
+    top: calc(env(safe-area-inset-top, 0px) + 28px);
+    padding: 2px 3px;
+    border-radius: 8px;
+  }
+
+  .objective-btn {
+    padding: 1px 2px;
+    font-size: 0.4rem;
+  }
+
+  .control-btn {
+    width: 16px;
+    height: 16px;
+    font-size: 0.5rem;
+  }
+
+  .viewer-title {
+    top: calc(env(safe-area-inset-top, 0px) + 58px);
+  }
+
+  .viewer-title h1 {
+    font-size: 0.5rem;
+  }
+
+  .viewer-title p {
+    font-size: 0.32rem;
+  }
+
+  /* Control panels - bottom, horizontal */
+  .indices-panels-container {
+    gap: 3px;
+    left: 4px;
+    right: 4px;
+  }
+
+  .rbc-control-panel.collapsed,
+  .wbc-control-panel.collapsed,
+  .plt-control-panel.collapsed {
+    width: 50px;
+  }
+
+  .morphology-control-panel.collapsed {
+    width: 40px;
+  }
+
+  .rbc-control-panel.expanded {
+    width: 120px;
+  }
+
+  .wbc-control-panel.expanded,
+  .plt-control-panel.expanded {
+    width: 90px;
+  }
+
+  .morphology-control-panel.expanded {
+    width: 75px;
+  }
+
+  .panel-toggle {
+    padding: 5px 5px;
+    font-size: 0.5rem;
+  }
+
+  .panel-summary {
+    font-size: 0.45rem;
+  }
+
+  .anemia-preset-btn,
+  .wbc-preset-btn,
+  .plt-preset-btn,
+  .morph-preset-btn {
+    font-size: 0.4rem;
+    padding: 2px 3px;
+  }
+
+  /* RBC slider styling for 360px */
+  .rbc-control-panel.expanded .rbc-index-label {
+    font-size: 0.45rem;
+  }
+
+  .rbc-control-panel.expanded .rbc-index-value {
+    font-size: 0.5rem;
+  }
+
+  .rbc-control-panel.expanded .rbc-slider::-webkit-slider-thumb {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* iPhone SE 1st gen, very small screens (320px) */
+@media (max-width: 320px) {
+  .viewer-nav-buttons {
+    top: calc(env(safe-area-inset-top, 0px) + 3px);
+    left: 3px;
+    right: 3px;
+    gap: 3px;
+  }
+
+  .viewer-back-link,
+  .viewer-morphology-link {
+    padding: 2px 3px;
+    font-size: 0.38rem;
+    border-radius: 4px;
+  }
+
+  .microscope-panel {
+    top: calc(env(safe-area-inset-top, 0px) + 24px);
+    padding: 2px 3px;
+    border-radius: 6px;
+  }
+
+  .objective-btn {
+    padding: 1px 2px;
+    font-size: 0.35rem;
+  }
+
+  .control-btn {
+    width: 14px;
+    height: 14px;
+    font-size: 0.45rem;
+  }
+
+  .viewer-title {
+    top: calc(env(safe-area-inset-top, 0px) + 50px);
+    left: 5px;
+    right: 5px;
+  }
+
+  .viewer-title h1 {
+    font-size: 0.45rem;
+  }
+
+  .viewer-title p {
+    font-size: 0.28rem;
+  }
+
+  /* Control panels - bottom, horizontal, compact */
+  .indices-panels-container {
+    gap: 2px;
+    left: 3px;
+    right: 3px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
+  }
+
+  .rbc-control-panel.collapsed,
+  .wbc-control-panel.collapsed,
+  .plt-control-panel.collapsed {
+    width: 45px;
+  }
+
+  .morphology-control-panel.collapsed {
+    width: 36px;
+  }
+
+  .rbc-control-panel.expanded {
+    width: 110px;
+  }
+
+  .wbc-control-panel.expanded,
+  .plt-control-panel.expanded {
+    width: 80px;
+  }
+
+  .morphology-control-panel.expanded {
+    width: 65px;
+  }
+
+  .panel-toggle {
+    padding: 4px 4px;
+    font-size: 0.45rem;
+  }
+
+  .panel-summary {
+    font-size: 0.4rem;
+  }
+
+  .anemia-preset-btn,
+  .wbc-preset-btn,
+  .plt-preset-btn,
+  .morph-preset-btn {
+    font-size: 0.38rem;
+    padding: 2px 2px;
+  }
+
+  /* RBC slider styling for 320px */
+  .rbc-control-panel.expanded .rbc-index-label {
+    font-size: 0.42rem;
+  }
+
+  .rbc-control-panel.expanded .rbc-index-value {
+    font-size: 0.48rem;
+  }
+
+  .rbc-control-panel.expanded .rbc-slider::-webkit-slider-thumb {
+    width: 9px;
+    height: 9px;
+  }
+}
+
+/* Landscape mode for phones - smear viewer */
+@media (max-height: 500px) and (orientation: landscape) {
+  .viewer-nav-buttons {
+    top: calc(env(safe-area-inset-top, 0px) + 5px);
+    flex-direction: row;
+  }
+
+  .microscope-panel {
+    top: calc(env(safe-area-inset-top, 0px) + 5px);
+    left: auto;
+    right: 10px;
+    transform: none;
+  }
+
+  .viewer-title {
+    top: auto;
+    bottom: 50px;
+    left: 10px;
+    right: auto;
+  }
+
+  /* Control panels - horizontal row in landscape */
+  .indices-panels-container {
+    top: auto;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 5px);
+    left: 5px;
+    right: 5px;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .rbc-control-panel.collapsed,
+  .wbc-control-panel.collapsed,
+  .plt-control-panel.collapsed {
+    width: 55px;
+  }
+
+  .morphology-control-panel.collapsed {
+    width: 45px;
+  }
+
+  .panel-toggle {
+    padding: 5px 6px;
+    font-size: 0.55rem;
+  }
 }

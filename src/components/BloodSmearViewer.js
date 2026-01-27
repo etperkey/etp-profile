@@ -131,7 +131,9 @@ function BloodSmearViewer() {
   const [rdw, setRdw] = useState(13); // Red cell Distribution Width (%)
   const [nrbcPer100RBC, setNrbcPer100RBC] = useState(0); // Nucleated RBCs per 100 RBCs
   const [pltPerUL, setPltPerUL] = useState(250000); // Platelet count (normal 150-400K)
-  const [showRbcPanel, setShowRbcPanel] = useState(true); // RBC panel expanded
+  // Check if mobile on initial render
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  const [showRbcPanel, setShowRbcPanel] = useState(!isMobile); // Collapsed on mobile, expanded on desktop
   const [showPltPanel, setShowPltPanel] = useState(false); // PLT panel collapsed by default
   const [showWbcPanel, setShowWbcPanel] = useState(false); // WBC panel collapsed by default
   const [showMorphPanel, setShowMorphPanel] = useState(false); // Morphology panel collapsed by default

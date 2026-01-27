@@ -1,0 +1,2002 @@
+.blood-smear-viewer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #fdf6f0 0%, #fef9f5 50%, #fff5ee 100%);
+  overflow: hidden;
+}
+
+.blood-smear-viewer .blood-smear-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Zoom container */
+.blood-smear-zoom-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+}
+
+/* Panning state */
+.blood-smear-viewer.panning .blood-smear-zoom-container {
+  transition: none;
+}
+
+.blood-smear-viewer.zoomed {
+  cursor: grab;
+}
+
+.blood-smear-viewer.panning {
+  cursor: grabbing;
+}
+
+/* Navigation buttons container */
+.viewer-nav-buttons {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 100;
+}
+
+/* Back link */
+.viewer-back-link {
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+.viewer-back-link:hover {
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Morphology Guide link */
+.viewer-morphology-link {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, rgba(139, 41, 66, 0.9), rgba(196, 68, 68, 0.9));
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  box-shadow: 0 2px 10px rgba(139, 41, 66, 0.3);
+  transition: all 0.2s;
+}
+
+.viewer-morphology-link:hover {
+  background: linear-gradient(135deg, rgba(139, 41, 66, 1), rgba(196, 68, 68, 1));
+  box-shadow: 0 4px 20px rgba(139, 41, 66, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Microscope panel - always visible, top center */
+.microscope-panel {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  border-radius: 12px;
+  padding: 12px 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.microscope-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.control-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  background: #f9fafb;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-btn:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.pause-btn.paused {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #16a34a;
+}
+
+.objective-selector {
+  display: flex;
+  gap: 4px;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.objective-btn {
+  padding: 8px 14px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #4b5563;
+}
+
+.objective-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.objective-btn.active {
+  background: white;
+  border-color: var(--obj-color, #3182ce);
+  color: var(--obj-color, #3182ce);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.objective-desc {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.pan-hint {
+  margin: 0;
+  font-size: 0.7rem;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Pause animation state */
+.blood-smear-viewer.paused .floating-cell {
+  animation-play-state: paused !important;
+}
+
+/* Cell Types panel - always visible, right side */
+.cell-types-panel {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  max-width: 260px;
+}
+
+.cell-types-panel h3 {
+  margin: 0 0 12px 0;
+  font-size: 1rem;
+  color: #1a1a2e;
+  font-weight: 600;
+}
+
+/* Hemoglobin Summary at top of Cell Types panel */
+.hgb-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: linear-gradient(135deg, #fef2f2 0%, #fff5f5 100%);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #fecaca;
+}
+
+.hgb-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #991b1b;
+}
+
+.hgb-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: 'Monaco', 'Consolas', monospace;
+}
+
+.hgb-status {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.cell-types-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cell-type-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cell-type-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cell-type-name {
+  font-size: 0.85rem;
+  color: #1a1a2e;
+  font-weight: 500;
+}
+
+.cell-type-percent {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.cell-type-desc {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.cell-type-percent.dynamic .dynamic-value {
+  font-weight: 700;
+  color: #8b2942;
+}
+
+/* Absolute count display */
+.cell-type-absolute {
+  font-size: 0.7rem;
+  color: #059669;
+  font-weight: 600;
+  font-family: 'Monaco', 'Consolas', monospace;
+}
+
+/* WBC Header Row */
+.wbc-header-row {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #d1d5db;
+}
+
+.wbc-header-icon {
+  width: 12px;
+  flex-shrink: 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.header-name {
+  font-weight: 600;
+  color: #4b5563;
+}
+
+/* =================================================================
+   COLLAPSIBLE PANEL STYLES (shared between RBC and WBC panels)
+   ================================================================= */
+.panel-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  color: #1a1a2e;
+}
+
+.panel-toggle:hover {
+  opacity: 0.8;
+}
+
+.panel-toggle .toggle-icon {
+  font-size: 0.7rem;
+  color: #6b7280;
+  width: 12px;
+}
+
+.panel-summary {
+  margin-left: auto;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.panel-content {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* =================================================================
+   INDICES PANELS CONTAINER - stacked vertically in top left
+   ================================================================= */
+.indices-panels-container {
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+  padding-bottom: 20px;
+}
+
+/* Custom scrollbar for indices container */
+.indices-panels-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.indices-panels-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.indices-panels-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.indices-panels-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* RBC Indices Control panel */
+.rbc-control-panel {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  border-radius: 12px;
+  padding: 14px 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: 270px;
+  transition: all 0.2s ease;
+}
+
+.rbc-control-panel.collapsed {
+  width: 200px;
+}
+
+.rbc-control-panel .panel-toggle {
+  color: #c44444;
+}
+
+.anemia-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.anemia-preset-btn {
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  background: #f3f4f6;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #4b5563;
+}
+
+.anemia-preset-btn:hover {
+  background: #fee2e2;
+}
+
+.anemia-preset-btn.active {
+  background: linear-gradient(135deg, #c44444, #e88a8a);
+  color: white;
+}
+
+.rbc-index-row {
+  margin-bottom: 12px;
+}
+
+.rbc-index-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.rbc-index-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #c44444;
+  min-width: 35px;
+}
+
+.rbc-index-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.rbc-index-status {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.rbc-index-absolute {
+  font-size: 0.7rem;
+  color: #059669;
+  font-family: 'Monaco', 'Consolas', monospace;
+}
+
+.rbc-slider {
+  width: 100%;
+  height: 5px;
+  border-radius: 3px;
+  background: #fecaca;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.rbc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c44444, #e88a8a);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.rbc-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c44444, #e88a8a);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.mcv-slider {
+  background: linear-gradient(to right, #fde68a 0%, #fecaca 50%, #e9d5ff 100%);
+}
+
+.rdw-slider {
+  background: linear-gradient(to right, #d1fae5, #fecaca);
+}
+
+/* Platelet slider - red to green to yellow */
+.plt-slider {
+  background: linear-gradient(to right, #fca5a5 0%, #fecaca 20%, #d1fae5 40%, #d1fae5 60%, #fde68a 100%);
+}
+
+.plt-row {
+  padding-top: 8px;
+  margin-top: 4px;
+  border-top: 1px dashed #e5e7eb;
+}
+
+.plt-label {
+  color: #0891b2 !important;
+}
+
+/* nRBC slider - green to red (none to many) */
+.nrbc-slider {
+  background: linear-gradient(to right, #d1fae5 0%, #fecaca 50%, #fca5a5 100%);
+}
+
+.nrbc-row {
+  padding-top: 8px;
+  margin-top: 4px;
+  border-top: 1px dashed #e5e7eb;
+}
+
+/* Calculated values (Hgb, Hct) - read-only display */
+.calculated-row {
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+.calculated-row .rbc-index-label {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.calculated-row .rbc-index-value {
+  font-size: 0.95rem;
+}
+
+.calculated-bar {
+  width: 100%;
+  height: 6px;
+  background: #f3f4f6;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.calculated-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.hgb-fill {
+  background: linear-gradient(90deg, #ef4444 0%, #f97316 30%, #10b981 60%, #10b981 100%);
+}
+
+.hct-fill {
+  background: linear-gradient(90deg, #ef4444 0%, #f97316 30%, #10b981 60%, #8b5cf6 100%);
+}
+
+.nrbc-label {
+  color: #7c3aed !important;
+}
+
+.rbc-reference {
+  margin: 8px 0 0 0;
+  font-size: 0.65rem;
+  color: #9ca3af;
+  text-align: center;
+}
+
+/* PLT Control panel */
+.plt-control-panel {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  border-radius: 12px;
+  padding: 14px 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: 270px;
+  transition: all 0.2s ease;
+}
+
+.plt-control-panel.collapsed {
+  width: 200px;
+}
+
+.plt-control-panel .panel-toggle {
+  color: #0891b2;
+}
+
+.plt-current {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.plt-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.plt-status {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.plt-control-panel .plt-slider {
+  width: 100%;
+  height: 5px;
+  border-radius: 3px;
+  background: linear-gradient(to right, #fca5a5 0%, #fecaca 20%, #d1fae5 40%, #d1fae5 60%, #fde68a 100%);
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.plt-control-panel .plt-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0891b2, #22d3ee);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.plt-control-panel .plt-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0891b2, #22d3ee);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.plt-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.plt-preset-btn {
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  background: #f3f4f6;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #4b5563;
+}
+
+.plt-preset-btn:hover {
+  background: #cffafe;
+}
+
+.plt-preset-btn.active {
+  background: linear-gradient(135deg, #0891b2, #22d3ee);
+  color: white;
+}
+
+.plt-reference {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* WBC Control panel */
+.wbc-control-panel {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  border-radius: 12px;
+  padding: 14px 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: 270px;
+  transition: all 0.2s ease;
+}
+
+.wbc-control-panel.collapsed {
+  width: 200px;
+}
+
+.wbc-control-panel .panel-toggle {
+  color: #8b2942;
+}
+
+.wbc-current {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.wbc-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.wbc-status {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.wbc-slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #e5e7eb;
+  outline: none;
+  -webkit-appearance: none;
+  margin-bottom: 12px;
+}
+
+.wbc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8b2942, #a13553);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.wbc-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8b2942, #a13553);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.wbc-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.wbc-preset-btn {
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  background: #f3f4f6;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #4b5563;
+}
+
+.wbc-preset-btn:hover {
+  background: #e5e7eb;
+}
+
+.wbc-preset-btn.active {
+  background: linear-gradient(135deg, #8b2942, #a13553);
+  color: white;
+}
+
+.wbc-reference {
+  margin: 0 0 16px 0;
+  font-size: 0.7rem;
+  color: #9ca3af;
+  text-align: center;
+}
+
+/* WBC Differential Section */
+.differential-section {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+}
+
+.differential-section h4 {
+  margin: 0 0 10px 0;
+  font-size: 0.85rem;
+  color: #4b5563;
+  font-weight: 600;
+}
+
+.differential-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.diff-preset-btn {
+  padding: 3px 6px;
+  font-size: 0.65rem;
+  background: #f3f4f6;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #4b5563;
+}
+
+.diff-preset-btn:hover {
+  background: #e5e7eb;
+}
+
+.diff-preset-btn.active {
+  background: linear-gradient(135deg, #8b2942, #a13553);
+  color: white;
+}
+
+.differential-sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.diff-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.diff-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: 40px;
+  flex-shrink: 0;
+}
+
+.diff-slider {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: #e5e7eb;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.diff-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: currentColor;
+  cursor: pointer;
+}
+
+.diff-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: currentColor;
+  cursor: pointer;
+  border: none;
+}
+
+.diff-percent {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Performance Stats panel - collapsible, bottom right */
+.perf-stats-panel {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.perf-stats-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #1a1a2e;
+  font-weight: 500;
+  text-align: left;
+}
+
+.perf-stats-toggle:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.toggle-icon {
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+.fps-badge {
+  margin-left: auto;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.perf-stats-content {
+  padding: 0 16px 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.perf-stats-panel.expanded {
+  width: 280px;
+}
+
+.perf-stats-panel.collapsed {
+  width: auto;
+}
+
+.stat-section {
+  margin-bottom: 18px;
+}
+
+.stat-section h4 {
+  margin: 0 0 10px 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.stat-label {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.stat-value {
+  font-weight: 600;
+  color: #1a1a2e;
+  font-size: 0.9rem;
+}
+
+.density-value {
+  text-transform: capitalize;
+  background: linear-gradient(135deg, #8b2942, #a13553);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gpu-row {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.gpu-value {
+  font-size: 0.75rem;
+  word-break: break-word;
+  line-height: 1.3;
+}
+
+/* Density controls */
+.density-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.density-btn {
+  padding: 8px 12px;
+  background: #f3f4f6;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  color: #4b5563;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.density-btn:hover {
+  background: #e5e7eb;
+}
+
+.density-btn.active {
+  background: linear-gradient(135deg, #8b2942, #a13553);
+  color: white;
+  border-color: #8b2942;
+}
+
+/* Zoom controls */
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.zoom-btn {
+  width: 36px;
+  height: 36px;
+  background: #f3f4f6;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  color: #4b5563;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoom-btn:hover:not(:disabled) {
+  background: #e5e7eb;
+  border-color: #d1d5db;
+}
+
+.zoom-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.zoom-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.zoom-btn.reset-btn {
+  width: auto;
+  padding: 0 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.zoom-level {
+  min-width: 45px;
+  text-align: center;
+  font-weight: 600;
+  color: #1a1a2e;
+  font-size: 0.95rem;
+}
+
+.zoom-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Cell legend */
+.cell-legend {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 15px;
+  margin-top: 15px;
+}
+
+.legend-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-dot.rbc {
+  background: radial-gradient(circle at 30% 30%, #e88a8a, #c44444);
+}
+
+.legend-dot.platelet {
+  background: radial-gradient(circle at 30% 30%, #d4b4e8, #9b6bc4);
+}
+
+.legend-dot.neutrophil {
+  background: radial-gradient(circle at 30% 30%, #b8d4e8, #6a9fc4);
+}
+
+.legend-dot.lymphocyte {
+  background: radial-gradient(circle at 30% 30%, #a8c8e8, #5a8ac4);
+}
+
+.legend-dot.monocyte {
+  background: radial-gradient(circle at 30% 30%, #c8d4e8, #8a9fc4);
+}
+
+.legend-dot.eosinophil {
+  background: radial-gradient(circle at 30% 30%, #f4c4a8, #e88a5a);
+}
+
+.legend-dot.basophil {
+  background: radial-gradient(circle at 30% 30%, #c4a8d4, #8a5aa4);
+}
+
+/* Title overlay */
+.viewer-title {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 50;
+}
+
+.viewer-title h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #1a1a2e;
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
+}
+
+.viewer-title p {
+  margin: 8px 0 0 0;
+  font-size: 1rem;
+  color: #6b7280;
+  text-shadow: 0 1px 5px rgba(255, 255, 255, 0.8);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .microscope-panel {
+    top: 70px;
+    padding: 10px 16px;
+  }
+
+  .control-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .objective-btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+
+  .cell-types-panel {
+    top: auto;
+    bottom: 80px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+    padding: 12px 16px;
+  }
+
+  .cell-types-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .cell-type-item {
+    gap: 6px;
+  }
+
+  .cell-type-name {
+    font-size: 0.8rem;
+  }
+
+  .cell-type-percent {
+    font-size: 0.7rem;
+  }
+
+  .wbc-control-panel {
+    top: auto;
+    bottom: 60px;
+    left: 10px;
+    right: 10px;
+    width: auto;
+    max-height: 45vh;
+    overflow-y: auto;
+  }
+
+  .wbc-value {
+    font-size: 1.2rem;
+  }
+
+  .wbc-presets {
+    justify-content: center;
+  }
+
+  .differential-presets {
+    justify-content: center;
+  }
+
+  .diff-label {
+    width: 35px;
+    font-size: 0.7rem;
+  }
+
+  .diff-percent {
+    width: 28px;
+    font-size: 0.65rem;
+  }
+
+  .perf-stats-panel {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+  }
+
+  .perf-stats-panel.expanded {
+    width: auto;
+  }
+
+  .viewer-title {
+    bottom: auto;
+    top: 120px;
+    left: 20px;
+    right: 20px;
+    transform: none;
+  }
+
+  .viewer-title h1 {
+    font-size: 1.3rem;
+  }
+
+  .viewer-title p {
+    font-size: 0.9rem;
+  }
+
+  .rbc-control-panel {
+    display: none; /* Hide on mobile for now - too crowded */
+  }
+
+  .viewer-copyright {
+    bottom: 5px;
+    left: 10px;
+    font-size: 0.6rem;
+  }
+}
+
+/* Copyright notice - bottom left */
+.viewer-copyright {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 50;
+  text-align: left;
+}
+
+.viewer-copyright p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+}
+
+.viewer-copyright p:first-child {
+  font-weight: 500;
+  color: #4b5563;
+}
+
+/* =================================================================
+   MORPHOLOGY PANEL
+   ================================================================= */
+
+.morph-control-panel {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.morph-control-panel.expanded {
+  width: 280px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.morph-control-panel.collapsed {
+  width: 200px;
+}
+
+.morph-toggle {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+.morph-summary {
+  color: #8b5cf6 !important;
+  font-size: 1.1rem;
+}
+
+.morph-panel-content {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.morph-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 10px;
+}
+
+.morph-preset-btn {
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.morph-preset-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.morph-preset-btn.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border-color: transparent;
+}
+
+.morph-section {
+  margin-bottom: 12px;
+}
+
+.morph-section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin: 8px 0 6px 0;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.rbc-morph-title {
+  background: linear-gradient(135deg, rgba(196, 68, 68, 0.1), rgba(232, 138, 138, 0.1));
+  color: #c44444;
+}
+
+.wbc-morph-title {
+  background: linear-gradient(135deg, rgba(139, 41, 66, 0.1), rgba(196, 68, 68, 0.1));
+  color: #8b2942;
+}
+
+.morph-sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.morph-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+}
+
+.morph-label {
+  font-size: 0.7rem;
+  color: #4b5563;
+  width: 85px;
+  flex-shrink: 0;
+}
+
+.morph-slider {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #e5e7eb;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.morph-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #6366f1;
+  cursor: pointer;
+}
+
+.rbc-morph-slider::-webkit-slider-thumb {
+  background: #c44444;
+}
+
+.wbc-morph-slider::-webkit-slider-thumb {
+  background: #8b2942;
+}
+
+.morph-percent {
+  font-size: 0.65rem;
+  color: #6b7280;
+  width: 28px;
+  text-align: right;
+  font-family: monospace;
+}
+
+/* =================================================================
+   RBC MORPHOLOGY CELL STYLES (floating cells in smear)
+   ================================================================= */
+
+/* Override contain property for cells that need overflow */
+.floating-cell.rouleaux,
+.floating-cell.smudge-cell,
+.floating-cell.sickle-cell,
+.floating-cell.stomatocyte,
+.floating-cell.howell-jolly,
+.floating-cell.band-neutrophil,
+.floating-cell.hypersegmented,
+.floating-cell.toxic-granulation,
+.floating-cell.dohle-bodies,
+.floating-cell.atypical-lymph,
+.floating-cell.blast,
+.floating-cell.auer-rod {
+  contain: none !important;
+  overflow: visible !important;
+}
+
+/* Spherocyte - small, dense, no central pallor */
+.floating-cell.spherocyte {
+  background: radial-gradient(
+    ellipse at 30% 30%,
+    rgba(200, 100, 100, 0.95) 0%,
+    rgba(180, 70, 70, 0.95) 50%,
+    rgba(160, 50, 50, 0.9) 100%
+  ) !important;
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2), 1px 2px 4px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Target cell - bull's eye with gradual transitions between zones */
+.floating-cell.target-cell {
+  background: radial-gradient(
+    circle,
+    /* Central hemoglobin - bull's eye */
+    rgba(195, 85, 85, 0.95) 0%,
+    rgba(200, 90, 90, 0.9) 12%,
+    /* Transition to central pallor */
+    rgba(235, 170, 160, 0.8) 18%,
+    rgba(255, 215, 200, 0.7) 25%,
+    rgba(255, 220, 205, 0.65) 35%,
+    /* Transition to peripheral hemoglobin */
+    rgba(235, 165, 155, 0.8) 42%,
+    rgba(200, 90, 90, 0.92) 50%,
+    rgba(185, 75, 75, 0.95) 70%,
+    rgba(175, 65, 65, 0.9) 100%
+  ) !important;
+}
+
+/* Schistocyte - helmet cell with jagged/irregular edges
+   Fragmented RBC torn through fibrin strands */
+.floating-cell.schistocyte {
+  background: radial-gradient(
+    ellipse at 50% 60%,
+    rgba(255, 200, 200, 0.8) 0%,
+    rgba(210, 95, 90, 0.95) 30%,
+    rgba(180, 70, 70, 0.9) 100%
+  ) !important;
+  /* Jagged helmet shape - irregular torn edges */
+  clip-path: polygon(
+    3% 50%,
+    8% 35%,
+    12% 40%,
+    18% 20%,
+    30% 12%,
+    38% 18%,
+    50% 5%,
+    62% 15%,
+    72% 8%,
+    82% 22%,
+    88% 35%,
+    95% 48%,
+    88% 58%,
+    75% 52%,
+    60% 60%,
+    45% 55%,
+    30% 62%,
+    18% 55%,
+    8% 58%
+  ) !important;
+  border-radius: 0 !important;
+}
+
+/* Sickle cell - crescent shape */
+.floating-cell.sickle-cell {
+  background: transparent !important;
+  position: relative;
+}
+
+.floating-cell.sickle-cell::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(180, 70, 70, 0.95), rgba(140, 40, 40, 0.95));
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+}
+
+.floating-cell.sickle-cell::after {
+  content: '';
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  background: linear-gradient(135deg, #fdf6f0 0%, #fef9f5 100%);
+  border-radius: 50%;
+  top: -15%;
+  left: 20%;
+}
+
+/* Teardrop - dacrocyte */
+.floating-cell.teardrop {
+  background: radial-gradient(
+    ellipse at 50% 70%,
+    rgba(240, 160, 160, 0.9) 0%,
+    rgba(200, 90, 90, 0.95) 40%,
+    rgba(180, 70, 70, 0.9) 100%
+  ) !important;
+  border-radius: 50% 50% 50% 50% / 30% 30% 70% 70% !important;
+}
+
+/* Elliptocyte - oval/elongated RBC */
+.floating-cell.elliptocyte {
+  background: radial-gradient(
+    ellipse at 40% 40%,
+    rgba(255, 200, 200, 0.9) 0%,
+    rgba(220, 100, 100, 0.95) 25%,
+    rgba(180, 60, 60, 0.7) 45%,
+    rgba(200, 80, 80, 0.95) 65%,
+    rgba(180, 60, 60, 0.9) 100%
+  ) !important;
+  border-radius: 50% / 25% !important;
+}
+
+/* Bite cell - large semicircular bite removed by splenic macrophages */
+.floating-cell.bite-cell {
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% 100%, 0% 100%,
+    0% 75%,
+    20% 68%,
+    40% 58%,
+    50% 50%,
+    40% 42%,
+    20% 32%,
+    0% 25%
+  ) !important;
+  border-radius: 50% !important;
+}
+
+/* Burr cell - echinocyte with evenly spaced short spicules all around */
+.floating-cell.burr-cell {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(255, 210, 200, 0.75) 0%,
+    rgba(220, 100, 100, 0.95) 30%,
+    rgba(190, 70, 70, 0.95) 60%,
+    rgba(180, 60, 60, 0.9) 100%
+  ) !important;
+  /* 16 evenly spaced spicules around entire circumference */
+  clip-path: polygon(
+    50% 2%, 56% 15%, 67% 5%, 72% 18%,
+    85% 15%, 82% 28%, 95% 33%, 88% 44%,
+    98% 50%, 88% 56%, 95% 67%, 82% 72%,
+    85% 85%, 72% 82%, 67% 95%, 56% 85%,
+    50% 98%, 44% 85%, 33% 95%, 28% 82%,
+    15% 85%, 18% 72%, 5% 67%, 12% 56%,
+    2% 50%, 12% 44%, 5% 33%, 18% 28%,
+    15% 15%, 28% 18%, 33% 5%, 44% 15%
+  ) !important;
+  border-radius: 0 !important;
+}
+
+/* Acanthocyte - spur cell with irregular spicules
+   Fewer spicules than burr, varying lengths, some areas smooth */
+.floating-cell.acanthocyte {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(255, 210, 200, 0.75) 0%,
+    rgba(220, 100, 100, 0.95) 30%,
+    rgba(190, 70, 70, 0.95) 60%,
+    rgba(180, 60, 60, 0.9) 100%
+  ) !important;
+  /* Only 5 spicules - irregular lengths, big gaps between */
+  clip-path: polygon(
+    /* Long spike top */
+    45% 0%, 55% 18%,
+    /* Smooth curve - no spike */
+    62% 15%, 72% 12%, 80% 18%,
+    /* Medium spike right */
+    97% 35%, 78% 40%,
+    /* Smooth curve - no spike */
+    82% 55%, 85% 70%,
+    /* Short spike bottom-right */
+    92% 88%, 72% 78%,
+    /* Smooth curve - no spike */
+    60% 82%, 50% 85%, 40% 82%,
+    /* Long spike bottom-left */
+    12% 95%, 32% 70%,
+    /* Smooth curve - no spike */
+    25% 55%, 20% 42%,
+    /* Medium spike left */
+    3% 28%, 25% 30%,
+    /* Smooth curve back to top */
+    28% 20%, 35% 12%
+  ) !important;
+  border-radius: 0 !important;
+}
+
+/* Stomatocyte - mouth-shaped pallor */
+.floating-cell.stomatocyte {
+  background: radial-gradient(
+    ellipse at 30% 30%,
+    rgba(200, 90, 90, 0.95) 0%,
+    rgba(180, 70, 70, 0.9) 100%
+  ) !important;
+  position: relative;
+}
+
+.floating-cell.stomatocyte::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  height: 15%;
+  background: rgba(255, 220, 200, 0.8);
+  border-radius: 50%;
+}
+
+/* Rouleaux - RBCs stacked like coins with minimal overlap */
+.floating-cell.rouleaux {
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  transform: rotate(var(--cell-rotation, 0deg)) !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* Individual cells in rouleaux stack - each with biconcave disc appearance */
+.rouleaux-cell {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  /* Biconcave disc gradient with central pallor */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 210, 200, 0.75) 0%,
+    rgba(245, 180, 170, 0.8) 15%,
+    rgba(220, 100, 90, 0.92) 30%,
+    rgba(190, 65, 60, 0.98) 50%,
+    rgba(175, 55, 55, 0.95) 65%,
+    rgba(195, 75, 70, 0.9) 85%,
+    rgba(210, 90, 85, 0.85) 100%
+  );
+  /* Position each cell based on stack index - 30px spacing for minimal overlap */
+  left: calc(var(--stack-index) * 30px);
+  top: calc(var(--stack-index) * 5px);
+  /* Cells in back are slightly dimmer */
+  opacity: calc(1 - (var(--stack-index) * 0.08));
+  /* Stack order - first cell on top */
+  z-index: calc(10 - var(--stack-index));
+}
+
+/* Howell-Jolly body */
+.floating-cell.howell-jolly {
+  position: relative;
+}
+
+.floating-cell.howell-jolly::after {
+  content: '';
+  position: absolute;
+  top: 25%;
+  right: 25%;
+  width: 20%;
+  height: 20%;
+  background: #4a1a6b;
+  border-radius: 50%;
+}
+
+/* Basophilic stippling */
+.floating-cell.basophilic-stippling {
+  background:
+    radial-gradient(circle at 25% 35%, #4a5568 1.5px, transparent 1.5px),
+    radial-gradient(circle at 55% 45%, #4a5568 1px, transparent 1px),
+    radial-gradient(circle at 40% 65%, #4a5568 1.5px, transparent 1.5px),
+    radial-gradient(circle at 70% 30%, #4a5568 1px, transparent 1px),
+    radial-gradient(
+      ellipse at 30% 30%,
+      rgba(255, 200, 200, 0.9) 0%,
+      rgba(220, 100, 100, 0.95) 25%,
+      rgba(180, 60, 60, 0.7) 45%,
+      rgba(200, 80, 80, 0.95) 65%,
+      rgba(180, 60, 60, 0.9) 100%
+    ) !important;
+}
+
+/* Polychromasia - bluish tint */
+.floating-cell.polychromasia {
+  background: radial-gradient(
+    ellipse at 30% 30%,
+    rgba(200, 180, 210, 0.9) 0%,
+    rgba(180, 140, 180, 0.95) 40%,
+    rgba(160, 120, 160, 0.9) 100%
+  ) !important;
+}
+
+/* =================================================================
+   WBC MORPHOLOGY CELL STYLES (floating cells in smear)
+   ================================================================= */
+
+/* Band neutrophil - horseshoe nucleus */
+.floating-cell.band-neutrophil {
+  background: radial-gradient(
+    ellipse at 40% 40%,
+    rgba(180, 200, 220, 0.95) 0%,
+    rgba(160, 180, 200, 0.9) 100%
+  ) !important;
+  position: relative;
+}
+
+.floating-cell.band-neutrophil::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 30%;
+  background: #4a1a6b;
+  border-radius: 50% 50% 50% 50% / 100% 100% 0% 0%;
+}
+
+/* Hypersegmented neutrophil */
+.floating-cell.hypersegmented {
+  background: radial-gradient(
+    ellipse at 40% 40%,
+    rgba(180, 200, 220, 0.95) 0%,
+    rgba(160, 180, 200, 0.9) 100%
+  ) !important;
+  position: relative;
+}
+
+.floating-cell.hypersegmented::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  height: 40%;
+  background: #4a1a6b;
+  clip-path: polygon(
+    0% 50%, 10% 20%, 25% 50%, 35% 15%, 50% 50%, 65% 15%, 75% 50%, 90% 20%, 100% 50%,
+    90% 80%, 75% 50%, 65% 85%, 50% 50%, 35% 85%, 25% 50%, 10% 80%
+  );
+}
+
+/* Toxic granulation */
+.floating-cell.toxic-granulation {
+  background:
+    radial-gradient(circle at 25% 30%, #2d1b4e 3px, transparent 3px),
+    radial-gradient(circle at 55% 55%, #2d1b4e 2.5px, transparent 2.5px),
+    radial-gradient(circle at 70% 35%, #2d1b4e 3px, transparent 3px),
+    radial-gradient(circle at 35% 70%, #2d1b4e 2px, transparent 2px),
+    radial-gradient(
+      ellipse at 40% 40%,
+      rgba(180, 200, 220, 0.95) 0%,
+      rgba(160, 180, 200, 0.9) 100%
+    ) !important;
+  position: relative;
+}
+
+.floating-cell.toxic-granulation::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 55%;
+  height: 30%;
+  background: #4a1a6b;
+  clip-path: polygon(0% 50%, 30% 20%, 50% 50%, 70% 20%, 100% 50%, 70% 80%, 50% 50%, 30% 80%);
+}
+
+/* Döhle bodies */
+.floating-cell.dohle-bodies {
+  background: radial-gradient(
+    ellipse at 40% 40%,
+    rgba(180, 200, 220, 0.95) 0%,
+    rgba(160, 180, 200, 0.9) 100%
+  ) !important;
+  position: relative;
+}
+
+.floating-cell.dohle-bodies::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 55%;
+  height: 30%;
+  background: #4a1a6b;
+  clip-path: polygon(0% 50%, 30% 20%, 50% 50%, 70% 20%, 100% 50%, 70% 80%, 50% 50%, 30% 80%);
+}
+
+.floating-cell.dohle-bodies::after {
+  content: '';
+  position: absolute;
+  bottom: 15%;
+  right: 15%;
+  width: 18%;
+  height: 10%;
+  background: rgba(150, 180, 220, 0.8);
+  border-radius: 50%;
+}
+
+/* Atypical lymphocyte */
+.floating-cell.atypical-lymph {
+  border-radius: 45% 55% 50% 50% !important;
+  background: radial-gradient(
+    ellipse at 40% 40%,
+    rgba(130, 160, 200, 0.95) 0%,
+    rgba(100, 130, 180, 0.9) 100%
+  ) !important;
+  position: relative;
+}
+
+.floating-cell.atypical-lymph::before {
+  content: '';
+  position: absolute;
+  top: 35%;
+  left: 30%;
+  width: 40%;
+  height: 40%;
+  background: #3d1a5c;
+  border-radius: 50%;
+}
+
+/* Blast cell - high N:C ratio but with visible cytoplasm rim */
+.floating-cell.blast {
+  background: radial-gradient(
+    ellipse at 40% 40%,
+    rgba(160, 180, 220, 0.95) 0%,
+    rgba(140, 160, 200, 0.9) 100%
+  ) !important;
+  /* Irregular amoeboid shape - 75% more irregular */
+  border-radius: 64% 36% 59% 41% / 54% 64% 36% 46% !important;
+  position: relative;
+}
+
+.floating-cell.blast::before {
+  content: '';
+  position: absolute;
+  top: 48%;
+  left: 48%;
+  transform: translate(-50%, -50%);
+  width: 72%;
+  height: 68%;
+  background: radial-gradient(
+    ellipse at 45% 45%,
+    rgba(100, 80, 140, 0.85) 0%,
+    rgba(74, 26, 107, 0.95) 100%
+  );
+  /* Irregular nucleus - 75% more irregular */
+  border-radius: 59% 41% 46% 54% / 50% 59% 41% 50%;
+}
+
+.floating-cell.blast::after {
+  content: '';
+  position: absolute;
+  top: 32%;
+  left: 38%;
+  width: 12%;
+  height: 12%;
+  background: rgba(200, 180, 220, 0.95);
+  border-radius: 50%;
+  box-shadow: 14px 6px 0 -1px rgba(200, 180, 220, 0.9);
+}
+
+/* Smudge cell - fragile lymphocyte that ruptured */
+.floating-cell.smudge-cell {
+  overflow: visible !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+
+.floating-cell.smudge-cell::before {
+  content: '';
+  position: absolute;
+  /* 1.5X bigger - adjusted positioning to center */
+  top: -62%;
+  left: -70%;
+  width: 240%;
+  height: 225%;
+  background: radial-gradient(
+    ellipse 75% 55% at 45% 50%,
+    rgba(100, 80, 140, 0.95) 0%,
+    rgba(80, 60, 120, 0.75) 25%,
+    rgba(74, 26, 107, 0.52) 45%,
+    rgba(74, 26, 107, 0.22) 65%,
+    transparent 80%
+  );
+  filter: blur(2px);
+  /* Highly irregular amoeboid shape for ruptured cell - 75% more irregular */
+  border-radius: 73% 27% 57% 43% / 59% 29% 71% 41%;
+}
+
+/* Auer rod (promyelocyte) */
+.floating-cell.auer-rod {
+  background:
+    /* More numerous, half-size granules */
+    radial-gradient(circle at 12% 22%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 25% 18%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
+    radial-gradient(circle at 18% 35%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 82% 25%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 75% 32%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
+    radial-gradient(circle at 88% 40%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 15% 75%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 22% 82%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
+    radial-gradient(circle at 28% 70%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 78% 72%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 85% 78%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
+    radial-gradient(circle at 72% 85%, rgba(140, 60, 100, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 30% 28%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
+    radial-gradient(circle at 70% 22%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
+    radial-gradient(circle at 25% 65%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
+    radial-gradient(circle at 75% 68%, rgba(140, 60, 100, 0.9) 0.75px, transparent 0.75px),
+    radial-gradient(
+      ellipse at 40% 40%,
+      rgba(150, 170, 210, 0.95) 0%,
+      rgba(130, 150, 190, 0.9) 100%
+    ) !important;
+  /* Irregular amoeboid shape - 75% more irregular */
+  border-radius: 59% 41% 54% 46% / 46% 59% 41% 54% !important;
+  position: relative;
+}
+
+.floating-cell.auer-rod::before {
+  content: '';
+  position: absolute;
+  top: 48%;
+  left: 48%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 52%;
+  background: radial-gradient(
+    ellipse at 45% 45%,
+    rgba(90, 70, 130, 0.85) 0%,
+    rgba(74, 26, 107, 0.95) 100%
+  );
+  /* Irregular nucleus - 75% more irregular */
+  border-radius: 54% 46% 59% 41% / 46% 54% 46% 54%;
+}
+
+.floating-cell.auer-rod::after {
+  content: '';
+  position: absolute;
+  top: 70%;
+  left: 20%;
+  width: 35%;
+  height: 8%;
+  background: linear-gradient(90deg, rgba(200, 80, 100, 0.95), rgba(160, 50, 70, 0.9));
+  border-radius: 2px;
+  transform: rotate(-25deg);
+}

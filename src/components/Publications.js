@@ -1,4 +1,3 @@
-import React from 'react';
 import BloodSmearBackground from './BloodSmearBackground';
 
 function Publications() {
@@ -6,39 +5,43 @@ function Publications() {
   const selectedPublications = [
     {
       id: 1,
-      title: 'Early Notch signals from fibroblastic reticular cells program effector CD8+ T cell differentiation',
+      title:
+        'Early Notch signals from fibroblastic reticular cells program effector CD8+ T cell differentiation',
       authors: 'De Sousa DM*, Perkey E*, Le Corre L*, et al.',
       journal: 'Journal of Experimental Medicine',
       year: 2025,
       badge: 'Co-First Author',
-      pmid: '40111253'
+      pmid: '40111253',
     },
     {
       id: 2,
-      title: 'Notch signaling drives intestinal graft-versus-host disease in mice and nonhuman primates',
+      title:
+        'Notch signaling drives intestinal graft-versus-host disease in mice and nonhuman primates',
       authors: 'Tkachev V*, Vanderbeck A*, Perkey E*, et al.',
       journal: 'Science Translational Medicine',
       year: 2023,
       badge: 'Co-First Author',
-      pmid: '37379368'
+      pmid: '37379368',
     },
     {
       id: 3,
-      title: 'Single-cell analyses identify brain mural cells expressing CD19 as potential off-tumor targets for CAR-T immunotherapies',
+      title:
+        'Single-cell analyses identify brain mural cells expressing CD19 as potential off-tumor targets for CAR-T immunotherapies',
       authors: 'Parker KR*, Migliorini D*, Perkey E, et al.',
       journal: 'Cell',
       year: 2020,
       badge: 'Key Contribution',
-      pmid: '32961131'
+      pmid: '32961131',
     },
     {
       id: 4,
-      title: 'GCNT1-Mediated O-Glycosylation of the Sialomucin CD43 Is a Sensitive Indicator of Notch Signaling in Activated T Cells',
+      title:
+        'GCNT1-Mediated O-Glycosylation of the Sialomucin CD43 Is a Sensitive Indicator of Notch Signaling in Activated T Cells',
       authors: 'Perkey E, Maurice De Sousa D, et al.',
       journal: 'Journal of Immunology',
       year: 2020,
       badge: 'First Author',
-      pmid: '32060138'
+      pmid: '32060138',
     },
     {
       id: 5,
@@ -47,7 +50,7 @@ function Publications() {
       journal: 'Journal of Clinical Investigation',
       year: 2017,
       badge: 'Key Contribution',
-      pmid: '28319044'
+      pmid: '28319044',
     },
     {
       id: 6,
@@ -56,32 +59,34 @@ function Publications() {
       journal: 'Annual Review of Pathology',
       year: 2018,
       badge: 'Key Review',
-      pmid: '29068759'
+      pmid: '29068759',
     },
     {
       id: 7,
-      title: 'Increased TORC2 signaling promotes age-related decline in CD4 T cell signaling and function',
+      title:
+        'Increased TORC2 signaling promotes age-related decline in CD4 T cell signaling and function',
       authors: 'Perkey E, Fingar D, Miller RA, Garcia GG',
       journal: 'Journal of Immunology',
       year: 2013,
       badge: 'First Author',
-      pmid: '24078700'
+      pmid: '24078700',
     },
     {
       id: 8,
-      title: 'Ex-vivo Enzymatic Treatment of Aged CD4 T cells Restores Cognate T-cell Helper Function and Enhances Antibody Production in Mice',
+      title:
+        'Ex-vivo Enzymatic Treatment of Aged CD4 T cells Restores Cognate T-cell Helper Function and Enhances Antibody Production in Mice',
       authors: 'Perkey E, Miller RA, Garcia GG',
       journal: 'Journal of Immunology',
       year: 2012,
       badge: 'First Author',
-      pmid: '23136198'
-    }
+      pmid: '23136198',
+    },
   ];
 
   const metrics = {
     totalPublications: 24,
     hIndex: 14,
-    totalCitations: '2,800+'
+    totalCitations: '2,800+',
   };
 
   return (
@@ -106,8 +111,7 @@ function Publications() {
         </div>
 
         <p className="publications-intro">
-          Publications highlighting my research contributions.
-          * denotes equal contribution.
+          Publications highlighting my research contributions. * denotes equal contribution.
         </p>
 
         <div className="publications-list">
@@ -115,7 +119,9 @@ function Publications() {
             <article key={pub.id} className="publication-card">
               <div className="publication-content">
                 <div className="publication-header">
-                  <span className={`publication-badge ${pub.badge.toLowerCase().replace(' ', '-')}`}>
+                  <span
+                    className={`publication-badge ${pub.badge.toLowerCase().replace(' ', '-')}`}
+                  >
                     {pub.badge}
                   </span>
                   <span className="publication-year">{pub.year}</span>

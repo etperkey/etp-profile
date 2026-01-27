@@ -1,5 +1,3 @@
-import React from 'react';
-
 function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -57,9 +55,7 @@ function Footer() {
               Doximity
             </a>
           </div>
-          <p className="footer-text">
-            &copy; {currentYear} Eric Perkey, MD. All rights reserved.
-          </p>
+          <p className="footer-text">&copy; {currentYear} Eric Perkey, MD. All rights reserved.</p>
         </div>
       </div>
     </footer>

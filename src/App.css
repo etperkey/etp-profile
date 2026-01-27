@@ -1,5 +1,7 @@
 /* Reset and Base Styles */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -24,7 +26,12 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
   font-size: 16px;
   line-height: 1.6;
   color: var(--text-color);
@@ -38,7 +45,12 @@ body {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 600;
   line-height: 1.3;
 }
@@ -112,7 +124,9 @@ a {
   background-color: var(--primary-color);
   margin: 15px auto 0;
   border-radius: 2px;
-  transition: width 0.3s ease, background-color 0.3s ease;
+  transition:
+    width 0.3s ease,
+    background-color 0.3s ease;
 }
 
 .section-title:hover::after {
@@ -145,7 +159,9 @@ a {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--primary-color);
-  transition: transform 0.2s ease, letter-spacing 0.3s ease;
+  transition:
+    transform 0.2s ease,
+    letter-spacing 0.3s ease;
 }
 
 .logo:hover {
@@ -257,7 +273,8 @@ a {
 }
 
 @keyframes flowCytometryDrift {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0);
     opacity: 0.15;
   }
@@ -287,6 +304,67 @@ a {
   overflow: hidden;
 }
 
+/* Microscope Link */
+.microscope-link {
+  position: absolute;
+  top: 100px;
+  left: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  z-index: 10;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.microscope-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.microscope-link:hover .microscope-icon {
+  transform: scale(1.05);
+}
+
+.microscope-icon {
+  width: 48px;
+  height: 48px;
+  transition: transform 0.3s ease;
+}
+
+.microscope-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #4a5568;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .microscope-link {
+    top: 80px;
+    left: 15px;
+    padding: 10px;
+  }
+
+  .microscope-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .microscope-label {
+    font-size: 0.65rem;
+  }
+}
+
 /* Blood Smear Background */
 .blood-smear-background {
   position: absolute;
@@ -297,10 +375,12 @@ a {
   pointer-events: none;
   z-index: 0;
   /* Subtle plasma tint - pale yellow/straw color of real plasma */
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     rgba(255, 252, 240, 0.3) 0%,
     rgba(255, 248, 230, 0.25) 50%,
-    rgba(255, 250, 235, 0.3) 100%);
+    rgba(255, 250, 235, 0.3) 100%
+  );
 }
 
 .floating-cell {
@@ -312,27 +392,42 @@ a {
   backface-visibility: hidden;
 }
 
+/* RBC - Biconcave disc appearance (donut-like when viewed from above)
+   Central pallor (lighter center) + darker hemoglobin-rich rim */
 .floating-cell.rbc {
-  background: radial-gradient(ellipse at 30% 30%,
-    rgba(220, 80, 80, 0.9) 0%,
-    rgba(180, 50, 50, 0.95) 40%,
-    rgba(140, 30, 30, 0.85) 60%,
-    rgba(180, 50, 50, 0.9) 100%);
-  box-shadow: inset 0 0 8px rgba(100, 20, 20, 0.5);
+  background: radial-gradient(
+    ellipse at center,
+    /* Central pallor - lighter, thinner center */
+    rgba(255, 210, 200, 0.75) 0%,
+    rgba(245, 180, 170, 0.8) 15%,
+    /* Transition to hemoglobin-rich zone */
+    rgba(220, 100, 90, 0.92) 30%,
+    /* Peak hemoglobin concentration - darkest ring */
+    rgba(190, 65, 60, 0.98) 50%,
+    rgba(175, 55, 55, 0.95) 65%,
+    /* Outer edge - slightly lighter than peak */
+    rgba(195, 75, 70, 0.9) 85%,
+    rgba(210, 90, 85, 0.85) 100%
+  );
+  box-shadow:
+    inset 0 0 4px rgba(120, 40, 40, 0.4),
+    0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* RBC biconcave disc appearance */
+/* Subtle highlight for 3D biconcave effect */
 .floating-cell.rbc::before {
   content: '';
   position: absolute;
-  top: 25%;
-  left: 25%;
-  width: 50%;
-  height: 50%;
+  top: 8%;
+  left: 12%;
+  width: 30%;
+  height: 25%;
   border-radius: 50%;
-  background: radial-gradient(ellipse at center,
-    rgba(255, 200, 200, 0.3) 0%,
-    transparent 70%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.25) 0%,
+    transparent 70%
+  );
 }
 
 /* Neutrophil - multilobulated nucleus with fine granules (50% reduced, 20% lighter) */
@@ -386,10 +481,12 @@ a {
     radial-gradient(circle at 32% 65%, rgba(70, 40, 100, 0.56) 1px, transparent 1.4px),
     radial-gradient(circle at 30% 28%, rgba(75, 45, 105, 0.56) 1px, transparent 1.4px),
     /* Base cytoplasm - pale pink */
-    radial-gradient(ellipse at 50% 50%,
-      rgba(250, 240, 245, 0.95) 0%,
-      rgba(245, 230, 235, 0.9) 70%,
-      rgba(235, 215, 225, 0.85) 100%);
+    radial-gradient(
+        ellipse at 50% 50%,
+        rgba(250, 240, 245, 0.95) 0%,
+        rgba(245, 230, 235, 0.9) 70%,
+        rgba(235, 215, 225, 0.85) 100%
+      );
   box-shadow: inset 0 0 6px rgba(180, 140, 160, 0.3);
 }
 
@@ -441,8 +538,7 @@ a {
   background: rgba(60, 30, 90, 0.8);
   transform: rotate(-20deg);
   /* Third lobe connection */
-  box-shadow:
-    12px 20px 0 -6px rgba(60, 30, 90, 0.8);
+  box-shadow: 12px 20px 0 -6px rgba(60, 30, 90, 0.8);
 }
 .floating-cell.neutrophil-3lobe::after {
   content: '';
@@ -463,9 +559,11 @@ a {
 
 /* Lymphocyte - large round nucleus, thin cytoplasm rim */
 .floating-cell.lymphocyte {
-  background: radial-gradient(ellipse at 40% 40%,
+  background: radial-gradient(
+    ellipse at 40% 40%,
     rgba(200, 210, 240, 0.95) 0%,
-    rgba(180, 190, 220, 0.9) 100%);
+    rgba(180, 190, 220, 0.9) 100%
+  );
   box-shadow: inset 0 0 6px rgba(100, 100, 150, 0.4);
 }
 
@@ -477,17 +575,21 @@ a {
   width: 76%;
   height: 76%;
   border-radius: 50%;
-  background: radial-gradient(ellipse at 35% 35%,
+  background: radial-gradient(
+    ellipse at 35% 35%,
     rgba(60, 40, 100, 0.75) 0%,
-    rgba(50, 30, 80, 0.8) 100%);
+    rgba(50, 30, 80, 0.8) 100%
+  );
 }
 
 /* Monocyte - kidney-bean shaped nucleus, gray-blue cytoplasm */
 .floating-cell.monocyte {
-  background: radial-gradient(ellipse at 40% 40%,
+  background: radial-gradient(
+    ellipse at 40% 40%,
     rgba(200, 210, 225, 0.95) 0%,
     rgba(180, 190, 210, 0.9) 50%,
-    rgba(165, 175, 195, 0.85) 100%);
+    rgba(165, 175, 195, 0.85) 100%
+  );
   box-shadow: inset 0 0 10px rgba(100, 110, 140, 0.4);
 }
 
@@ -654,10 +756,12 @@ a {
     radial-gradient(circle at 38% 65%, rgba(230, 90, 55, 0.9) 1px, transparent 1.4px),
     radial-gradient(circle at 55% 65%, rgba(215, 75, 50, 0.9) 1px, transparent 1.4px),
     /* Base cytoplasm - pale pink */
-    radial-gradient(ellipse at 50% 50%,
-      rgba(255, 245, 240, 0.95) 0%,
-      rgba(250, 235, 225, 0.9) 70%,
-      rgba(245, 225, 215, 0.85) 100%);
+    radial-gradient(
+        ellipse at 50% 50%,
+        rgba(255, 245, 240, 0.95) 0%,
+        rgba(250, 235, 225, 0.9) 70%,
+        rgba(245, 225, 215, 0.85) 100%
+      );
   box-shadow: inset 0 0 8px rgba(180, 100, 80, 0.3);
 }
 
@@ -708,8 +812,7 @@ a {
   background: rgba(80, 50, 120, 0.8);
   transform: rotate(-22deg);
   /* Third lobe connection */
-  box-shadow:
-    10px 18px 0 -5px rgba(80, 50, 120, 0.8);
+  box-shadow: 10px 18px 0 -5px rgba(80, 50, 120, 0.8);
 }
 .floating-cell.eosinophil-3lobe::after {
   content: '';
@@ -803,10 +906,12 @@ a {
     radial-gradient(circle at 92% 88%, rgba(45, 25, 85, 0.7) 2px, transparent 2.5px),
     radial-gradient(circle at 88% 92%, rgba(40, 20, 80, 0.7) 2px, transparent 2.5px),
     /* Base cytoplasm - pale lavender */
-    radial-gradient(ellipse at 50% 50%,
-      rgba(235, 230, 250, 0.95) 0%,
-      rgba(220, 215, 240, 0.9) 70%,
-      rgba(200, 195, 225, 0.85) 100%);
+    radial-gradient(
+        ellipse at 50% 50%,
+        rgba(235, 230, 250, 0.95) 0%,
+        rgba(220, 215, 240, 0.9) 70%,
+        rgba(200, 195, 225, 0.85) 100%
+      );
   box-shadow: inset 0 0 8px rgba(60, 40, 100, 0.4);
 }
 
@@ -825,10 +930,12 @@ a {
 
 /* Platelet - tiny purple-ish fragments, irregular shape */
 .floating-cell.platelet {
-  background: radial-gradient(ellipse at 40% 40%,
+  background: radial-gradient(
+    ellipse at 40% 40%,
     rgba(180, 160, 200, 0.9) 0%,
     rgba(160, 140, 180, 0.85) 60%,
-    rgba(140, 120, 160, 0.8) 100%);
+    rgba(140, 120, 160, 0.8) 100%
+  );
   border-radius: 45% 55% 50% 50%;
   box-shadow: inset 0 0 2px rgba(100, 80, 140, 0.5);
 }
@@ -843,6 +950,72 @@ a {
   height: 50%;
   border-radius: 40%;
   background: rgba(140, 110, 170, 0.6);
+}
+
+/* =================================================================
+   NUCLEATED RBCs (nRBCs) - Immature RBCs with retained nucleus
+   ================================================================= */
+/* nRBC stages: orthochromatic (most mature), polychromatic, basophilic (least mature)
+   All have: RBC-like pink cytoplasm + central dark purple nucleus
+   Nucleus size varies by maturity stage */
+
+/* Base nRBC style - similar to RBC but slightly larger with nucleus */
+.floating-cell[class*="nrbc-"] {
+  background: radial-gradient(
+    ellipse at 30% 30%,
+    rgba(240, 160, 160, 0.9) 0%,
+    rgba(220, 120, 120, 0.95) 40%,
+    rgba(200, 100, 100, 0.85) 70%,
+    rgba(180, 80, 80, 0.8) 100%
+  );
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 3px rgba(100, 40, 40, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Nucleus styles via ::before pseudo-element */
+.floating-cell[class*="nrbc-"]::before {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 40%,
+    rgba(80, 50, 100, 0.95) 0%,
+    rgba(60, 30, 80, 0.98) 60%,
+    rgba(40, 20, 60, 0.9) 100%
+  );
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Orthochromatic nRBC - most mature, small pyknotic nucleus */
+.floating-cell.nrbc-ortho::before {
+  top: 35%;
+  left: 35%;
+  width: 30%;
+  height: 30%;
+}
+
+/* Polychromatic nRBC - medium nucleus */
+.floating-cell.nrbc-poly::before {
+  top: 28%;
+  left: 28%;
+  width: 44%;
+  height: 44%;
+}
+
+/* Basophilic nRBC - least mature, large nucleus with open chromatin */
+.floating-cell.nrbc-baso::before {
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(
+    circle at 40% 40%,
+    rgba(70, 50, 120, 0.9) 0%,
+    rgba(50, 30, 100, 0.95) 50%,
+    rgba(40, 20, 80, 0.9) 100%
+  );
 }
 
 /* Soft drop shadows for all WBCs */
@@ -882,7 +1055,7 @@ a {
 .hero-content {
   text-align: center;
   max-width: 800px;
-  background: rgba(255, 255, 255, 0.50);
+  background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   padding: 40px;
@@ -953,7 +1126,9 @@ a {
 }
 
 .profile-flip-container:hover .hero-profile-image {
-  box-shadow: 0 0 30px rgba(37, 99, 235, 0.3), var(--shadow-lg);
+  box-shadow:
+    0 0 30px rgba(37, 99, 235, 0.3),
+    var(--shadow-lg);
 }
 
 .hero-cell-image {
@@ -988,8 +1163,14 @@ a {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .cell-label.normal {
@@ -1011,8 +1192,15 @@ a {
 
 /* Add subtle pulse animation to hint it's clickable */
 @keyframes subtle-pulse {
-  0%, 100% { box-shadow: var(--shadow-lg); }
-  50% { box-shadow: 0 0 25px rgba(37, 99, 235, 0.2), var(--shadow-lg); }
+  0%,
+  100% {
+    box-shadow: var(--shadow-lg);
+  }
+  50% {
+    box-shadow:
+      0 0 25px rgba(37, 99, 235, 0.2),
+      var(--shadow-lg);
+  }
 }
 
 .profile-flip-container:not(.flipped) .hero-profile-image {
@@ -1106,7 +1294,10 @@ a {
   font-size: 0.95rem;
   color: var(--text-color);
   border-left: 3px solid var(--primary-color);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-left-width 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-left-width 0.2s ease;
   cursor: default;
 }
 
@@ -1144,7 +1335,7 @@ a {
 .section-with-blood-smear .container {
   position: relative;
   z-index: 1;
-  background: rgba(255, 255, 255, 0.70);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border-radius: 16px;
@@ -1186,7 +1377,9 @@ a {
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--primary-color);
-  transition: text-shadow 0.3s ease, transform 0.2s ease;
+  transition:
+    text-shadow 0.3s ease,
+    transform 0.2s ease;
 }
 
 .metric-label {
@@ -1239,7 +1432,9 @@ a {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   cursor: default;
 }
 
@@ -1455,8 +1650,14 @@ a {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .mechanisms-section {
@@ -1477,7 +1678,9 @@ a {
   padding: 15px 20px;
   border-radius: 10px;
   margin-bottom: 12px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .mechanism-item:hover {
@@ -1569,7 +1772,9 @@ a {
   position: relative;
   line-height: 1.5;
   border-bottom: 1px solid rgba(37, 99, 235, 0.1);
-  transition: padding-left 0.2s ease, background-color 0.2s ease;
+  transition:
+    padding-left 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .insights-list li:hover {
@@ -1672,7 +1877,9 @@ a {
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .tool-card:hover .tool-icon {
@@ -1919,6 +2126,101 @@ a {
   color: #dc2626;
   font-size: 0.9rem;
   margin-bottom: 15px;
+}
+
+/* Toast Notifications */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+  animation: toastSlideIn 0.3s ease-out;
+  max-width: 90vw;
+}
+
+.toast-success {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: white;
+}
+
+.toast-error {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  color: white;
+}
+
+.toast-icon {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.toast-message {
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  margin-left: 8px;
+  border-radius: 4px;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.toast-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.toast-exit {
+  animation: toastSlideOut 0.3s ease-in forwards;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+}
+
+@media (max-width: 768px) {
+  .toast {
+    bottom: 20px;
+    padding: 12px 16px;
+    gap: 10px;
+  }
+
+  .toast-message {
+    font-size: 0.9rem;
+  }
 }
 
 /* Footer */
@@ -2242,7 +2544,7 @@ a {
   font-size: 10pt;
   line-height: 1.25;
   color: #000;
-  background: rgba(255, 255, 255, 0.70);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   padding: 40px 50px;
@@ -2403,7 +2705,9 @@ a {
 .cv-container a {
   color: #0066cc;
   text-decoration: none;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .cv-container a:hover {
@@ -2591,7 +2895,7 @@ a {
   }
 
   /* Page break controls */
-  .cv-section:nth-of-type(n+8) {
+  .cv-section:nth-of-type(n + 8) {
     page-break-before: auto;
   }
 

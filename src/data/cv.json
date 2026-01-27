@@ -391,16 +391,61 @@
     }
   ],
   "presentations": [
-    { "year": 2025, "event": "Chicago Lymphoma Rounds, Lymphoma Research Foundation", "location": "Chicago, IL", "type": "Oral Presentation" },
+    {
+      "year": 2025,
+      "event": "Chicago Lymphoma Rounds, Lymphoma Research Foundation",
+      "location": "Chicago, IL",
+      "type": "Oral Presentation"
+    },
     { "year": 2019, "event": "The Notch Meeting", "location": "Athens, Greece", "type": "Poster" },
-    { "year": 2019, "event": "Autumn Immunology Conference", "location": "Chicago, IL", "type": "Poster" },
-    { "year": 2018, "event": "American Society of Hematology Meeting", "location": "San Diego, CA", "type": "Oral Presentation" },
-    { "year": 2018, "event": "Notch Signaling Gordon Research Conference", "location": "Lewiston, ME", "type": "Poster" },
-    { "year": 2017, "event": "UMich Department of Internal Medicine Annual Research Symposium", "location": "Ann Arbor, MI", "type": "Oral Presentation" },
-    { "year": 2016, "event": "Autumn Immunology Conference", "location": "Chicago, IL", "type": "Poster" },
-    { "year": 2016, "event": "Notch Signaling Gordon Research Conference", "location": "Lewiston, ME", "type": "Poster" },
-    { "year": 2016, "event": "Keystone Symposia – Stromal Cells in Immunity", "location": "Keystone, CO", "type": "Poster" },
-    { "year": 2012, "event": "Autumn Immunology Conference", "location": "Chicago, IL", "type": "Poster" }
+    {
+      "year": 2019,
+      "event": "Autumn Immunology Conference",
+      "location": "Chicago, IL",
+      "type": "Poster"
+    },
+    {
+      "year": 2018,
+      "event": "American Society of Hematology Meeting",
+      "location": "San Diego, CA",
+      "type": "Oral Presentation"
+    },
+    {
+      "year": 2018,
+      "event": "Notch Signaling Gordon Research Conference",
+      "location": "Lewiston, ME",
+      "type": "Poster"
+    },
+    {
+      "year": 2017,
+      "event": "UMich Department of Internal Medicine Annual Research Symposium",
+      "location": "Ann Arbor, MI",
+      "type": "Oral Presentation"
+    },
+    {
+      "year": 2016,
+      "event": "Autumn Immunology Conference",
+      "location": "Chicago, IL",
+      "type": "Poster"
+    },
+    {
+      "year": 2016,
+      "event": "Notch Signaling Gordon Research Conference",
+      "location": "Lewiston, ME",
+      "type": "Poster"
+    },
+    {
+      "year": 2016,
+      "event": "Keystone Symposia – Stromal Cells in Immunity",
+      "location": "Keystone, CO",
+      "type": "Poster"
+    },
+    {
+      "year": 2012,
+      "event": "Autumn Immunology Conference",
+      "location": "Chicago, IL",
+      "type": "Poster"
+    }
   ],
   "teaching": [
     {
@@ -441,7 +486,10 @@
     { "years": "2016-2018", "role": "UMich MSTP Program Activities Committee" },
     { "years": "2017", "role": "UMich MSTP Annual Retreat Co-Chair" },
     { "years": "2014-2017", "role": "UMich Student-Run Free Clinic – Pinckney, MI" },
-    { "years": "2013-2015", "role": "Doctors of Tomorrow Mentor – Cass Tech High School, Detroit, MI" },
+    {
+      "years": "2013-2015",
+      "role": "Doctors of Tomorrow Mentor – Cass Tech High School, Detroit, MI"
+    },
     { "years": "2010-2014", "role": "Assistant Debate Coach – Cass Tech High School, Detroit, MI" }
   ],
   "memberships": [

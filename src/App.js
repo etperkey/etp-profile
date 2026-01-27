@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -11,6 +11,8 @@ import ThemeSwitcher from './components/ThemeSwitcher';
 import MySpacePlayer from './components/MySpacePlayer';
 import DancingBabies from './components/DancingBabies';
 import CV from './components/CV';
+import BloodSmearViewer from './components/BloodSmearViewer';
+import MorphologyGuide from './components/MorphologyGuide';
 import './App.css';
 
 function App() {
@@ -23,6 +25,10 @@ function App() {
       const hash = window.location.hash;
       if (hash === '#cv' || hash === '#/cv') {
         setCurrentPage('cv');
+      } else if (hash === '#smear' || hash === '#/smear' || hash === '#blood-smear') {
+        setCurrentPage('smear');
+      } else if (hash === '#morphology' || hash === '#/morphology' || hash === '#morphology-guide') {
+        setCurrentPage('morphology');
       } else {
         setCurrentPage('home');
       }
@@ -51,6 +57,16 @@ function App() {
   // Render CV page
   if (currentPage === 'cv') {
     return <CV />;
+  }
+
+  // Render Blood Smear Viewer page
+  if (currentPage === 'smear') {
+    return <BloodSmearViewer />;
+  }
+
+  // Render Morphology Guide page
+  if (currentPage === 'morphology') {
+    return <MorphologyGuide />;
   }
 
   return (

@@ -1,20 +1,19 @@
-import React from 'react';
 import './ThemeSwitcher.css';
 
 function ThemeSwitcher({ currentTheme, setTheme }) {
   const themes = [
     { id: 'modern', label: 'Modern', icon: '✨' },
     { id: 'geocities', label: "90's Geocities", icon: '🚧' },
-    { id: 'myspace', label: "2000's MySpace", icon: '💫' }
+    { id: 'myspace', label: "2000's MySpace", icon: '💫' },
   ];
 
   const cycleTheme = () => {
-    const currentIndex = themes.findIndex(t => t.id === currentTheme);
+    const currentIndex = themes.findIndex((t) => t.id === currentTheme);
     const nextIndex = (currentIndex + 1) % themes.length;
     setTheme(themes[nextIndex].id);
   };
 
-  const currentThemeData = themes.find(t => t.id === currentTheme);
+  const currentThemeData = themes.find((t) => t.id === currentTheme);
 
   return (
     <div className="theme-switcher">

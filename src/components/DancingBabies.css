@@ -44,18 +44,29 @@
 }
 
 @keyframes babyBounce1 {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 @keyframes babyBounce2 {
-  0%, 100% { transform: translateY(0) scaleX(1); }
-  50% { transform: translateY(-15px) scaleX(-1); }
+  0%,
+  100% {
+    transform: translateY(0) scaleX(1);
+  }
+  50% {
+    transform: translateY(-15px) scaleX(-1);
+  }
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .baby-3, .baby-4 {
+  .baby-3,
+  .baby-4 {
     display: none;
   }
 

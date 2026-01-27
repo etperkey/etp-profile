@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './MySpacePlayer.css';
 
 function MySpacePlayer({ isActive }) {
@@ -8,23 +8,23 @@ function MySpacePlayer({ isActive }) {
     {
       id: 'RRKJiM9Njr8',
       title: 'Welcome to the Black Parade',
-      artist: 'My Chemical Romance'
+      artist: 'My Chemical Romance',
     },
     {
       id: 'gGdGFtwCNBE',
       title: 'Mr. Brightside',
-      artist: 'The Killers'
+      artist: 'The Killers',
     },
     {
       id: 'vc6vs-l5dkc',
       title: 'I Write Sins Not Tragedies',
-      artist: 'Panic! At The Disco'
+      artist: 'Panic! At The Disco',
     },
     {
       id: 'aCyGvGEtOwc',
       title: 'Misery Business',
-      artist: 'Paramore'
-    }
+      artist: 'Paramore',
+    },
   ];
 
   const [currentTrack, setCurrentTrack] = useState(0);
@@ -69,9 +69,15 @@ function MySpacePlayer({ isActive }) {
           ></iframe>
         </div>
         <div className="player-controls">
-          <button onClick={prevTrack} className="player-btn">◄◄</button>
-          <span className="track-number">{currentTrack + 1} / {playlist.length}</span>
-          <button onClick={nextTrack} className="player-btn">►►</button>
+          <button onClick={prevTrack} className="player-btn">
+            ◄◄
+          </button>
+          <span className="track-number">
+            {currentTrack + 1} / {playlist.length}
+          </span>
+          <button onClick={nextTrack} className="player-btn">
+            ►►
+          </button>
         </div>
         <div className="player-info">
           <marquee scrollamount="3">

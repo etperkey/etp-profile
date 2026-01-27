@@ -1,4 +1,3 @@
-import React from 'react';
 import cvData from '../data/cv.json';
 import BloodSmearBackground from './BloodSmearBackground';
 
@@ -9,15 +8,15 @@ function CV() {
 
   // Highlight "Perkey E" in author strings
   const highlightAuthor = (authors) => {
-    return authors.split(/(Perkey E\*?|Perkey, E\.?,?)/).map((part, i) =>
-      part.match(/Perkey/) ? <strong key={i}>{part}</strong> : part
-    );
+    return authors
+      .split(/(Perkey E\*?|Perkey, E\.?,?)/)
+      .map((part, i) => (part.match(/Perkey/) ? <strong key={i}>{part}</strong> : part));
   };
 
   // Calculate publication metrics
   const publicationMetrics = {
     total: cvData.publications.length,
-    firstAuthor: cvData.publications.filter(p => p.firstAuthor || p.equalFirst).length,
+    firstAuthor: cvData.publications.filter((p) => p.firstAuthor || p.equalFirst).length,
     reviews: cvData.reviews.length,
   };
 
@@ -25,7 +24,16 @@ function CV() {
     <div className="cv-page">
       <BloodSmearBackground density="medium" />
       <div className="cv-container">
-        <a href="#home" className="cv-back-link no-print" onClick={(e) => { e.preventDefault(); window.location.hash = ''; }}>Back to Home</a>
+        <a
+          href="#home"
+          className="cv-back-link no-print"
+          onClick={(e) => {
+            e.preventDefault();
+            window.location.hash = '';
+          }}
+        >
+          Back to Home
+        </a>
         <button className="cv-print-btn no-print" onClick={handlePrint}>
           Download PDF
         </button>
@@ -33,12 +41,21 @@ function CV() {
         {/* Header */}
         <header className="cv-header">
           <h1>CURRICULUM VITAE</h1>
-          <h2>{cvData.name}, {cvData.credentials}</h2>
+          <h2>
+            {cvData.name}, {cvData.credentials}
+          </h2>
           <p className="cv-metrics">
-            {publicationMetrics.total} peer-reviewed publications ({publicationMetrics.firstAuthor} first/co-first author) · {publicationMetrics.reviews} reviews
+            {publicationMetrics.total} peer-reviewed publications ({publicationMetrics.firstAuthor}{' '}
+            first/co-first author) · {publicationMetrics.reviews} reviews
             {cvData.scholarMetrics?.hIndex && <> · h-index: {cvData.scholarMetrics.hIndex}</>}
             {cvData.contact.googleScholar && (
-              <> · <a href={cvData.contact.googleScholar} target="_blank" rel="noopener noreferrer">Google Scholar</a></>
+              <>
+                {' '}
+                ·{' '}
+                <a href={cvData.contact.googleScholar} target="_blank" rel="noopener noreferrer">
+                  Google Scholar
+                </a>
+              </>
             )}
           </p>
         </header>
@@ -51,28 +68,56 @@ function CV() {
               <strong>Address:</strong>
               <div>
                 {cvData.contact.address.map((line, i) => (
-                  <span key={i}>{line}<br /></span>
+                  <span key={i}>
+                    {line}
+                    <br />
+                  </span>
                 ))}
               </div>
             </div>
             <div className="cv-contact-block">
-              <p><strong>Email:</strong> <a href={`mailto:${cvData.contact.email}`}>{cvData.contact.email}</a></p>
+              <p>
+                <strong>Email:</strong>{' '}
+                <a href={`mailto:${cvData.contact.email}`}>{cvData.contact.email}</a>
+              </p>
               {cvData.contact.secondaryEmails && (
-                <p><strong>Alt Email:</strong> {cvData.contact.secondaryEmails.map((email, i) => (
-                  <span key={i}>
-                    {i > 0 && '; '}
-                    <a href={`mailto:${email}`}>{email}</a>
-                  </span>
-                ))}</p>
+                <p>
+                  <strong>Alt Email:</strong>{' '}
+                  {cvData.contact.secondaryEmails.map((email, i) => (
+                    <span key={i}>
+                      {i > 0 && '; '}
+                      <a href={`mailto:${email}`}>{email}</a>
+                    </span>
+                  ))}
+                </p>
               )}
               {cvData.contact.website && (
-                <p><strong>Website:</strong> <a href={cvData.contact.website} target="_blank" rel="noopener noreferrer">{cvData.contact.website.replace('https://', '')}</a></p>
+                <p>
+                  <strong>Website:</strong>{' '}
+                  <a href={cvData.contact.website} target="_blank" rel="noopener noreferrer">
+                    {cvData.contact.website.replace('https://', '')}
+                  </a>
+                </p>
               )}
               {cvData.contact.orcid && (
-                <p><strong>ORCID:</strong> <a href={`https://orcid.org/${cvData.contact.orcid}`} target="_blank" rel="noopener noreferrer">{cvData.contact.orcid}</a></p>
+                <p>
+                  <strong>ORCID:</strong>{' '}
+                  <a
+                    href={`https://orcid.org/${cvData.contact.orcid}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {cvData.contact.orcid}
+                  </a>
+                </p>
               )}
               {cvData.contact.googleScholar && (
-                <p><strong>Google Scholar:</strong> <a href={cvData.contact.googleScholar} target="_blank" rel="noopener noreferrer">{cvData.contact.googleScholar.replace('https://', '')}</a></p>
+                <p>
+                  <strong>Google Scholar:</strong>{' '}
+                  <a href={cvData.contact.googleScholar} target="_blank" rel="noopener noreferrer">
+                    {cvData.contact.googleScholar.replace('https://', '')}
+                  </a>
+                </p>
               )}
             </div>
           </div>
@@ -102,8 +147,22 @@ function CV() {
               <div className="cv-details">
                 <span className="cv-title">{item.degree}</span>
                 <span className="cv-institution">{item.institution}</span>
-                <p>{item.field}{item.mentor && `. Mentor: ${item.mentor}`}</p>
-                {item.thesis && <p className="cv-thesis"><em>Dissertation:</em> {item.thesisUrl ? <a href={item.thesisUrl} target="_blank" rel="noopener noreferrer">"{item.thesis}"</a> : `"${item.thesis}"`}</p>}
+                <p>
+                  {item.field}
+                  {item.mentor && `. Mentor: ${item.mentor}`}
+                </p>
+                {item.thesis && (
+                  <p className="cv-thesis">
+                    <em>Dissertation:</em>{' '}
+                    {item.thesisUrl ? (
+                      <a href={item.thesisUrl} target="_blank" rel="noopener noreferrer">
+                        &quot;{item.thesis}&quot;
+                      </a>
+                    ) : (
+                      `"${item.thesis}"`
+                    )}
+                  </p>
+                )}
               </div>
             </div>
           ))}
@@ -117,7 +176,17 @@ function CV() {
               <span className="cv-years">{item.years}</span>
               <div className="cv-details">
                 <span className="cv-title">{item.name}</span>
-                {item.details && <p>{item.url ? <a href={item.url} target="_blank" rel="noopener noreferrer">{item.details}</a> : item.details}</p>}
+                {item.details && (
+                  <p>
+                    {item.url ? (
+                      <a href={item.url} target="_blank" rel="noopener noreferrer">
+                        {item.details}
+                      </a>
+                    ) : (
+                      item.details
+                    )}
+                  </p>
+                )}
               </div>
             </div>
           ))}
@@ -134,11 +203,21 @@ function CV() {
                 <span className="cv-institution">{item.institution}</span>
                 {item.mentor && (
                   <p>
-                    Mentor: {item.mentorLinked ? (
-                      <>{item.mentor}<a href={item.mentorUrl} target="_blank" rel="noopener noreferrer">{item.mentorLinked}</a></>
+                    Mentor:{' '}
+                    {item.mentorLinked ? (
+                      <>
+                        {item.mentor}
+                        <a href={item.mentorUrl} target="_blank" rel="noopener noreferrer">
+                          {item.mentorLinked}
+                        </a>
+                      </>
                     ) : item.mentorUrl ? (
-                      <a href={item.mentorUrl} target="_blank" rel="noopener noreferrer">{item.mentor}</a>
-                    ) : item.mentor}
+                      <a href={item.mentorUrl} target="_blank" rel="noopener noreferrer">
+                        {item.mentor}
+                      </a>
+                    ) : (
+                      item.mentor
+                    )}
                   </p>
                 )}
                 {item.description && <p>{item.description}</p>}
@@ -152,13 +231,39 @@ function CV() {
           <h3>Publications</h3>
           <p className="cv-note">*denotes equal first authorship</p>
           {cvData.publications.map((pub, i) => (
-            <div key={i} className={`cv-publication ${pub.firstAuthor || pub.equalFirst ? 'first-author' : ''}`}>
+            <div
+              key={i}
+              className={`cv-publication ${pub.firstAuthor || pub.equalFirst ? 'first-author' : ''}`}
+            >
               <span className="cv-pub-year">{pub.year}</span>
               <p className="cv-pub-details">
-                {highlightAuthor(pub.authors)}. "{pub.title}." <em>{pub.journal}</em>
+                {highlightAuthor(pub.authors)}. &quot;{pub.title}.&quot; <em>{pub.journal}</em>
                 {pub.details && `. ${pub.details}`}
-                {pub.pmid && <>. PMID: <a href={`https://pubmed.ncbi.nlm.nih.gov/${pub.pmid}/`} target="_blank" rel="noopener noreferrer">{pub.pmid}</a></>}
-                {pub.doi && <>. DOI: <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer">{pub.doi}</a></>}.
+                {pub.pmid && (
+                  <>
+                    . PMID:{' '}
+                    <a
+                      href={`https://pubmed.ncbi.nlm.nih.gov/${pub.pmid}/`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {pub.pmid}
+                    </a>
+                  </>
+                )}
+                {pub.doi && (
+                  <>
+                    . DOI:{' '}
+                    <a
+                      href={`https://doi.org/${pub.doi}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {pub.doi}
+                    </a>
+                  </>
+                )}
+                .
               </p>
             </div>
           ))}
@@ -171,9 +276,32 @@ function CV() {
             <div key={i} className="cv-publication">
               <span className="cv-pub-year">{pub.year}</span>
               <p className="cv-pub-details">
-                {highlightAuthor(pub.authors)}. "{pub.title}." <em>{pub.journal}</em>
-                {pub.pmid && <>. PMID: <a href={`https://pubmed.ncbi.nlm.nih.gov/${pub.pmid}/`} target="_blank" rel="noopener noreferrer">{pub.pmid}</a></>}
-                {pub.doi && <>. DOI: <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer">{pub.doi}</a></>}.
+                {highlightAuthor(pub.authors)}. &quot;{pub.title}.&quot; <em>{pub.journal}</em>
+                {pub.pmid && (
+                  <>
+                    . PMID:{' '}
+                    <a
+                      href={`https://pubmed.ncbi.nlm.nih.gov/${pub.pmid}/`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {pub.pmid}
+                    </a>
+                  </>
+                )}
+                {pub.doi && (
+                  <>
+                    . DOI:{' '}
+                    <a
+                      href={`https://doi.org/${pub.doi}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {pub.doi}
+                    </a>
+                  </>
+                )}
+                .
               </p>
             </div>
           ))}
@@ -188,9 +316,32 @@ function CV() {
               <div key={i} className="cv-publication">
                 <span className="cv-pub-year">{pub.year}</span>
                 <p className="cv-pub-details">
-                  {pub.authors} "{pub.title}." <em>{pub.journal}</em>
-                  {pub.pmid && <>. PMID: <a href={`https://pubmed.ncbi.nlm.nih.gov/${pub.pmid}/`} target="_blank" rel="noopener noreferrer">{pub.pmid}</a></>}
-                  {pub.doi && <>. DOI: <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer">{pub.doi}</a></>}.
+                  {pub.authors} &quot;{pub.title}.&quot; <em>{pub.journal}</em>
+                  {pub.pmid && (
+                    <>
+                      . PMID:{' '}
+                      <a
+                        href={`https://pubmed.ncbi.nlm.nih.gov/${pub.pmid}/`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {pub.pmid}
+                      </a>
+                    </>
+                  )}
+                  {pub.doi && (
+                    <>
+                      . DOI:{' '}
+                      <a
+                        href={`https://doi.org/${pub.doi}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {pub.doi}
+                      </a>
+                    </>
+                  )}
+                  .
                 </p>
               </div>
             ))}
@@ -205,7 +356,17 @@ function CV() {
               <span className="cv-years">{item.years}</span>
               <div className="cv-details">
                 <span className="cv-title">{item.name}</span>
-                {item.details && <p>{item.url ? <a href={item.url} target="_blank" rel="noopener noreferrer">{item.details}</a> : item.details}</p>}
+                {item.details && (
+                  <p>
+                    {item.url ? (
+                      <a href={item.url} target="_blank" rel="noopener noreferrer">
+                        {item.details}
+                      </a>
+                    ) : (
+                      item.details
+                    )}
+                  </p>
+                )}
               </div>
             </div>
           ))}
@@ -233,7 +394,10 @@ function CV() {
               <span className="cv-years">{item.year}</span>
               <div className="cv-details">
                 <span className="cv-title">{item.event}</span>
-                <p>{item.location && `${item.location}. `}{item.type}.</p>
+                <p>
+                  {item.location && `${item.location}. `}
+                  {item.type}.
+                </p>
               </div>
             </div>
           ))}
@@ -247,7 +411,9 @@ function CV() {
               <span className="cv-years">{item.years}</span>
               <div className="cv-details">
                 <span className="cv-title">{item.role}</span>
-                <p>{item.course}. {item.institution}.</p>
+                <p>
+                  {item.course}. {item.institution}.
+                </p>
               </div>
             </div>
           ))}
@@ -260,7 +426,9 @@ function CV() {
             <div key={i} className="cv-entry">
               <span className="cv-years">{item.years}</span>
               <div className="cv-details">
-                <span className="cv-title">{item.name}, {item.role}</span>
+                <span className="cv-title">
+                  {item.name}, {item.role}
+                </span>
                 <p>Currently: {item.current}</p>
               </div>
             </div>
@@ -295,7 +463,10 @@ function CV() {
         </section>
 
         <footer className="cv-footer no-print">
-          <p>Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+          <p>
+            Last updated:{' '}
+            {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+          </p>
         </footer>
       </div>
     </div>

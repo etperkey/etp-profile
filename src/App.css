@@ -350,9 +350,9 @@ a {
 
 @media (max-width: 768px) {
   .microscope-link {
-    /* Move to bottom right on mobile - visible and not blocked by hero content */
+    /* Move to bottom right on mobile - below hero content */
     top: auto;
-    bottom: 100px;
+    bottom: 30px;
     left: auto;
     right: 15px;
     padding: 12px 16px;

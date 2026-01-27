@@ -1202,18 +1202,18 @@
   .indices-panels-container {
     position: fixed;
     top: auto;
-    bottom: 25px;
+    bottom: 20px;
     left: 0;
     right: 0;
     flex-direction: row;
-    gap: 5px;
-    padding: 5px;
+    gap: 3px;
+    padding: 3px 4px;
     max-height: none;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(5px);
   }
 
@@ -1221,25 +1221,26 @@
     display: none;
   }
 
-  /* Compact control panels for mobile */
+  /* Compact control panels for mobile - tiny to fit iPhone */
   .rbc-control-panel,
   .wbc-control-panel,
   .plt-control-panel,
   .morphology-control-panel {
-    min-width: 90px;
-    max-width: 110px;
-    padding: 5px 6px;
-    font-size: 0.5rem;
+    min-width: 70px;
+    max-width: 80px;
+    padding: 4px 5px;
+    font-size: 0.4rem;
     flex-shrink: 0;
-    border-radius: 8px;
+    border-radius: 6px;
   }
 
   .rbc-control-panel h3,
   .wbc-control-panel h3,
   .plt-control-panel h3,
   .morphology-control-panel h3 {
-    font-size: 0.55rem;
-    margin-bottom: 4px;
+    font-size: 0.45rem;
+    margin-bottom: 3px;
+    letter-spacing: -0.3px;
   }
 
   /* Compact presets */
@@ -1247,7 +1248,7 @@
   .wbc-presets,
   .plt-presets,
   .morphology-presets {
-    gap: 2px;
+    gap: 1px;
     flex-wrap: wrap;
   }
 
@@ -1255,24 +1256,29 @@
   .wbc-preset-btn,
   .plt-preset-btn,
   .morphology-preset-btn {
-    padding: 2px 4px;
-    font-size: 0.45rem;
-    border-radius: 3px;
+    padding: 1px 3px;
+    font-size: 0.38rem;
+    border-radius: 2px;
+    letter-spacing: -0.3px;
   }
 
   /* Hide detailed controls on mobile - just show presets */
   .rbc-indices-grid,
   .differential-section,
   .plt-slider-section,
-  .morphology-sliders {
+  .morphology-sliders,
+  .nrbc-section,
+  .rbc-slider-section,
+  .wbc-slider-section {
     display: none;
   }
 
-  /* Compact value displays */
+  /* Hide value displays on mobile to save space */
   .rbc-value,
   .wbc-value,
   .plt-value {
-    font-size: 0.6rem;
+    font-size: 0.5rem;
+    display: none;
   }
 
   .rbc-reference,

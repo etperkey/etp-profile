@@ -59,7 +59,6 @@ function BloodSmearBackground({
   pltPerUL = 250000,
   rbcMorphologies = null,
   wbcMorphologies = null,
-  pltMorphologies = null,
 }) {
   const isMobile = useIsMobile();
 

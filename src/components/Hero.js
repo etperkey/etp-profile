@@ -165,7 +165,7 @@ function Hero({ theme = 'modern' }) {
 
   return (
     <section id="home" className="hero">
-      {theme === 'modern' && <BloodSmearBackground wbcPerUL={75000} />}
+      {theme === 'modern' && <BloodSmearBackground wbcPerUL={150000} />}
 
       {/* Microscope link to Blood Smear Viewer */}
       <a href="#smear" className="microscope-link" title="Review Blood Smear">

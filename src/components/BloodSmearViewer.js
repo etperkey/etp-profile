@@ -271,6 +271,8 @@ function BloodSmearViewer() {
   const handleTouchMove = useCallback(
     (e) => {
       if (isPanning && currentZoom > 1 && e.touches.length === 1) {
+        // Prevent page scroll while panning the smear
+        e.preventDefault();
         const newX = e.touches[0].clientX - panStart.x;
         const newY = e.touches[0].clientY - panStart.y;
         const maxPan = (currentZoom - 1) * 300;

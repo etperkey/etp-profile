@@ -59,6 +59,7 @@ function BloodSmearBackground({
   pltPerUL = 250000,
   rbcMorphologies = null,
   wbcMorphologies = null,
+  pltMorphologies = null,
 }) {
   const isMobile = useIsMobile();
 
@@ -275,11 +276,34 @@ function BloodSmearBackground({
     // Size: 2.5 µm (2-3) → ratio 0.33 → 3-5 px
     const pltRatio = pltPerUL / 5000000; // e.g., 250000/5000000 = 0.05
     const numPlatelets = Math.max(1, Math.round(numRBCs * pltRatio));
+
+    // Platelet morphology percentages (default to normal if not provided)
+    const pltMorph = pltMorphologies || { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 };
+    const giantPct = pltMorph.giantPlatelet || 0;
+    const clumpPct = pltMorph.plateletClump || 0;
+    const hypoPct = pltMorph.hypogranular || 0;
+
     for (let i = 0; i < numPlatelets; i++) {
-      const size = RBC_BASE_SIZE * 0.25 + wideGaussian() * (RBC_BASE_SIZE * 0.15);
+      const roll = Math.random() * 100;
+      let pltType = 'platelet'; // normal
+      let size = RBC_BASE_SIZE * 0.25 + wideGaussian() * (RBC_BASE_SIZE * 0.15);
+
+      if (roll < giantPct) {
+        // Giant platelet - approaches RBC size
+        pltType = 'giant-platelet';
+        size = RBC_BASE_SIZE * 0.6 + wideGaussian() * (RBC_BASE_SIZE * 0.2);
+      } else if (roll < giantPct + clumpPct) {
+        // Platelet clump - larger mass
+        pltType = 'platelet-clump';
+        size = RBC_BASE_SIZE * 0.8 + wideGaussian() * (RBC_BASE_SIZE * 0.3);
+      } else if (roll < giantPct + clumpPct + hypoPct) {
+        // Hypogranular - same size, different appearance
+        pltType = 'hypogranular-plt';
+      }
+
       cellArray.push({
         id: numRBCs + i,
-        type: 'platelet',
+        type: pltType,
         x: Math.random() * 100,
         y: Math.random() * 100,
         size: size,
@@ -485,7 +509,7 @@ function BloodSmearBackground({
     }
 
     return cellArray;
-  }, [effectiveDensity, scaleOverride, rbcPerUL, mcv, rdw, nrbcPer100RBC, wbcPerUL, wbcDifferential, pltPerUL, rbcMorphologies, wbcMorphologies]);
+  }, [effectiveDensity, scaleOverride, rbcPerUL, mcv, rdw, nrbcPer100RBC, wbcPerUL, wbcDifferential, pltPerUL, rbcMorphologies, wbcMorphologies, pltMorphologies]);
 
   return (
     <div className={`blood-smear-background${isMobile ? ' blood-smear-mobile' : ''}`}>

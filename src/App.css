@@ -980,6 +980,69 @@ a {
   background: rgba(140, 110, 170, 0.6);
 }
 
+/* Giant Platelet - approaches RBC size, prominent granules */
+.floating-cell.giant-platelet {
+  background: radial-gradient(
+    ellipse at 40% 40%,
+    rgba(190, 170, 215, 0.95) 0%,
+    rgba(170, 150, 195, 0.9) 60%,
+    rgba(150, 130, 175, 0.85) 100%
+  );
+  border-radius: 48% 52% 45% 55%;
+  box-shadow: inset 0 0 4px rgba(100, 80, 140, 0.6);
+}
+
+.floating-cell.giant-platelet::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  border-radius: 40%;
+  background: rgba(130, 100, 160, 0.7);
+}
+
+/* Platelet Clump - aggregated platelets */
+.floating-cell.platelet-clump {
+  background: radial-gradient(
+    ellipse at 35% 35%,
+    rgba(180, 160, 200, 0.9) 0%,
+    rgba(165, 145, 185, 0.85) 30%,
+    rgba(150, 130, 170, 0.8) 100%
+  );
+  border-radius: 60% 40% 55% 45% / 45% 55% 45% 55%;
+  box-shadow:
+    inset 0 0 3px rgba(100, 80, 140, 0.5),
+    inset -5px 5px 0 -3px rgba(140, 120, 160, 0.7),
+    inset 8px -3px 0 -4px rgba(140, 120, 160, 0.6);
+}
+
+.floating-cell.platelet-clump::before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  width: 35%;
+  height: 40%;
+  border-radius: 45%;
+  background: rgba(130, 100, 160, 0.65);
+  box-shadow: 12px 8px 0 -2px rgba(130, 100, 160, 0.6);
+}
+
+/* Hypogranular Platelet - pale, lacking granules */
+.floating-cell.hypogranular-plt {
+  background: radial-gradient(
+    ellipse at 40% 40%,
+    rgba(210, 200, 225, 0.6) 0%,
+    rgba(195, 185, 210, 0.5) 60%,
+    rgba(180, 170, 195, 0.45) 100%
+  );
+  border-radius: 45% 55% 50% 50%;
+  border: 1px solid rgba(150, 130, 175, 0.4);
+  box-shadow: inset 0 0 2px rgba(100, 80, 140, 0.2);
+}
+
 /* =================================================================
    NUCLEATED RBCs (nRBCs) - Immature RBCs with retained nucleus
    ================================================================= */

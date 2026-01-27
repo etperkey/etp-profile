@@ -486,7 +486,7 @@ function BloodSmearBackground({
     }
 
     return cellArray;
-  }, [effectiveDensity, scaleOverride, rbcPerUL, mcv, rdw, nrbcPer100RBC, wbcPerUL, wbcDifferential, pltPerUL, rbcMorphologies, wbcMorphologies, pltMorphologies]);
+  }, [effectiveDensity, scaleOverride, rbcPerUL, mcv, rdw, nrbcPer100RBC, wbcPerUL, wbcDifferential, pltPerUL, rbcMorphologies, wbcMorphologies]);
 
   return (
     <div className={`blood-smear-background${isMobile ? ' blood-smear-mobile' : ''}`}>

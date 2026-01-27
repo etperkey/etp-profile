@@ -350,18 +350,46 @@ a {
 
 @media (max-width: 768px) {
   .microscope-link {
-    top: 80px;
-    left: 15px;
-    padding: 10px;
+    /* Move to bottom right on mobile - visible and not blocked by hero content */
+    top: auto;
+    bottom: 100px;
+    left: auto;
+    right: 15px;
+    padding: 12px 16px;
+    flex-direction: row;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(139, 41, 66, 0.95), rgba(196, 68, 68, 0.95));
+    box-shadow: 0 4px 20px rgba(139, 41, 66, 0.4);
+  }
+
+  .microscope-link:hover {
+    background: linear-gradient(135deg, rgba(139, 41, 66, 1), rgba(196, 68, 68, 1));
   }
 
   .microscope-icon {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Make icon white on mobile for contrast with red background */
+  .microscope-link svg rect,
+  .microscope-link svg ellipse,
+  .microscope-link svg path,
+  .microscope-link svg circle {
+    fill: white;
+  }
+
+  /* Keep colored objectives */
+  .microscope-link svg rect[fill="#e53e3e"],
+  .microscope-link svg rect[fill="#3182ce"],
+  .microscope-link svg rect[fill="#38a169"] {
+    fill: currentColor;
   }
 
   .microscope-label {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
+    color: white;
+    font-weight: 600;
   }
 }
 

@@ -509,7 +509,7 @@ function BloodSmearViewer() {
   }, [nrbcPer100RBC, rbcPerUL]);
 
   // Clinical anemia presets
-  // Each preset sets RBC count, MCV, RDW, and nRBC to mimic the condition
+  // Each preset sets RBC count, MCV, RDW, nRBC, and associated morphologies
   // nRBC values: normally 0, elevated in marrow stress/hemolysis/infiltration
   const anemiaPresets = [
     {
@@ -520,6 +520,9 @@ function BloodSmearViewer() {
       rdw: 13,
       plt: 250000,
       nrbc: 0,
+      rbcMorph: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbcMorph: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
+      pltMorph: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
     },
     {
       name: 'IDA',
@@ -529,6 +532,9 @@ function BloodSmearViewer() {
       rdw: 19,
       plt: 380000, // Reactive thrombocytosis common in IDA
       nrbc: 0,
+      rbcMorph: { spherocyte: 0, targetCell: 10, schistocyte: 0, sickleCell: 0, teardrop: 5, elliptocyte: 15, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 0 },
+      wbcMorph: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
+      pltMorph: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
     },
     {
       name: 'Thalassemia',
@@ -538,6 +544,9 @@ function BloodSmearViewer() {
       rdw: 14,
       plt: 280000,
       nrbc: 3,
+      rbcMorph: { spherocyte: 0, targetCell: 25, schistocyte: 0, sickleCell: 0, teardrop: 0, elliptocyte: 5, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 10, pappenheimer: 0, polychromasia: 5 },
+      wbcMorph: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
+      pltMorph: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 },
     },
     {
       name: 'B12/Folate',
@@ -547,6 +556,9 @@ function BloodSmearViewer() {
       rdw: 18,
       plt: 100000, // Thrombocytopenia common
       nrbc: 2,
+      rbcMorph: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 5, elliptocyte: 15, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 10, basophilicStippling: 5, pappenheimer: 0, polychromasia: 5 },
+      wbcMorph: { bandNeutrophil: 0, hypersegmented: 30, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
+      pltMorph: { giantPlatelet: 5, plateletClump: 0, hypogranular: 10 },
     },
     {
       name: 'Hemolytic',
@@ -556,6 +568,9 @@ function BloodSmearViewer() {
       rdw: 20,
       plt: 200000,
       nrbc: 8,
+      rbcMorph: { spherocyte: 20, targetCell: 0, schistocyte: 5, sickleCell: 0, teardrop: 0, elliptocyte: 0, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 0, pappenheimer: 0, polychromasia: 25 },
+      wbcMorph: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
+      pltMorph: { giantPlatelet: 5, plateletClump: 0, hypogranular: 0 },
     },
     {
       name: 'MDS',
@@ -565,6 +580,9 @@ function BloodSmearViewer() {
       rdw: 22,
       plt: 80000, // Often thrombocytopenic
       nrbc: 5,
+      rbcMorph: { spherocyte: 0, targetCell: 0, schistocyte: 0, sickleCell: 0, teardrop: 5, elliptocyte: 10, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 5, rouleaux: 0, howellJolly: 5, basophilicStippling: 10, pappenheimer: 5, polychromasia: 5 },
+      wbcMorph: { bandNeutrophil: 5, hypersegmented: 10, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 5, smudgeCell: 0, auerRod: 0 },
+      pltMorph: { giantPlatelet: 15, plateletClump: 0, hypogranular: 20 },
     },
     {
       name: 'Myelophthisis',
@@ -574,6 +592,9 @@ function BloodSmearViewer() {
       rdw: 20,
       plt: 60000, // Thrombocytopenic
       nrbc: 15,
+      rbcMorph: { spherocyte: 0, targetCell: 5, schistocyte: 5, sickleCell: 0, teardrop: 30, elliptocyte: 10, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 0, basophilicStippling: 5, pappenheimer: 0, polychromasia: 10 },
+      wbcMorph: { bandNeutrophil: 15, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 5, smudgeCell: 0, auerRod: 0 },
+      pltMorph: { giantPlatelet: 20, plateletClump: 5, hypogranular: 0 },
     },
     {
       name: 'Thal Major',
@@ -583,6 +604,9 @@ function BloodSmearViewer() {
       rdw: 25,
       plt: 120000,
       nrbc: 20,
+      rbcMorph: { spherocyte: 0, targetCell: 35, schistocyte: 5, sickleCell: 0, teardrop: 10, elliptocyte: 10, biteCell: 0, burrCell: 0, acanthocyte: 0, stomatocyte: 0, rouleaux: 0, howellJolly: 5, basophilicStippling: 20, pappenheimer: 5, polychromasia: 20 },
+      wbcMorph: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 },
+      pltMorph: { giantPlatelet: 5, plateletClump: 0, hypogranular: 0 },
     },
   ];
 
@@ -697,22 +721,32 @@ function BloodSmearViewer() {
     }));
   };
 
-  // Platelet presets
+  // Platelet presets with morphologies
   const plateletPresets = [
-    { value: 250000, label: 'Normal', desc: '250K/µL' },
-    { value: 25000, label: 'ITP', desc: 'Immune Thrombocytopenic Purpura' },
-    { value: 50000, label: 'Moderate ↓', desc: 'Moderate thrombocytopenia' },
-    { value: 500000, label: 'Reactive', desc: 'Reactive thrombocytosis' },
-    { value: 700000, label: 'ET', desc: 'Essential Thrombocythemia' },
+    { value: 250000, label: 'Normal', desc: '250K/µL', morph: { giantPlatelet: 0, plateletClump: 0, hypogranular: 0 } },
+    { value: 25000, label: 'ITP', desc: 'Immune Thrombocytopenic Purpura', morph: { giantPlatelet: 30, plateletClump: 0, hypogranular: 0 } },
+    { value: 50000, label: 'Moderate ↓', desc: 'Moderate thrombocytopenia', morph: { giantPlatelet: 10, plateletClump: 0, hypogranular: 0 } },
+    { value: 500000, label: 'Reactive', desc: 'Reactive thrombocytosis', morph: { giantPlatelet: 5, plateletClump: 5, hypogranular: 0 } },
+    { value: 700000, label: 'ET', desc: 'Essential Thrombocythemia', morph: { giantPlatelet: 25, plateletClump: 10, hypogranular: 5 } },
   ];
 
-  // Apply an anemia preset
+  // Apply platelet preset (count + morphology)
+  const applyPlateletPreset = (preset) => {
+    setPltPerUL(preset.value);
+    if (preset.morph) setPltMorphologies(preset.morph);
+  };
+
+  // Apply an anemia preset (includes morphologies)
   const applyAnemiaPreset = (preset) => {
     setRbcPerUL(preset.rbc);
     setMcv(preset.mcv);
     setPltPerUL(preset.plt);
     setRdw(preset.rdw);
     setNrbcPer100RBC(preset.nrbc);
+    // Also set morphologies if provided
+    if (preset.rbcMorph) setRbcMorphologies(preset.rbcMorph);
+    if (preset.wbcMorph) setWbcMorphologies(preset.wbcMorph);
+    if (preset.pltMorph) setPltMorphologies(preset.pltMorph);
   };
 
   // Get nRBC status label
@@ -729,14 +763,20 @@ function BloodSmearViewer() {
 
   // WBC count presets with clinical context
   const wbcPresets = [
-    { value: 2500, label: 'Leukopenia', desc: '2,500/µL' },
-    { value: 7500, label: 'Normal', desc: '7,500/µL' },
-    { value: 15000, label: 'Mild ↑', desc: '15,000/µL' },
-    { value: 30000, label: 'Leukocytosis', desc: '30,000/µL' },
-    { value: 75000, label: 'Marked ↑', desc: '75,000/µL' },
-    { value: 150000, label: 'Leukemia', desc: '150,000/µL' },
-    { value: 500000, label: 'Blast Crisis', desc: '500,000/µL' },
+    { value: 2500, label: 'Leukopenia', desc: '2,500/µL', morph: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 } },
+    { value: 7500, label: 'Normal', desc: '7,500/µL', morph: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 } },
+    { value: 15000, label: 'Mild ↑', desc: '15,000/µL - bacterial infection', morph: { bandNeutrophil: 15, hypersegmented: 0, toxicGranulation: 5, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 } },
+    { value: 30000, label: 'Leukocytosis', desc: '30,000/µL - severe infection', morph: { bandNeutrophil: 25, hypersegmented: 0, toxicGranulation: 20, dohleBodies: 10, atypicalLymph: 0, blast: 0, smudgeCell: 0, auerRod: 0 } },
+    { value: 75000, label: 'Marked ↑', desc: '75,000/µL - leukemoid reaction', morph: { bandNeutrophil: 35, hypersegmented: 0, toxicGranulation: 30, dohleBodies: 15, atypicalLymph: 0, blast: 5, smudgeCell: 0, auerRod: 0 } },
+    { value: 150000, label: 'CLL', desc: '150,000/µL - CLL (smudge cells)', morph: { bandNeutrophil: 0, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 0, smudgeCell: 40, auerRod: 0 } },
+    { value: 500000, label: 'Blast Crisis', desc: '500,000/µL - acute leukemia', morph: { bandNeutrophil: 5, hypersegmented: 0, toxicGranulation: 0, dohleBodies: 0, atypicalLymph: 0, blast: 60, smudgeCell: 0, auerRod: 10 } },
   ];
+
+  // Apply WBC preset (count + morphology)
+  const applyWbcPreset = (preset) => {
+    setWbcPerUL(preset.value);
+    if (preset.morph) setWbcMorphologies(preset.morph);
+  };
 
   // Get WBC status label
   const getWbcStatus = () => {
@@ -1103,7 +1143,7 @@ function BloodSmearViewer() {
                 <button
                   key={preset.label}
                   className={`plt-preset-btn ${pltPerUL === preset.value ? 'active' : ''}`}
-                  onClick={() => setPltPerUL(preset.value)}
+                  onClick={() => applyPlateletPreset(preset)}
                   title={preset.desc}
                 >
                   {preset.label}
@@ -1147,7 +1187,7 @@ function BloodSmearViewer() {
                 <button
                   key={preset.value}
                   className={`wbc-preset-btn ${wbcPerUL === preset.value ? 'active' : ''}`}
-                  onClick={() => setWbcPerUL(preset.value)}
+                  onClick={() => applyWbcPreset(preset)}
                   title={preset.desc}
                 >
                   {preset.label}

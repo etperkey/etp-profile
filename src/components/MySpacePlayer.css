@@ -128,10 +128,27 @@
   border-top: 1px solid #ff69b4;
 }
 
-.player-info marquee {
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee-text {
+  display: inline-block;
   font-family: 'Trebuchet MS', sans-serif;
   font-size: 10px;
   color: #ff69b4;
+  animation: marqueeScroll 12s linear infinite;
+  padding-left: 100%;
+}
+
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 /* Responsive */

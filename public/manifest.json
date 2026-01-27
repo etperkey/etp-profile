@@ -1,0 +1,17 @@
+{
+  "short_name": "Eric Perkey",
+  "name": "Eric Perkey, MD-PhD | Physician-Scientist",
+  "description": "Physician-scientist specializing in immunology, lymphoma research, and computational biology at University of Chicago.",
+  "icons": [
+    {
+      "src": "cell-library/malignant/leukemia/AML_myeloblasts/MYB_0021.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#2563eb",
+  "background_color": "#ffffff"
+}

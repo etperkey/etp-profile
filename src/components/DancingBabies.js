@@ -9,16 +9,16 @@ function DancingBabies({ isActive }) {
   return (
     <>
       <div className="dancing-baby baby-1">
-        <img src={babyGif} alt="Dancing Baby" crossOrigin="anonymous" />
+        <img src={babyGif} alt="Dancing Baby" crossOrigin="anonymous" loading="lazy" />
       </div>
       <div className="dancing-baby baby-2">
-        <img src={babyGif} alt="Dancing Baby" crossOrigin="anonymous" />
+        <img src={babyGif} alt="Dancing Baby" crossOrigin="anonymous" loading="lazy" />
       </div>
       <div className="dancing-baby baby-3">
-        <img src={babyGif} alt="Dancing Baby" crossOrigin="anonymous" />
+        <img src={babyGif} alt="Dancing Baby" crossOrigin="anonymous" loading="lazy" />
       </div>
       <div className="dancing-baby baby-4">
-        <img src={babyGif} alt="Dancing Baby" crossOrigin="anonymous" />
+        <img src={babyGif} alt="Dancing Baby" crossOrigin="anonymous" loading="lazy" />
       </div>
     </>
   );

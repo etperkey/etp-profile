@@ -12,6 +12,7 @@ function Publications() {
       year: 2025,
       badge: 'Co-First Author',
       pmid: '40111253',
+      doi: '10.1084/jem.20231758',
     },
     {
       id: 2,
@@ -22,6 +23,7 @@ function Publications() {
       year: 2023,
       badge: 'Co-First Author',
       pmid: '37379368',
+      doi: '10.1126/scitranslmed.add1175',
     },
     {
       id: 3,
@@ -32,6 +34,7 @@ function Publications() {
       year: 2020,
       badge: 'Key Contribution',
       pmid: '32961131',
+      doi: '10.1016/j.cell.2020.08.022',
     },
     {
       id: 4,
@@ -42,6 +45,7 @@ function Publications() {
       year: 2020,
       badge: 'First Author',
       pmid: '32060138',
+      doi: '10.4049/jimmunol.1901194',
     },
     {
       id: 5,
@@ -51,6 +55,7 @@ function Publications() {
       year: 2017,
       badge: 'Key Contribution',
       pmid: '28319044',
+      doi: '10.1172/JCI89535',
     },
     {
       id: 6,
@@ -59,7 +64,8 @@ function Publications() {
       journal: 'Annual Review of Pathology',
       year: 2018,
       badge: 'Key Review',
-      pmid: '29068759',
+      pmid: '29099650',
+      doi: '10.1146/annurev-pathol-020117-043720',
     },
     {
       id: 7,
@@ -70,6 +76,7 @@ function Publications() {
       year: 2013,
       badge: 'First Author',
       pmid: '24078700',
+      doi: '10.4049/jimmunol.1300073',
     },
     {
       id: 8,
@@ -80,6 +87,7 @@ function Publications() {
       year: 2012,
       badge: 'First Author',
       pmid: '23136198',
+      doi: '10.4049/jimmunol.1200487',
     },
   ];
 
@@ -126,17 +134,27 @@ function Publications() {
                   </span>
                   <span className="publication-year">{pub.year}</span>
                 </div>
-                <h3 className="publication-title">
+                <h3 className="publication-title">{pub.title}</h3>
+                <p className="publication-authors">{pub.authors}</p>
+                <p className="publication-journal">{pub.journal}</p>
+                <div className="publication-links">
                   <a
                     href={`https://pubmed.ncbi.nlm.nih.gov/${pub.pmid}/`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="pub-link"
                   >
-                    {pub.title}
+                    PMID: {pub.pmid}
                   </a>
-                </h3>
-                <p className="publication-authors">{pub.authors}</p>
-                <p className="publication-journal">{pub.journal}</p>
+                  <a
+                    href={`https://doi.org/${pub.doi}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="pub-link"
+                  >
+                    DOI ↗
+                  </a>
+                </div>
               </div>
             </article>
           ))}

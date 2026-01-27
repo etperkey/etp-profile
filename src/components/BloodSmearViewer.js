@@ -294,6 +294,84 @@ function BloodSmearViewer() {
     setIsPanning(false);
   }, []);
 
+  // Keyboard controls for accessibility
+  const handleKeyDown = useCallback(
+    (e) => {
+      const panStep = 50;
+      const maxPan = (currentZoom - 1) * 300;
+
+      switch (e.key) {
+        // Zoom controls
+        case '+':
+        case '=':
+          e.preventDefault();
+          if (objective === '10x') handleObjectiveChange('40x');
+          else if (objective === '40x') handleObjectiveChange('100x');
+          break;
+        case '-':
+        case '_':
+          e.preventDefault();
+          if (objective === '100x') handleObjectiveChange('40x');
+          else if (objective === '40x') handleObjectiveChange('10x');
+          break;
+
+        // Pan controls (only when zoomed)
+        case 'ArrowUp':
+          if (currentZoom > 1) {
+            e.preventDefault();
+            setPanOffset((prev) => ({
+              ...prev,
+              y: Math.min(maxPan, prev.y + panStep),
+            }));
+          }
+          break;
+        case 'ArrowDown':
+          if (currentZoom > 1) {
+            e.preventDefault();
+            setPanOffset((prev) => ({
+              ...prev,
+              y: Math.max(-maxPan, prev.y - panStep),
+            }));
+          }
+          break;
+        case 'ArrowLeft':
+          if (currentZoom > 1) {
+            e.preventDefault();
+            setPanOffset((prev) => ({
+              ...prev,
+              x: Math.min(maxPan, prev.x + panStep),
+            }));
+          }
+          break;
+        case 'ArrowRight':
+          if (currentZoom > 1) {
+            e.preventDefault();
+            setPanOffset((prev) => ({
+              ...prev,
+              x: Math.max(-maxPan, prev.x - panStep),
+            }));
+          }
+          break;
+
+        // Pause/Play
+        case ' ':
+          e.preventDefault();
+          togglePause();
+          break;
+
+        // Reset pan position
+        case 'Home':
+          e.preventDefault();
+          setPanOffset({ x: 0, y: 0 });
+          break;
+
+        default:
+          break;
+      }
+    },
+    [currentZoom, objective, handleObjectiveChange, togglePause]
+  );
+
   const currentDensity = manualDensity || getAutoDensity();
 
   // Estimate cell count based on density (derived value, no effect needed)
@@ -872,6 +950,9 @@ function BloodSmearViewer() {
     <div
       className={`blood-smear-viewer ${isPanning ? 'panning' : ''} ${currentZoom > 1 ? 'zoomed' : ''} ${isPaused ? 'paused' : ''}`}
       ref={containerRef}
+      tabIndex={0}
+      role="application"
+      aria-label="Interactive blood smear viewer. Use +/- to zoom, arrow keys to pan when zoomed, space to pause."
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
@@ -879,6 +960,7 @@ function BloodSmearViewer() {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      onKeyDown={handleKeyDown}
     >
       <div
         className="blood-smear-zoom-container"

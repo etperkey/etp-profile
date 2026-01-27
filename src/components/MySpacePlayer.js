@@ -30,10 +30,11 @@ function MySpacePlayer({ isActive }) {
   const [currentTrack, setCurrentTrack] = useState(0);
 
   useEffect(() => {
+    // Reload iframe when track changes to trigger new video
     if (isActive && playerRef.current) {
       const iframe = playerRef.current;
-      const src = iframe.src;
-      iframe.src = src;
+      // eslint-disable-next-line no-self-assign
+      iframe.src = iframe.src;
     }
   }, [isActive, currentTrack]);
 
@@ -66,6 +67,7 @@ function MySpacePlayer({ isActive }) {
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            loading="lazy"
           ></iframe>
         </div>
         <div className="player-controls">
@@ -80,9 +82,11 @@ function MySpacePlayer({ isActive }) {
           </button>
         </div>
         <div className="player-info">
-          <marquee scrollamount="3">
-            ★ {current.artist} - {current.title} ★ Add to playlist ★ Share with friends ★
-          </marquee>
+          <div className="marquee-container">
+            <span className="marquee-text">
+              ★ {current.artist} - {current.title} ★ Add to playlist ★ Share with friends ★
+            </span>
+          </div>
         </div>
       </div>
     </div>

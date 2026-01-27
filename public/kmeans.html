@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>K-MEANS???</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: linear-gradient(135deg, #000066 0%, #330066 50%, #000033 100%);
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+    }
+
+    html {
+      height: -webkit-fill-available;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, white, transparent),
+        radial-gradient(2px 2px at 40px 70px, white, transparent),
+        radial-gradient(1px 1px at 90px 40px, white, transparent),
+        radial-gradient(2px 2px at 160px 120px, white, transparent),
+        radial-gradient(1px 1px at 230px 80px, white, transparent),
+        radial-gradient(2px 2px at 300px 150px, white, transparent),
+        radial-gradient(1px 1px at 400px 60px, white, transparent),
+        radial-gradient(2px 2px at 500px 200px, white, transparent),
+        radial-gradient(1px 1px at 600px 100px, white, transparent),
+        radial-gradient(2px 2px at 700px 180px, white, transparent);
+      background-size: 800px 400px;
+      animation: twinkle 4s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .floating-text {
+      position: absolute;
+      white-space: nowrap;
+      font-weight: bold;
+      text-shadow:
+        0 0 10px currentColor,
+        0 0 20px currentColor,
+        0 0 30px currentColor,
+        2px 2px 0 #000;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+    }
+
+    .kmeans-1 {
+      font-size: 3rem;
+      color: #00ff00;
+      top: 10%;
+      animation: floatAcross1 8s linear infinite;
+      animation-delay: 0s;
+    }
+
+    .kmeans-2 {
+      font-size: 4rem;
+      color: #ff00ff;
+      top: 25%;
+      animation: floatAcross2 7s linear infinite;
+      animation-delay: 1s;
+    }
+
+    .kmeans-3 {
+      font-size: 2.5rem;
+      color: #ffff00;
+      top: 40%;
+      animation: floatAcross1 9s linear infinite;
+      animation-delay: 2s;
+    }
+
+    .kmeans-what-1 {
+      font-size: 3.5rem;
+      color: #00ffff;
+      top: 55%;
+      animation: floatAcross2 6s linear infinite;
+      animation-delay: 3s;
+    }
+
+    .kmeans-what-2 {
+      font-size: 2.8rem;
+      color: #ff6600;
+      top: 70%;
+      animation: floatAcross1 8s linear infinite;
+      animation-delay: 4s;
+    }
+
+    .big-what {
+      font-size: 5rem;
+      color: #ff0000;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      position: fixed;
+      z-index: 100;
+      opacity: 0;
+      animation: appearBig 12s ease-in-out infinite;
+      text-align: center;
+      padding: 0 10px;
+    }
+
+    @keyframes floatAcross1 {
+      0% { left: -50%; }
+      100% { left: 120%; }
+    }
+
+    @keyframes floatAcross2 {
+      0% { left: 120%; }
+      100% { left: -50%; }
+    }
+
+    @keyframes appearBig {
+      0%, 70% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      75% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+      80%, 95% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    }
+
+    .back-link {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      color: #00ffff;
+      font-size: 1.2rem;
+      text-decoration: underline;
+      cursor: pointer;
+      z-index: 1000;
+      padding: 10px;
+    }
+
+    .back-link:hover {
+      color: #ff00ff;
+    }
+
+    /* Multicolored floating question marks */
+    .question-mark {
+      position: absolute;
+      font-size: 5rem;
+      font-weight: bold;
+      text-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+      animation: floatUp linear infinite;
+      pointer-events: none;
+    }
+
+    .qm-green { color: rgba(0, 255, 0, 0.7); }
+    .qm-magenta { color: rgba(255, 0, 255, 0.7); }
+    .qm-yellow { color: rgba(255, 255, 0, 0.7); }
+    .qm-cyan { color: rgba(0, 255, 255, 0.7); }
+    .qm-orange { color: rgba(255, 153, 0, 0.7); }
+    .qm-red { color: rgba(255, 0, 0, 0.7); }
+    .qm-pink { color: rgba(255, 105, 180, 0.7); }
+    .qm-lime { color: rgba(50, 205, 50, 0.7); }
+    .qm-blue { color: rgba(0, 150, 255, 0.7); }
+    .qm-purple { color: rgba(180, 0, 255, 0.7); }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) rotate(0deg) scale(0.5);
+        opacity: 0;
+      }
+      5% { opacity: 0.8; }
+      95% { opacity: 0.8; }
+      100% {
+        transform: translateY(-100vh) rotate(360deg) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    /* Mobile Responsive - Tablets */
+    @media (max-width: 768px) {
+      .kmeans-1 { font-size: 2rem; }
+      .kmeans-2 { font-size: 2.5rem; }
+      .kmeans-3 { font-size: 1.8rem; }
+      .kmeans-what-1 { font-size: 2.2rem; }
+      .kmeans-what-2 { font-size: 2rem; }
+      .big-what { font-size: 3rem; }
+      .question-mark { font-size: 4rem; }
+      .back-link { font-size: 1rem; top: 15px; left: 15px; }
+    }
+
+    /* Mobile - iPhone 14 Pro Max */
+    @media (max-width: 430px) {
+      .kmeans-1 { font-size: 1.6rem; }
+      .kmeans-2 { font-size: 2rem; }
+      .kmeans-3 { font-size: 1.4rem; }
+      .kmeans-what-1 { font-size: 1.8rem; }
+      .kmeans-what-2 { font-size: 1.6rem; }
+      .big-what { font-size: 2.2rem; line-height: 1.2; }
+      .question-mark { font-size: 3.5rem; }
+    }
+
+    /* Mobile - iPhone 14/13/12 */
+    @media (max-width: 393px) {
+      .kmeans-1 { font-size: 1.4rem; }
+      .kmeans-2 { font-size: 1.8rem; }
+      .kmeans-3 { font-size: 1.2rem; }
+      .kmeans-what-1 { font-size: 1.5rem; }
+      .kmeans-what-2 { font-size: 1.4rem; }
+      .big-what { font-size: 1.8rem; }
+      .question-mark { font-size: 3rem; }
+      .back-link { font-size: 0.9rem; }
+    }
+
+    /* Mobile - iPhone SE, small phones */
+    @media (max-width: 375px) {
+      .kmeans-1 { font-size: 1.2rem; }
+      .kmeans-2 { font-size: 1.5rem; }
+      .kmeans-3 { font-size: 1rem; }
+      .kmeans-what-1 { font-size: 1.3rem; }
+      .kmeans-what-2 { font-size: 1.2rem; }
+      .big-what { font-size: 1.5rem; }
+      .question-mark { font-size: 2.5rem; }
+    }
+
+    /* Mobile - Very small */
+    @media (max-width: 320px) {
+      .kmeans-1 { font-size: 1rem; }
+      .kmeans-2 { font-size: 1.3rem; }
+      .kmeans-3 { font-size: 0.9rem; }
+      .kmeans-what-1 { font-size: 1.1rem; }
+      .kmeans-what-2 { font-size: 1rem; }
+      .big-what { font-size: 1.3rem; }
+      .question-mark { font-size: 2rem; }
+      .back-link { font-size: 0.8rem; top: 10px; left: 10px; }
+    }
+
+    /* Safe area for notched phones */
+    @supports (padding: env(safe-area-inset-top)) {
+      .back-link {
+        top: calc(env(safe-area-inset-top, 0px) + 15px);
+        left: calc(env(safe-area-inset-left, 0px) + 15px);
+      }
+    }
+
+    /* UMAP Dot Clusters */
+    .umap-cluster {
+      position: absolute;
+      pointer-events: none;
+      animation: driftCluster 20s ease-in-out infinite;
+    }
+
+    .umap-cluster .dot {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.8;
+    }
+
+    @keyframes driftCluster {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(20px, -15px); }
+      50% { transform: translate(-10px, 20px); }
+      75% { transform: translate(-20px, -10px); }
+    }
+
+    /* UMAP Axes */
+    .umap-axes {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.5;
+      animation: spinDrift 15s ease-in-out infinite;
+      z-index: 5;
+    }
+
+    .umap-axes svg {
+      width: 180px;
+      height: 180px;
+      overflow: visible;
+    }
+
+    .umap-axes text {
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      fill: white;
+      font-weight: bold;
+      text-shadow: 0 0 10px currentColor;
+    }
+
+    .umap-axes line {
+      stroke: rgba(255, 255, 255, 0.8);
+      stroke-width: 3;
+    }
+
+    .umap-axes .arrow {
+      fill: rgba(255, 255, 255, 0.8);
+    }
+
+    @keyframes spinDrift {
+      0% { transform: translate(0, 0) rotate(-5deg); opacity: 0.4; }
+      20% { transform: translate(40px, -25px) rotate(12deg); opacity: 0.7; }
+      40% { transform: translate(10px, 40px) rotate(-8deg); opacity: 0.5; }
+      60% { transform: translate(-35px, 15px) rotate(18deg); opacity: 0.7; }
+      80% { transform: translate(-20px, -30px) rotate(-12deg); opacity: 0.5; }
+      100% { transform: translate(0, 0) rotate(-5deg); opacity: 0.4; }
+    }
+
+    /* Mobile adjustments for clusters */
+    @media (max-width: 768px) {
+      .umap-cluster { transform: scale(0.7); }
+      .umap-axes svg { width: 100px; height: 100px; }
+      .umap-axes text { font-size: 9px; }
+    }
+
+    @media (max-width: 430px) {
+      .umap-cluster { transform: scale(0.5); }
+      .umap-axes svg { width: 80px; height: 80px; }
+      .umap-axes text { font-size: 7px; }
+    }
+
+    @media (max-width: 375px) {
+      .umap-cluster { transform: scale(0.4); }
+      .umap-axes svg { width: 60px; height: 60px; }
+    }
+
+    /* Floating gene symbols (the "noise") */
+    .gene-symbol {
+      position: absolute;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      font-style: italic;
+      pointer-events: none;
+      opacity: 0.6;
+      text-shadow: 0 0 8px currentColor;
+      animation: geneFloat linear infinite;
+    }
+
+    @keyframes geneFloat {
+      0% {
+        transform: translateX(-100px) rotate(-10deg);
+        opacity: 0;
+      }
+      10% { opacity: 0.7; }
+      90% { opacity: 0.7; }
+      100% {
+        transform: translateX(calc(100vw + 100px)) rotate(15deg);
+        opacity: 0;
+      }
+    }
+
+    .gene-malat1 { color: #ff6b6b; font-size: 1.4rem; }
+    .gene-gapdh { color: #4ecdc4; font-size: 1.6rem; }
+    .gene-actb { color: #ffe66d; font-size: 1.3rem; }
+    .gene-ttn { color: #95e1d3; font-size: 1.8rem; }
+    .gene-xist { color: #f38181; font-size: 1.5rem; }
+    .gene-hbb { color: #aa96da; font-size: 1.4rem; }
+    .gene-neat1 { color: #fcbad3; font-size: 1.3rem; }
+    .gene-hspa1a { color: #a8d8ea; font-size: 1.2rem; }
+    .gene-igj { color: #ffd3b6; font-size: 1.5rem; }
+
+    @media (max-width: 768px) {
+      .gene-symbol { font-size: 1rem !important; }
+    }
+
+    @media (max-width: 430px) {
+      .gene-symbol { font-size: 0.85rem !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+
+  <a href="/#about" class="back-link">← Back to safety</a>
+
+  <div class="floating-text kmeans-1">k-means?</div>
+  <div class="floating-text kmeans-2">k-means?</div>
+  <div class="floating-text kmeans-3">k-means?</div>
+  <div class="floating-text kmeans-what-1">k means what?</div>
+  <div class="floating-text kmeans-what-2">K means what?</div>
+
+  <div class="floating-text big-what">WHAT DOES K MEANS?!</div>
+
+  <!-- Multicolored question marks -->
+  <div class="question-mark qm-green" style="left: 5%; animation-duration: 8s; animation-delay: 0s;">?</div>
+  <div class="question-mark qm-magenta" style="left: 15%; animation-duration: 10s; animation-delay: 1s;">?</div>
+  <div class="question-mark qm-yellow" style="left: 25%; animation-duration: 9s; animation-delay: 2s;">?</div>
+  <div class="question-mark qm-cyan" style="left: 35%; animation-duration: 11s; animation-delay: 0.5s;">?</div>
+  <div class="question-mark qm-orange" style="left: 45%; animation-duration: 8.5s; animation-delay: 3s;">?</div>
+  <div class="question-mark qm-red" style="left: 55%; animation-duration: 10.5s; animation-delay: 1.5s;">?</div>
+  <div class="question-mark qm-pink" style="left: 65%; animation-duration: 9.5s; animation-delay: 2.5s;">?</div>
+  <div class="question-mark qm-lime" style="left: 75%; animation-duration: 7.5s; animation-delay: 0.8s;">?</div>
+  <div class="question-mark qm-blue" style="left: 85%; animation-duration: 12s; animation-delay: 1.8s;">?</div>
+  <div class="question-mark qm-purple" style="left: 95%; animation-duration: 8s; animation-delay: 3.5s;">?</div>
+
+  <!-- Second wave of question marks for more density -->
+  <div class="question-mark qm-cyan" style="left: 10%; animation-duration: 11s; animation-delay: 4s;">?</div>
+  <div class="question-mark qm-orange" style="left: 20%; animation-duration: 9s; animation-delay: 5s;">?</div>
+  <div class="question-mark qm-magenta" style="left: 40%; animation-duration: 10s; animation-delay: 4.5s;">?</div>
+  <div class="question-mark qm-green" style="left: 60%; animation-duration: 8s; animation-delay: 5.5s;">?</div>
+  <div class="question-mark qm-yellow" style="left: 80%; animation-duration: 9.5s; animation-delay: 6s;">?</div>
+  <div class="question-mark qm-red" style="left: 90%; animation-duration: 7s; animation-delay: 4.2s;">?</div>
+
+  <!-- UMAP Clusters will be generated by JavaScript -->
+
+  <!-- UMAP Axes scattered around with slight tilts -->
+  <div class="umap-axes" style="top: 8%; left: 15%; animation-delay: 0s;">
+    <svg viewBox="0 0 180 180" overflow="visible" style="transform: rotate(-8deg);">
+      <defs>
+        <marker id="arrow1" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" class="arrow" />
+        </marker>
+      </defs>
+      <line x1="30" y1="140" x2="150" y2="140" marker-end="url(#arrow1)" />
+      <line x1="30" y1="140" x2="30" y2="20" marker-end="url(#arrow1)" />
+      <text x="85" y="165">UMAP1</text>
+      <text x="8" y="85" transform="rotate(-90, 8, 85)">UMAP2</text>
+    </svg>
+  </div>
+
+  <div class="umap-axes" style="top: 55%; left: 60%; animation-delay: 4s;">
+    <svg viewBox="0 0 180 180" overflow="visible" style="transform: rotate(12deg);">
+      <defs>
+        <marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" class="arrow" />
+        </marker>
+      </defs>
+      <line x1="30" y1="140" x2="150" y2="140" marker-end="url(#arrow2)" />
+      <line x1="30" y1="140" x2="30" y2="20" marker-end="url(#arrow2)" />
+      <text x="85" y="165">UMAP1</text>
+      <text x="8" y="85" transform="rotate(-90, 8, 85)">UMAP2</text>
+    </svg>
+  </div>
+
+  <div class="umap-axes" style="top: 20%; left: 50%; animation-delay: 8s;">
+    <svg viewBox="0 0 180 180" overflow="visible" style="transform: rotate(-5deg);">
+      <defs>
+        <marker id="arrow3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" class="arrow" />
+        </marker>
+      </defs>
+      <line x1="30" y1="140" x2="150" y2="140" marker-end="url(#arrow3)" />
+      <line x1="30" y1="140" x2="30" y2="20" marker-end="url(#arrow3)" />
+      <text x="85" y="165">UMAP1</text>
+      <text x="8" y="85" transform="rotate(-90, 8, 85)">UMAP2</text>
+    </svg>
+  </div>
+
+  <div class="umap-axes" style="top: 65%; left: 10%; animation-delay: 12s;">
+    <svg viewBox="0 0 180 180" overflow="visible" style="transform: rotate(15deg);">
+      <defs>
+        <marker id="arrow4" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" class="arrow" />
+        </marker>
+      </defs>
+      <line x1="30" y1="140" x2="150" y2="140" marker-end="url(#arrow4)" />
+      <line x1="30" y1="140" x2="30" y2="20" marker-end="url(#arrow4)" />
+      <text x="85" y="165">UMAP1</text>
+      <text x="8" y="85" transform="rotate(-90, 8, 85)">UMAP2</text>
+    </svg>
+  </div>
+
+  <div class="umap-axes" style="top: 35%; left: 75%; animation-delay: 6s;">
+    <svg viewBox="0 0 180 180" overflow="visible" style="transform: rotate(-12deg);">
+      <defs>
+        <marker id="arrow5" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" class="arrow" />
+        </marker>
+      </defs>
+      <line x1="30" y1="140" x2="150" y2="140" marker-end="url(#arrow5)" />
+      <line x1="30" y1="140" x2="30" y2="20" marker-end="url(#arrow5)" />
+      <text x="85" y="165">UMAP1</text>
+      <text x="8" y="85" transform="rotate(-90, 8, 85)">UMAP2</text>
+    </svg>
+  </div>
+
+  <div class="umap-axes" style="top: 78%; left: 45%; animation-delay: 10s;">
+    <svg viewBox="0 0 180 180" overflow="visible" style="transform: rotate(8deg);">
+      <defs>
+        <marker id="arrow6" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" class="arrow" />
+        </marker>
+      </defs>
+      <line x1="30" y1="140" x2="150" y2="140" marker-end="url(#arrow6)" />
+      <line x1="30" y1="140" x2="30" y2="20" marker-end="url(#arrow6)" />
+      <text x="85" y="165">UMAP1</text>
+      <text x="8" y="85" transform="rotate(-90, 8, 85)">UMAP2</text>
+    </svg>
+  </div>
+
+  <script>
+    // Generate UMAP-style dot clusters with different shapes
+    const clusterConfigs = [
+      { x: 8, y: 12, color: '#ff6384', shape: 'circle' },
+      { x: 75, y: 8, color: '#36a2eb', shape: 'square' },
+      { x: 85, y: 65, color: '#ffce56', shape: 'triangle' },
+      { x: 12, y: 70, color: '#4bc0c0', shape: 'diamond' },
+      { x: 45, y: 15, color: '#9966ff', shape: 'circle' },
+      { x: 55, y: 75, color: '#ff9f40', shape: 'square' },
+      { x: 25, y: 45, color: '#00ff7f', shape: 'star' },
+      { x: 70, y: 40, color: '#ff00ff', shape: 'triangle' },
+      { x: 88, y: 25, color: '#00bfff', shape: 'diamond' },
+      { x: 5, y: 50, color: '#ff4500', shape: 'circle' },
+      { x: 35, y: 60, color: '#adff2f', shape: 'star' },
+      { x: 60, y: 20, color: '#ff1493', shape: 'square' },
+    ];
+
+    // Connections between clusters (trajectory-like)
+    const connections = [
+      { from: 0, to: 4 },
+      { from: 4, to: 7 },
+      { from: 1, to: 11 },
+      { from: 3, to: 10 },
+      { from: 10, to: 5 },
+      { from: 2, to: 8 },
+      { from: 6, to: 9 },
+    ];
+
+    function createShape(shape, size, color) {
+      const el = document.createElement('div');
+      el.className = 'dot';
+
+      switch(shape) {
+        case 'circle':
+          el.style.width = size + 'px';
+          el.style.height = size + 'px';
+          el.style.borderRadius = '50%';
+          el.style.backgroundColor = color;
+          break;
+        case 'square':
+          el.style.width = size + 'px';
+          el.style.height = size + 'px';
+          el.style.borderRadius = '2px';
+          el.style.backgroundColor = color;
+          break;
+        case 'triangle':
+          el.style.width = '0';
+          el.style.height = '0';
+          el.style.borderLeft = (size/2) + 'px solid transparent';
+          el.style.borderRight = (size/2) + 'px solid transparent';
+          el.style.borderBottom = size + 'px solid ' + color;
+          el.style.backgroundColor = 'transparent';
+          break;
+        case 'diamond':
+          el.style.width = size + 'px';
+          el.style.height = size + 'px';
+          el.style.backgroundColor = color;
+          el.style.transform = 'rotate(45deg)';
+          break;
+        case 'star':
+          el.style.width = size + 'px';
+          el.style.height = size + 'px';
+          el.style.backgroundColor = color;
+          el.style.clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+          break;
+      }
+
+      el.style.boxShadow = `0 0 ${size + 2}px ${color}`;
+      return el;
+    }
+
+    function createCluster(config, index) {
+      const cluster = document.createElement('div');
+      cluster.className = 'umap-cluster';
+      cluster.id = 'cluster-' + index;
+      cluster.style.left = config.x + '%';
+      cluster.style.top = config.y + '%';
+      cluster.style.animationDuration = (15 + Math.random() * 10) + 's';
+      cluster.style.animationDelay = (Math.random() * 5) + 's';
+
+      const dotCount = 18 + Math.floor(Math.random() * 12);
+
+      for (let i = 0; i < dotCount; i++) {
+        const size = 4 + Math.random() * 6;
+        const dot = createShape(config.shape, size, config.color);
+        dot.style.position = 'absolute';
+        dot.style.left = (Math.random() - 0.5) * 90 + 'px';
+        dot.style.top = (Math.random() - 0.5) * 90 + 'px';
+        dot.style.opacity = 0.7 + Math.random() * 0.3;
+        cluster.appendChild(dot);
+      }
+
+      document.body.appendChild(cluster);
+      return cluster;
+    }
+
+    // Create SVG for connection lines
+    function createConnections() {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.style.position = 'fixed';
+      svg.style.top = '0';
+      svg.style.left = '0';
+      svg.style.width = '100%';
+      svg.style.height = '100%';
+      svg.style.pointerEvents = 'none';
+      svg.style.zIndex = '1';
+      svg.style.opacity = '0.4';
+
+      connections.forEach(conn => {
+        const from = clusterConfigs[conn.from];
+        const to = clusterConfigs[conn.to];
+
+        // Create gradient line
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', from.x + '%');
+        line.setAttribute('y1', from.y + '%');
+        line.setAttribute('x2', to.x + '%');
+        line.setAttribute('y2', to.y + '%');
+        line.setAttribute('stroke', `url(#grad-${conn.from}-${conn.to})`);
+        line.setAttribute('stroke-width', '3');
+        line.setAttribute('stroke-dasharray', '8,4');
+        line.style.animation = `dashMove ${3 + Math.random() * 2}s linear infinite`;
+
+        // Create gradient
+        const defs = svg.querySelector('defs') || document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+        gradient.id = `grad-${conn.from}-${conn.to}`;
+        gradient.innerHTML = `
+          <stop offset="0%" stop-color="${from.color}" />
+          <stop offset="100%" stop-color="${to.color}" />
+        `;
+        defs.appendChild(gradient);
+        if (!svg.querySelector('defs')) svg.appendChild(defs);
+
+        svg.appendChild(line);
+      });
+
+      // Add animation style
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes dashMove {
+          0% { stroke-dashoffset: 0; }
+          100% { stroke-dashoffset: 24; }
+        }
+      `;
+      document.head.appendChild(style);
+
+      document.body.appendChild(svg);
+    }
+
+    // Create all clusters
+    clusterConfigs.forEach((config, i) => {
+      createCluster(config, i);
+    });
+
+    // Create connection lines
+    createConnections();
+
+    // Create floating "noise" gene symbols
+    const noiseGenes = [
+      { name: 'MALAT1', class: 'gene-malat1', pval: 'p < 0.0001***' },
+      { name: 'GAPDH', class: 'gene-gapdh', pval: 'p = 2.3e-47' },
+      { name: 'ACTB', class: 'gene-actb', pval: 'p < 0.00001' },
+      { name: 'TTN', class: 'gene-ttn', pval: 'p = 1.2e-89' },
+      { name: 'XIST', class: 'gene-xist', pval: 'p < 2.2e-16' },
+      { name: 'HBB', class: 'gene-hbb', pval: 'p = 4.5e-32' },
+      { name: 'NEAT1', class: 'gene-neat1', pval: 'p < 0.001**' },
+      { name: 'HSPA1A', class: 'gene-hspa1a', pval: 'p = 8.9e-56' },
+      { name: 'IGJ', class: 'gene-igj', pval: 'p = 3.1e-28' },
+    ];
+
+    function createGeneSymbol(gene, delay) {
+      const el = document.createElement('div');
+      el.className = `gene-symbol ${gene.class}`;
+      el.innerHTML = `${gene.name} <span style="font-size: 0.7em; opacity: 0.8;">${gene.pval}</span>`;
+      el.style.top = (10 + Math.random() * 75) + '%';
+      el.style.left = '-150px';
+      el.style.animationDuration = (12 + Math.random() * 8) + 's';
+      el.style.animationDelay = delay + 's';
+      document.body.appendChild(el);
+    }
+
+    // Spawn genes continuously
+    noiseGenes.forEach((gene, i) => {
+      createGeneSymbol(gene, i * 2.5);
+      // Respawn periodically
+      setInterval(() => {
+        createGeneSymbol(gene, 0);
+      }, 20000 + i * 3000);
+    });
+
+    // Add some chaos - random spinning text occasionally
+    setInterval(() => {
+      const texts = document.querySelectorAll('.floating-text:not(.big-what)');
+      const randomText = texts[Math.floor(Math.random() * texts.length)];
+      randomText.style.transform = 'rotate(360deg)';
+      setTimeout(() => {
+        randomText.style.transform = '';
+      }, 500);
+    }, 3000);
+  </script>
+</body>
+</html>

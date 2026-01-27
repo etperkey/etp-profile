@@ -222,6 +222,11 @@ a {
   transition: var(--transition);
 }
 
+/* Mobile Nav Close Button - hidden on desktop */
+.nav-close {
+  display: none;
+}
+
 /* Flow Cytometry Background Pattern */
 .modern-theme {
   position: relative;
@@ -1660,6 +1665,28 @@ a {
   font-weight: 500;
 }
 
+.publication-links {
+  display: flex;
+  gap: 15px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.pub-link {
+  font-size: 0.8rem;
+  color: var(--primary-color);
+  padding: 4px 10px;
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+.pub-link:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
 .publications-footer {
   display: flex;
   justify-content: center;
@@ -2424,6 +2451,72 @@ a {
   font-size: 0.9rem;
 }
 
+.quote-section {
+  padding: 40px 20px;
+  background-color: var(--background-alt);
+  text-align: center;
+}
+
+.nietzsche-quote {
+  color: var(--text-light);
+  font-size: 1rem;
+  font-style: italic;
+  max-width: 550px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.nietzsche-quote .monster-link {
+  color: var(--text-color);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  transition: color 0.2s ease;
+}
+
+.nietzsche-quote .monster-link:hover {
+  color: #e53e3e;
+}
+
+.nietzsche-quote .quote-attribution {
+  display: block;
+  font-style: normal;
+  font-size: 0.85rem;
+  margin-top: 10px;
+  opacity: 0.6;
+}
+
+/* Page Loader for lazy-loaded components */
+.page-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  gap: 20px;
+}
+
+.loader-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--background-alt);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.page-loader p {
+  font-size: 1.1rem;
+  opacity: 0.7;
+}
+
 /* Research Insights Section */
 .research-insights {
   padding: 100px 20px;
@@ -2577,6 +2670,24 @@ a {
 
   .nav.active {
     display: block;
+  }
+
+  .nav-close {
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 5px 10px;
+    line-height: 1;
+  }
+
+  .nav-close:hover {
+    color: var(--primary-color);
   }
 
   .nav-list {

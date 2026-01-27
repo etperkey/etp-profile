@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -10,13 +10,27 @@ import Footer from './components/Footer';
 import ThemeSwitcher from './components/ThemeSwitcher';
 import MySpacePlayer from './components/MySpacePlayer';
 import DancingBabies from './components/DancingBabies';
-import CV from './components/CV';
-import BloodSmearViewer from './components/BloodSmearViewer';
-import MorphologyGuide from './components/MorphologyGuide';
+import ErrorBoundary from './components/ErrorBoundary';
 import './App.css';
 
+// Lazy-loaded components for code splitting
+const CV = lazy(() => import('./components/CV'));
+const BloodSmearViewer = lazy(() => import('./components/BloodSmearViewer'));
+const MorphologyGuide = lazy(() => import('./components/MorphologyGuide'));
+
+// Loading fallback component
+const PageLoader = () => (
+  <div className="page-loader">
+    <div className="loader-spinner"></div>
+    <p>Loading...</p>
+  </div>
+);
+
 function App() {
-  const [theme, setTheme] = useState('modern');
+  const [theme, setTheme] = useState(() => {
+    // Load saved theme from localStorage, default to 'modern'
+    return localStorage.getItem('etp-theme') || 'modern';
+  });
   const [currentPage, setCurrentPage] = useState('home');
 
   // Handle hash-based routing
@@ -47,6 +61,8 @@ function App() {
     document.body.classList.remove('modern-theme', 'geocities-theme', 'myspace-theme');
     // Add current theme class
     document.body.classList.add(`${theme}-theme`);
+    // Save to localStorage
+    localStorage.setItem('etp-theme', theme);
 
     // Cleanup on unmount
     return () => {
@@ -56,17 +72,35 @@ function App() {
 
   // Render CV page
   if (currentPage === 'cv') {
-    return <CV />;
+    return (
+      <ErrorBoundary>
+        <Suspense fallback={<PageLoader />}>
+          <CV />
+        </Suspense>
+      </ErrorBoundary>
+    );
   }
 
   // Render Blood Smear Viewer page
   if (currentPage === 'smear') {
-    return <BloodSmearViewer />;
+    return (
+      <ErrorBoundary>
+        <Suspense fallback={<PageLoader />}>
+          <BloodSmearViewer />
+        </Suspense>
+      </ErrorBoundary>
+    );
   }
 
   // Render Morphology Guide page
   if (currentPage === 'morphology') {
-    return <MorphologyGuide />;
+    return (
+      <ErrorBoundary>
+        <Suspense fallback={<PageLoader />}>
+          <MorphologyGuide />
+        </Suspense>
+      </ErrorBoundary>
+    );
   }
 
   return (
@@ -79,6 +113,21 @@ function App() {
         <Projects />
         <ResearchTools />
         <Contact />
+        <section className="quote-section">
+          <p className="nietzsche-quote">
+            &ldquo;He who fights with monsters should see to it that he himself does not become a{' '}
+            <a
+              href="https://www.nejm.org/doi/full/10.1056/NEJMoa2411507"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="monster-link"
+            >
+              monster
+            </a>
+            .&rdquo;
+            <span className="quote-attribution">&mdash; Nietzsche</span>
+          </p>
+        </section>
       </main>
       <Footer />
       <ThemeSwitcher currentTheme={theme} setTheme={setTheme} />

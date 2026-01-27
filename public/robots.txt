@@ -1,0 +1,7 @@
+# robots.txt for ericperkey.com
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://ericperkey.com/sitemap.xml

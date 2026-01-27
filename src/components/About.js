@@ -13,11 +13,32 @@ function About() {
   const technical = [
     'R / Shiny',
     'Python',
+    'AI',
     'Flow Cytometry',
-    'Single-cell RNA-seq',
+    'scRNAseq',
+    'Molecular Biology',
     'Mouse Models',
     'Data Visualization',
   ];
+
+  // Easter eggs for certain skills
+  const easterEggs = {
+    'R / Shiny': 'https://www.youtube.com/shorts/xH5CWzye3W8',
+    'AI': 'https://dune.fandom.com/wiki/Butlerian_Jihad',
+    'Python': 'https://www.youtube.com/watch?v=vt0Y39eMvpI&t=40',
+    'Mouse Models': 'https://www.youtube.com/watch?v=SfrxQmR4_dY&t=630',
+    'Data Visualization': 'https://www.youtube.com/watch?v=Vxq9yj2pVWk',
+    'Molecular Biology': 'https://www.youtube.com/watch?v=dMjQ3hA9mEA',
+    'scRNAseq': '/kmeans.html',
+    'Immunotherapy Optimization': 'https://www.youtube.com/watch?v=zicGxU5MfwE&t=35',
+    'Translational Research': 'https://www.youtube.com/watch?v=S4PYI6TzqYk&t=10',
+  };
+
+  const handleSkillClick = (skill) => {
+    if (easterEggs[skill]) {
+      window.open(easterEggs[skill], '_blank', 'noopener,noreferrer');
+    }
+  };
 
   return (
     <section id="about" className="about">
@@ -28,8 +49,8 @@ function About() {
             <p>
               I&apos;m a physician-scientist and Hematology/Oncology Fellow at the University of
               Chicago with a <strong>clinical focus in Lymphoma</strong>. My training combines deep
-              expertise in tumor immunology with hands-on care of patients receiving cutting-edge
-              immunotherapies including BiTEs, CAR-T cells, and checkpoint inhibitors.
+              expertise in <strong>tumor immunology</strong> with hands-on care of patients receiving cutting-edge{' '}
+              <strong>immunotherapies</strong> including BiTEs, CAR-T cells, and checkpoint inhibitors.
             </p>
             <p>
               <strong>Current Research:</strong> Working with{' '}
@@ -39,7 +60,7 @@ function About() {
                 rel="noopener noreferrer"
                 className="mentor-link"
               >
-                <strong>Dr. Justin Kline</strong>
+                <strong>Dr. Justin Kline</strong> <span aria-hidden="true">↗</span>
               </a>
               &apos;s lab, I investigate how lymphomas evade immune surveillance and how we can
               overcome resistance to immunotherapy. My projects focus on TP53-driven immune escape,
@@ -54,7 +75,7 @@ function About() {
                 rel="noopener noreferrer"
                 className="mentor-link"
               >
-                <strong>Dr. Ivan Maillard</strong>
+                <strong>Dr. Ivan Maillard</strong> <span aria-hidden="true">↗</span>
               </a>{' '}
               at the University of Michigan and University of Pennsylvania uncovered how stromal
               cells in lymph nodes regulate T cell responses through Notch signaling, with
@@ -67,7 +88,7 @@ function About() {
                 rel="noopener noreferrer"
                 className="mentor-link"
               >
-                <strong>Dr. Richard A. Miller</strong>
+                <strong>Dr. Richard A. Miller</strong> <span aria-hidden="true">↗</span>
               </a>
               .
             </p>
@@ -76,7 +97,20 @@ function About() {
             <h3>Current Focus</h3>
             <ul className="skills-list">
               {currentFocus.map((item, index) => (
-                <li key={index} className="skill-item current">
+                <li
+                  key={index}
+                  className={`skill-item current ${easterEggs[item] ? 'has-easter-egg' : ''}`}
+                  onClick={() => handleSkillClick(item)}
+                  onKeyDown={(e) => {
+                    if (easterEggs[item] && (e.key === 'Enter' || e.key === ' ')) {
+                      e.preventDefault();
+                      handleSkillClick(item);
+                    }
+                  }}
+                  role={easterEggs[item] ? 'button' : undefined}
+                  tabIndex={easterEggs[item] ? 0 : undefined}
+                  style={easterEggs[item] ? { cursor: 'pointer' } : {}}
+                >
                   {item}
                 </li>
               ))}
@@ -92,7 +126,20 @@ function About() {
             <h3 style={{ marginTop: '25px' }}>Technical Skills</h3>
             <ul className="skills-list">
               {technical.map((item, index) => (
-                <li key={index} className="skill-item">
+                <li
+                  key={index}
+                  className={`skill-item ${easterEggs[item] ? 'has-easter-egg' : ''}`}
+                  onClick={() => handleSkillClick(item)}
+                  onKeyDown={(e) => {
+                    if (easterEggs[item] && (e.key === 'Enter' || e.key === ' ')) {
+                      e.preventDefault();
+                      handleSkillClick(item);
+                    }
+                  }}
+                  role={easterEggs[item] ? 'button' : undefined}
+                  tabIndex={easterEggs[item] ? 0 : undefined}
+                  style={easterEggs[item] ? { cursor: 'pointer' } : {}}
+                >
                   {item}
                 </li>
               ))}

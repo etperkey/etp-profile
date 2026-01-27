@@ -22,7 +22,7 @@ function CV() {
 
   return (
     <div className="cv-page">
-      <BloodSmearBackground density="medium" />
+      <BloodSmearBackground density="medium" wbcPerUL={150000} />
       <div className="cv-container">
         <a
           href="#home"

@@ -18,13 +18,22 @@ function Header() {
           className={`menu-toggle ${isMenuOpen ? 'active' : ''}`}
           onClick={toggleMenu}
           aria-label="Toggle navigation"
+          aria-expanded={isMenuOpen}
+          aria-controls="main-nav"
         >
           <span></span>
           <span></span>
           <span></span>
         </button>
 
-        <nav className={`nav ${isMenuOpen ? 'active' : ''}`}>
+        <nav id="main-nav" className={`nav ${isMenuOpen ? 'active' : ''}`}>
+          <button
+            className="nav-close"
+            onClick={() => setIsMenuOpen(false)}
+            aria-label="Close navigation"
+          >
+            &times;
+          </button>
           <ul className="nav-list">
             <li>
               <a href="#home" onClick={() => setIsMenuOpen(false)}>

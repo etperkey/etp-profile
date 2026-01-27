@@ -33,7 +33,11 @@ function Toast({ message, type = 'success', duration = 5000, onClose }) {
   };
 
   return (
-    <div className={`toast toast-${type} ${isExiting ? 'toast-exit' : ''}`}>
+    <div
+      className={`toast toast-${type} ${isExiting ? 'toast-exit' : ''}`}
+      role="alert"
+      aria-live="assertive"
+    >
       <span className="toast-icon">{icons[type]}</span>
       <span className="toast-message">{message}</span>
       <button className="toast-close" onClick={handleClose} aria-label="Close">

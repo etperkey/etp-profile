@@ -122,18 +122,77 @@ function BloodSmearViewer() {
   const { fps, performanceLevel } = usePerformanceMonitor();
   const hardwareInfo = useHardwareInfo();
   const [manualDensity, setManualDensity] = useState(null);
+  const [shadowsEnabled, setShadowsEnabled] = useState(null); // null = auto, true/false = manual
   const [showPerfStats, setShowPerfStats] = useState(false); // Minimized by default
   const [isPanning, setIsPanning] = useState(false);
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
+  const [isDraggingSlide, setIsDraggingSlide] = useState(false); // 10x slide navigation
+  const [slideStart, setSlideStart] = useState({ x: 0, y: 0 }); // Starting mouse position for slide drag
+  // Slide position: viewport position on the larger conceptual slide (0-1 range)
+  // x: 0 = left edge, 1 = right edge (centered at 0.5)
+  // y: 0 = body/center of slide, 1 = feathered edge (top)
+  const [slidePosition, setSlidePosition] = useState({ x: 0.5, y: 0 });
+  const [isDraggingMinimap, setIsDraggingMinimap] = useState(false);
+  // Zone transition cross-fade state
+  const [previousZone, setPreviousZone] = useState(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const transitionTimeoutRef = useRef(null);
+
+  // Derive edgeProximity from slidePosition.y for backwards compatibility
+  // Use coarse quantization - only regenerate at major zone boundaries
+  // Zones: Body/Head (0-0.6), Monolayer (0.6-0.85), Feathered Edge (0.85-1.0)
+  const edgeProximity = useMemo(() => {
+    const y = slidePosition.y;
+    // Only 3 regeneration points to minimize cell popping:
+    // 0-0.6: body/head zone (edgeProximity = 0.3)
+    // 0.6-0.85: monolayer zone (edgeProximity = 0.7)
+    // 0.85-1.0: feathered edge (edgeProximity = 0.95)
+    if (y < 0.6) return 0.3;
+    if (y < 0.85) return 0.7;
+    return 0.95;
+  }, [slidePosition.y]);
+
+  // Cross-fade effect when zone changes (skip on low performance to avoid lag)
+  const prevEdgeProximityRef = useRef(edgeProximity);
+  useEffect(() => {
+    if (prevEdgeProximityRef.current !== edgeProximity) {
+      // Skip cross-fade on low/minimal performance - just swap instantly
+      if (performanceLevel === 'low' || performanceLevel === 'minimal') {
+        prevEdgeProximityRef.current = edgeProximity;
+        return;
+      }
+
+      // Zone changed - start cross-fade
+      setPreviousZone(prevEdgeProximityRef.current);
+      setIsTransitioning(true);
+
+      // Clear any existing timeout
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+
+      // End transition after fade completes
+      transitionTimeoutRef.current = setTimeout(() => {
+        setIsTransitioning(false);
+        setPreviousZone(null);
+      }, 250); // Match CSS transition duration
+
+      prevEdgeProximityRef.current = edgeProximity;
+    }
+
+    return () => {
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+    };
+  }, [edgeProximity, performanceLevel]);
   const [rbcPerUL, setRbcPerUL] = useState(5000000); // Normal RBC count
   const [mcv, setMcv] = useState(90); // Mean Corpuscular Volume (fL)
   const [rdw, setRdw] = useState(13); // Red cell Distribution Width (%)
   const [nrbcPer100RBC, setNrbcPer100RBC] = useState(0); // Nucleated RBCs per 100 RBCs
   const [pltPerUL, setPltPerUL] = useState(250000); // Platelet count (normal 150-400K)
-  // Check if mobile on initial render
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-  const [showRbcPanel, setShowRbcPanel] = useState(!isMobile); // Collapsed on mobile, expanded on desktop
+  const [showRbcPanel, setShowRbcPanel] = useState(false); // RBC panel collapsed by default
   const [showPltPanel, setShowPltPanel] = useState(false); // PLT panel collapsed by default
   const [showWbcPanel, setShowWbcPanel] = useState(false); // WBC panel collapsed by default
   const [showMorphPanel, setShowMorphPanel] = useState(false); // Morphology panel collapsed by default
@@ -188,6 +247,7 @@ function BloodSmearViewer() {
   });
   const [isPaused, setIsPaused] = useState(false);
   const [objective, setObjective] = useState('10x'); // Start at scanning view
+  const [selectedPreset, setSelectedPreset] = useState('Normal'); // Track selected clinical case
   const containerRef = useRef(null);
 
   // Map performance level to density - use max (5x) for high performance
@@ -229,11 +289,17 @@ function BloodSmearViewer() {
   }, []);
 
   // Pan handlers for dragging when zoomed (100x oil immersion)
+  // Also handles slide navigation at 10x on desktop
   const handleMouseDown = useCallback(
     (e) => {
       if (currentZoom > 1) {
+        // 100x mode: pan within the zoomed view
         setIsPanning(true);
         setPanStart({ x: e.clientX - panOffset.x, y: e.clientY - panOffset.y });
+      } else if (window.innerWidth > 768) {
+        // 10x mode on desktop: drag to navigate slide position
+        setIsDraggingSlide(true);
+        setSlideStart({ x: e.clientX, y: e.clientY });
       }
     },
     [currentZoom, panOffset]
@@ -242,22 +308,67 @@ function BloodSmearViewer() {
   const handleMouseMove = useCallback(
     (e) => {
       if (isPanning && currentZoom > 1) {
+        // 40x/100x mode: pan within the zoomed view
         const newX = e.clientX - panStart.x;
         const newY = e.clientY - panStart.y;
-        // Limit panning to reasonable bounds
-        const maxPan = (currentZoom - 1) * 300;
+        // Resolution-aware pan bounds: scale with viewport and zoom level
+        const viewportSize = Math.min(window.innerWidth, window.innerHeight);
+        const maxPan = (currentZoom - 1) * (viewportSize * 0.4);
+        // Viewport model: drag up = see above, drag down = see below
+        // Invert Y to match arrow key behavior
         setPanOffset({
           x: Math.max(-maxPan, Math.min(maxPan, newX)),
-          y: Math.max(-maxPan, Math.min(maxPan, newY)),
+          y: Math.max(-maxPan, Math.min(maxPan, -newY)),
         });
+      } else if (isDraggingSlide && currentZoom === 1) {
+        // 10x mode on desktop: update slide position based on drag
+        const deltaX = e.clientX - slideStart.x;
+        const deltaY = e.clientY - slideStart.y;
+        // Resolution-aware sensitivity: scale with viewport size
+        const viewportWidth = window.innerWidth;
+        const baseSensitivity = Math.max(1000, Math.min(2400, viewportWidth * 1.1));
+        // Viewport model: drag up = see above (edge), drag down = see below (body)
+        // This matches arrow key behavior and is intuitive for navigation
+        setSlidePosition((prev) => ({
+          x: Math.max(0, Math.min(1, prev.x - deltaX / baseSensitivity)),
+          y: Math.max(0, Math.min(1, prev.y - deltaY / baseSensitivity)),
+        }));
+        setSlideStart({ x: e.clientX, y: e.clientY });
       }
     },
-    [isPanning, currentZoom, panStart]
+    [isPanning, isDraggingSlide, currentZoom, panStart, slideStart]
   );
 
   const handleMouseUp = useCallback(() => {
     setIsPanning(false);
+    setIsDraggingSlide(false);
   }, []);
+
+  // Double-click to center the view on that spot (desktop only, 10x mode)
+  // Now includes Y axis since we have smooth cross-fade transitions
+  const handleDoubleClick = useCallback(
+    (e) => {
+      // Only handle on desktop at 10x
+      if (window.innerWidth <= 768 || currentZoom > 1) return;
+
+      // Get click position relative to viewport (0-1 range)
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = (e.clientX - rect.left) / rect.width;
+      const clickY = (e.clientY - rect.top) / rect.height;
+
+      // Calculate how far from center the click was
+      const offsetX = (clickX - 0.5);
+      const offsetY = (clickY - 0.5);
+
+      // Update slide position to center on clicked spot
+      setSlidePosition((prev) => ({
+        x: Math.max(0, Math.min(1, prev.x + offsetX * 0.8)),
+        // Click above center (low screen Y) = move toward edge = increase slideY
+        y: Math.max(0, Math.min(1, prev.y - offsetY * 0.8)),
+      }));
+    },
+    [currentZoom]
+  );
 
   // Touch support for mobile
   const handleTouchStart = useCallback(
@@ -280,10 +391,13 @@ function BloodSmearViewer() {
         e.preventDefault();
         const newX = e.touches[0].clientX - panStart.x;
         const newY = e.touches[0].clientY - panStart.y;
-        const maxPan = (currentZoom - 1) * 300;
+        // Resolution-aware pan bounds for mobile
+        const viewportSize = Math.min(window.innerWidth, window.innerHeight);
+        const maxPan = (currentZoom - 1) * (viewportSize * 0.5);
+        // Viewport model: drag up = see above, drag down = see below
         setPanOffset({
           x: Math.max(-maxPan, Math.min(maxPan, newX)),
-          y: Math.max(-maxPan, Math.min(maxPan, newY)),
+          y: Math.max(-maxPan, Math.min(maxPan, -newY)),
         });
       }
     },
@@ -294,11 +408,64 @@ function BloodSmearViewer() {
     setIsPanning(false);
   }, []);
 
+  // Wheel handler for scrolling toward/away from feathered edge (desktop only)
+  const handleWheel = useCallback(
+    (e) => {
+      // Only handle on desktop (not mobile)
+      if (window.innerWidth <= 768) return;
+
+      e.preventDefault();
+      // Resolution-aware scroll sensitivity
+      const viewportWidth = window.innerWidth;
+      const scrollMultiplier = Math.max(0.0006, Math.min(0.0015, 1.5 / viewportWidth));
+
+      const deltaY = e.deltaY * scrollMultiplier;
+      const deltaX = e.deltaX * scrollMultiplier;
+      // Viewport model: scroll up = see above (edge), scroll down = see below (body)
+      setSlidePosition((prev) => ({
+        x: Math.max(0, Math.min(1, prev.x + deltaX)),
+        y: Math.max(0, Math.min(1, prev.y - deltaY)),
+      }));
+    },
+    []
+  );
+
+  // Minimap handlers for dragging the viewport
+  const minimapRef = useRef(null);
+
+  const updateSlidePositionFromMinimap = useCallback((e) => {
+    if (!minimapRef.current) return;
+    const rect = minimapRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    // Invert Y because top of minimap = feathered edge (y=1)
+    const y = Math.max(0, Math.min(1, 1 - (e.clientY - rect.top) / rect.height));
+    setSlidePosition({ x, y });
+  }, []);
+
+  const handleMinimapMouseDown = useCallback((e) => {
+    if (window.innerWidth <= 768) return;
+    setIsDraggingMinimap(true);
+    updateSlidePositionFromMinimap(e);
+  }, [updateSlidePositionFromMinimap]);
+
+  const handleMinimapMouseMove = useCallback((e) => {
+    if (!isDraggingMinimap) return;
+    updateSlidePositionFromMinimap(e);
+  }, [isDraggingMinimap, updateSlidePositionFromMinimap]);
+
+  const handleMinimapMouseUp = useCallback(() => {
+    setIsDraggingMinimap(false);
+  }, []);
+
   // Keyboard controls for accessibility
   const handleKeyDown = useCallback(
     (e) => {
-      const panStep = 50;
-      const maxPan = (currentZoom - 1) * 300;
+      // Resolution-aware keyboard navigation
+      const viewportSize = Math.min(window.innerWidth, window.innerHeight);
+      const panStep = Math.max(30, viewportSize * 0.04); // Scale with viewport
+      const maxPan = (currentZoom - 1) * (viewportSize * 0.4);
+      // Smaller step for 10x slide navigation on larger screens
+      const slideStep = Math.max(0.02, Math.min(0.05, 40 / viewportSize));
 
       switch (e.key) {
         // Zoom controls
@@ -315,40 +482,64 @@ function BloodSmearViewer() {
           else if (objective === '40x') handleObjectiveChange('10x');
           break;
 
-        // Pan controls (only when zoomed)
+        // Pan controls (40x/100x) or slide navigation (10x)
         case 'ArrowUp':
+          e.preventDefault();
           if (currentZoom > 1) {
-            e.preventDefault();
             setPanOffset((prev) => ({
               ...prev,
               y: Math.min(maxPan, prev.y + panStep),
             }));
+          } else {
+            // 10x: move toward edge (increase slidePosition.y)
+            setSlidePosition((prev) => ({
+              ...prev,
+              y: Math.min(1, prev.y + slideStep),
+            }));
           }
           break;
         case 'ArrowDown':
+          e.preventDefault();
           if (currentZoom > 1) {
-            e.preventDefault();
             setPanOffset((prev) => ({
               ...prev,
               y: Math.max(-maxPan, prev.y - panStep),
             }));
+          } else {
+            // 10x: move toward head (decrease slidePosition.y)
+            setSlidePosition((prev) => ({
+              ...prev,
+              y: Math.max(0, prev.y - slideStep),
+            }));
           }
           break;
         case 'ArrowLeft':
+          e.preventDefault();
           if (currentZoom > 1) {
-            e.preventDefault();
             setPanOffset((prev) => ({
               ...prev,
               x: Math.min(maxPan, prev.x + panStep),
             }));
+          } else {
+            // 10x: move left on slide
+            setSlidePosition((prev) => ({
+              ...prev,
+              x: Math.max(0, prev.x - slideStep),
+            }));
           }
           break;
         case 'ArrowRight':
+          e.preventDefault();
           if (currentZoom > 1) {
-            e.preventDefault();
             setPanOffset((prev) => ({
               ...prev,
               x: Math.max(-maxPan, prev.x - panStep),
+            }));
+          } else {
+            // 10x: move right on slide
+            setSlidePosition((prev) => ({
+              ...prev,
+              x: Math.min(1, prev.x + slideStep),
             }));
           }
           break;
@@ -894,6 +1085,8 @@ function BloodSmearViewer() {
     if (preset.rbc) setRbcMorphologies(preset.rbc);
     if (preset.wbc) setWbcMorphologies(preset.wbc);
     if (preset.plt) setPltMorphologies(preset.plt);
+    // Track selected preset
+    setSelectedPreset(preset.name);
   };
 
   // Update a single RBC morphology
@@ -948,7 +1141,7 @@ function BloodSmearViewer() {
 
   return (
     <div
-      className={`blood-smear-viewer ${isPanning ? 'panning' : ''} ${currentZoom > 1 ? 'zoomed' : ''} ${isPaused ? 'paused' : ''}`}
+      className={`blood-smear-viewer ${isPanning ? 'panning' : ''} ${currentZoom > 1 ? 'zoomed' : ''} ${isPaused ? 'paused' : ''} ${isDraggingSlide ? 'dragging-slide' : ''}`}
       ref={containerRef}
       tabIndex={0}
       role="application"
@@ -957,10 +1150,12 @@ function BloodSmearViewer() {
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      onDoubleClick={handleDoubleClick}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
       onKeyDown={handleKeyDown}
+      onWheel={handleWheel}
     >
       <div
         className="blood-smear-zoom-container"
@@ -969,20 +1164,63 @@ function BloodSmearViewer() {
           transformOrigin: 'center center',
         }}
       >
-        <BloodSmearBackground
-          density={currentDensity}
-          scaleOverride={null}
-          rbcPerUL={rbcPerUL}
-          mcv={mcv}
-          rdw={rdw}
-          nrbcPer100RBC={nrbcPer100RBC}
-          wbcPerUL={wbcPerUL}
-          wbcDifferential={wbcDifferential}
-          pltPerUL={pltPerUL}
-          rbcMorphologies={rbcMorphologies}
-          wbcMorphologies={wbcMorphologies}
-          pltMorphologies={pltMorphologies}
-        />
+        {/* Previous zone cells - fading out during transition */}
+        {isTransitioning && previousZone !== null && (
+          <div className="zone-transition zone-fade-out">
+            <BloodSmearBackground
+              density={currentDensity}
+              scaleOverride={null}
+              rbcPerUL={rbcPerUL}
+              mcv={mcv}
+              rdw={rdw}
+              nrbcPer100RBC={nrbcPer100RBC}
+              wbcPerUL={wbcPerUL}
+              wbcDifferential={wbcDifferential}
+              pltPerUL={pltPerUL}
+              rbcMorphologies={rbcMorphologies}
+              edgeProximity={previousZone}
+              wbcMorphologies={wbcMorphologies}
+              pltMorphologies={pltMorphologies}
+              showShadows={
+                shadowsEnabled !== null
+                  ? shadowsEnabled
+                  : typeof window !== 'undefined' && window.innerWidth <= 768
+                    ? performanceLevel === 'high'
+                    : performanceLevel === 'high' || performanceLevel === 'medium'
+              }
+              slideOffset={currentZoom === 1 ? slidePosition : null}
+            />
+          </div>
+        )}
+        {/* Current zone cells - fading in during transition, always visible otherwise */}
+        <div className={`zone-transition ${isTransitioning ? 'zone-fade-in' : ''}`}>
+          <BloodSmearBackground
+            density={currentDensity}
+            scaleOverride={null}
+            rbcPerUL={rbcPerUL}
+            mcv={mcv}
+            rdw={rdw}
+            nrbcPer100RBC={nrbcPer100RBC}
+            wbcPerUL={wbcPerUL}
+            wbcDifferential={wbcDifferential}
+            pltPerUL={pltPerUL}
+            rbcMorphologies={rbcMorphologies}
+            edgeProximity={edgeProximity}
+            wbcMorphologies={wbcMorphologies}
+            pltMorphologies={pltMorphologies}
+            showShadows={
+              // Manual toggle overrides auto-detection
+              shadowsEnabled !== null
+                ? shadowsEnabled
+                : // Auto: Desktop shadows on high/medium, Mobile only on high
+                  typeof window !== 'undefined' && window.innerWidth <= 768
+                    ? performanceLevel === 'high'
+                    : performanceLevel === 'high' || performanceLevel === 'medium'
+            }
+            // Pass slideOffset for continuous scrolling at 10x (transform-based)
+            slideOffset={currentZoom === 1 ? slidePosition : null}
+          />
+        </div>
       </div>
 
       {/* Navigation buttons */}
@@ -1008,6 +1246,52 @@ function BloodSmearViewer() {
           Morphology Guide
         </a>
       </div>
+
+      {/* Slide minimap (desktop only) - shows position on the blood smear */}
+      {typeof window !== 'undefined' && window.innerWidth > 768 && (
+        <div className="slide-minimap-container">
+          <div className="slide-minimap-header">
+            <span className="minimap-title">Blood Smear</span>
+            <span className={`zone-indicator ${
+              edgeProximity > 0.75 ? 'edge' :
+              edgeProximity > 0.5 ? 'monolayer' :
+              edgeProximity > 0.2 ? 'body' : 'head'
+            }`}>
+              {edgeProximity > 0.75 ? 'Feathered Edge' :
+               edgeProximity > 0.5 ? 'Monolayer ✓' :
+               edgeProximity > 0.2 ? 'Body' : 'Head (Thick)'}
+            </span>
+          </div>
+          <div
+            className="slide-minimap"
+            ref={minimapRef}
+            onMouseDown={handleMinimapMouseDown}
+            onMouseMove={handleMinimapMouseMove}
+            onMouseUp={handleMinimapMouseUp}
+            onMouseLeave={handleMinimapMouseUp}
+          >
+            {/* Slide background with zones */}
+            <div className="slide-zone slide-zone-edge" />
+            <div className="slide-zone slide-zone-monolayer" />
+            <div className="slide-zone slide-zone-body" />
+            <div className="slide-zone slide-zone-head" />
+            {/* Viewport indicator */}
+            <div
+              className="minimap-viewport"
+              style={{
+                left: `${(slidePosition.x - 0.15) * 100}%`,
+                bottom: `${slidePosition.y * 100}%`,
+              }}
+            />
+            {/* Zone labels */}
+            <span className="zone-label zone-label-edge">Edge</span>
+            <span className="zone-label zone-label-monolayer">Monolayer</span>
+            <span className="zone-label zone-label-body">Body</span>
+            <span className="zone-label zone-label-head">Head</span>
+          </div>
+          <div className="minimap-hint">Click or drag • Scroll to move</div>
+        </div>
+      )}
 
       {/* Microscope controls - always visible */}
       <div className="microscope-panel">
@@ -1359,12 +1643,7 @@ function BloodSmearViewer() {
                 {morphologyPresets.map((preset) => (
                   <button
                     key={preset.name}
-                    className={`morph-preset-btn ${
-                      JSON.stringify(rbcMorphologies) === JSON.stringify(preset.rbc) &&
-                      JSON.stringify(wbcMorphologies) === JSON.stringify(preset.wbc)
-                        ? 'active'
-                        : ''
-                    }`}
+                    className={`morph-preset-btn ${selectedPreset === preset.name ? 'active' : ''}`}
                     onClick={() => applyMorphologyPreset(preset)}
                     title={preset.desc}
                   >
@@ -1432,6 +1711,42 @@ function BloodSmearViewer() {
               <div className="stat-row">
                 <span className="stat-label">Cells:</span>
                 <span className="stat-value">{cellCount}</span>
+              </div>
+            </div>
+
+            <div className="stat-section">
+              <h4>Cell Shadows</h4>
+              <div className="shadow-controls">
+                <button
+                  className={`shadow-btn ${shadowsEnabled === null ? 'active' : ''}`}
+                  onClick={() => setShadowsEnabled(null)}
+                >
+                  Auto
+                </button>
+                <button
+                  className={`shadow-btn ${shadowsEnabled === true ? 'active' : ''}`}
+                  onClick={() => setShadowsEnabled(true)}
+                >
+                  On
+                </button>
+                <button
+                  className={`shadow-btn ${shadowsEnabled === false ? 'active' : ''}`}
+                  onClick={() => setShadowsEnabled(false)}
+                >
+                  Off
+                </button>
+              </div>
+              <div className="stat-row">
+                <span className="stat-label">Status:</span>
+                <span className="stat-value">
+                  {shadowsEnabled !== null
+                    ? (shadowsEnabled ? 'Enabled' : 'Disabled')
+                    : (typeof window !== 'undefined' && window.innerWidth <= 768
+                        ? (performanceLevel === 'high' ? 'Auto (On)' : 'Auto (Off)')
+                        : (performanceLevel === 'high' || performanceLevel === 'medium' ? 'Auto (On)' : 'Auto (Off)')
+                      )
+                  }
+                </span>
               </div>
             </div>
           </div>

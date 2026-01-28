@@ -15,6 +15,9 @@
   left: 0;
   width: 100%;
   height: 100%;
+  /* Smooth transform for continuous scrolling at 10x */
+  transition: transform 0.12s ease-out;
+  will-change: transform;
 }
 
 /* Zoom container */
@@ -28,6 +31,34 @@
   will-change: transform;
 }
 
+/* Zone transition cross-fade */
+.zone-transition {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.zone-fade-out {
+  animation: fadeOut 0.25s ease-in-out forwards;
+  pointer-events: none;
+}
+
+.zone-fade-in {
+  animation: fadeIn 0.25s ease-in-out forwards;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* Panning state */
 .blood-smear-viewer.panning .blood-smear-zoom-container {
   transition: none;
@@ -39,6 +70,22 @@
 
 .blood-smear-viewer.panning {
   cursor: grabbing;
+}
+
+/* 10x slide navigation cursor (desktop only) */
+@media (min-width: 769px) {
+  .blood-smear-viewer:not(.zoomed) {
+    cursor: grab;
+  }
+
+  .blood-smear-viewer.dragging-slide {
+    cursor: grabbing;
+  }
+
+  /* Disable transition during active dragging for immediate feedback */
+  .blood-smear-viewer.dragging-slide .blood-smear-background {
+    transition: none;
+  }
 }
 
 /* Navigation buttons container */
@@ -87,6 +134,163 @@
   background: linear-gradient(135deg, rgba(139, 41, 66, 1), rgba(196, 68, 68, 1));
   box-shadow: 0 4px 20px rgba(139, 41, 66, 0.4);
   transform: translateY(-1px);
+}
+
+/* Slide minimap - shows position on the larger conceptual slide */
+.slide-minimap-container {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.slide-minimap-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.minimap-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.zone-indicator {
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+
+.zone-indicator.head {
+  background: #e5e7eb;
+  color: #4b5563;
+}
+
+.zone-indicator.body {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.zone-indicator.monolayer {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.zone-indicator.edge {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.slide-minimap {
+  width: 120px;
+  height: 160px;
+  background: linear-gradient(to bottom,
+    #fecaca 0%,      /* Feathered Edge - large cells/clumps here */
+    #fecaca 15%,
+    #d1fae5 15%,     /* Monolayer - optimal reading zone */
+    #d1fae5 35%,
+    #fef3c7 35%,     /* Body - middle section */
+    #fef3c7 70%,
+    #d1d5db 70%,     /* Head - thick, cells stacked */
+    #d1d5db 100%
+  );
+  border-radius: 8px;
+  position: relative;
+  cursor: crosshair;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #9ca3af;
+}
+
+/* Zone overlays for visual clarity */
+.slide-zone {
+  position: absolute;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+
+.slide-zone-edge {
+  top: 0;
+  height: 15%;
+  border-bottom: 1px dashed rgba(220, 38, 38, 0.4);
+}
+
+.slide-zone-monolayer {
+  top: 15%;
+  height: 20%;
+  border-bottom: 1px dashed rgba(16, 185, 129, 0.4);
+}
+
+.slide-zone-body {
+  top: 35%;
+  height: 35%;
+  border-bottom: 1px dashed rgba(217, 119, 6, 0.3);
+}
+
+.slide-zone-head {
+  bottom: 0;
+  height: 30%;
+}
+
+/* Zone labels */
+.zone-label {
+  position: absolute;
+  right: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.zone-label-edge {
+  top: 2%;
+  color: #dc2626;
+}
+
+.zone-label-monolayer {
+  top: 20%;
+  color: #059669;
+}
+
+.zone-label-body {
+  top: 48%;
+  color: #d97706;
+}
+
+.zone-label-head {
+  bottom: 8%;
+  color: #4b5563;
+}
+
+/* Viewport indicator - represents the current view */
+.minimap-viewport {
+  position: absolute;
+  width: 30%;
+  height: 20%;
+  background: rgba(139, 41, 66, 0.2);
+  border: 2px solid #8b2942;
+  border-radius: 4px;
+  transform: translate(-50%, 50%);
+  /* No transition - instant updates for responsive dragging */
+  box-shadow: 0 2px 8px rgba(139, 41, 66, 0.3);
+  pointer-events: none;
+}
+
+.minimap-hint {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  text-align: center;
 }
 
 /* Microscope panel - always visible, top center */
@@ -185,6 +389,40 @@
 /* Pause animation state */
 .blood-smear-viewer.paused .floating-cell {
   animation-play-state: paused !important;
+}
+
+/* Stationary cells at the cutoff line - no animation */
+.floating-cell.stationary {
+  animation: none !important;
+  transform: translate(-50%, -50%);
+}
+
+/* Cell shadows - performance dependent */
+/* Only applied when .with-shadows class is on parent (high/medium performance) */
+.blood-smear-background.with-shadows .floating-cell {
+  filter: drop-shadow(1.5px 1.5px 2px rgba(0, 0, 0, 0.25));
+}
+
+/* WBCs get more prominent shadows (larger cells) */
+.blood-smear-background.with-shadows .floating-cell.neutrophil,
+.blood-smear-background.with-shadows .floating-cell.neutrophil-3lobe,
+.blood-smear-background.with-shadows .floating-cell.band-neutrophil,
+.blood-smear-background.with-shadows .floating-cell.lymphocyte,
+.blood-smear-background.with-shadows .floating-cell.monocyte,
+.blood-smear-background.with-shadows .floating-cell.eosinophil,
+.blood-smear-background.with-shadows .floating-cell.eosinophil-3lobe,
+.blood-smear-background.with-shadows .floating-cell.basophil,
+.blood-smear-background.with-shadows .floating-cell.blast,
+.blood-smear-background.with-shadows .floating-cell.auer-rod,
+.blood-smear-background.with-shadows .floating-cell.myelocyte,
+.blood-smear-background.with-shadows .floating-cell.metamyelocyte,
+.blood-smear-background.with-shadows .floating-cell.atypical-lymph {
+  filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.3));
+}
+
+/* Stationary cells at cutoff get strongest shadows for depth */
+.blood-smear-background.with-shadows .floating-cell.stationary {
+  filter: drop-shadow(3px 3px 4px rgba(0, 0, 0, 0.35));
 }
 
 /* Cell Types panel - collapsible, right side */
@@ -1074,6 +1312,36 @@
   border-color: #8b2942;
 }
 
+/* Shadow controls */
+.shadow-controls {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.shadow-btn {
+  flex: 1;
+  padding: 6px 10px;
+  background: #f3f4f6;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  color: #4b5563;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.shadow-btn:hover {
+  background: #e5e7eb;
+}
+
+.shadow-btn.active {
+  background: linear-gradient(135deg, #8b2942, #a13553);
+  color: white;
+  border-color: #8b2942;
+}
+
 /* Zoom controls */
 .zoom-controls {
   display: flex;
@@ -1594,8 +1862,8 @@
 
 .morph-control-panel.expanded {
   width: 280px;
-  max-height: 400px;
-  overflow-y: auto;
+  max-height: none;
+  overflow-y: visible;
 }
 
 .morph-control-panel.collapsed {
@@ -1625,8 +1893,8 @@
 }
 
 .morph-panel-content {
-  max-height: 350px;
-  overflow-y: auto;
+  max-height: none;
+  overflow-y: visible;
 }
 
 .morph-presets {
@@ -3251,6 +3519,1054 @@
   .rbc-control-panel.expanded .rbc-slider::-webkit-slider-thumb {
     width: 9px;
     height: 9px;
+  }
+}
+
+/* =================================================================
+   LARGE SCREEN RESPONSIVE STYLES
+   ================================================================= */
+
+/* 1440p monitors and larger laptops */
+@media (min-width: 1440px) {
+  .rbc-control-panel,
+  .wbc-control-panel,
+  .plt-control-panel {
+    width: 310px;
+    padding: 16px 20px;
+    border-radius: 14px;
+  }
+
+  .rbc-control-panel.collapsed,
+  .wbc-control-panel.collapsed,
+  .plt-control-panel.collapsed {
+    width: 230px;
+  }
+
+  .panel-toggle {
+    font-size: 1.15rem;
+    gap: 10px;
+  }
+
+  .panel-summary {
+    font-size: 0.85rem;
+  }
+
+  .toggle-icon {
+    font-size: 0.9rem;
+  }
+
+  /* RBC panel scaling */
+  .rbc-index-label {
+    font-size: 0.75rem;
+    min-width: 32px;
+  }
+
+  .rbc-index-value {
+    font-size: 0.75rem;
+    min-width: 44px;
+  }
+
+  .rbc-index-value .unit {
+    font-size: 0.6rem;
+  }
+
+  .rbc-index-status {
+    font-size: 0.65rem;
+  }
+
+  .rbc-slider {
+    height: 4px;
+    max-width: 65px;
+  }
+
+  .rbc-slider::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+  }
+
+  .rbc-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+  }
+
+  .anemia-preset-btn {
+    font-size: 0.6rem;
+    padding: 3px 5px;
+  }
+
+  /* PLT/WBC panel scaling */
+  .plt-value,
+  .wbc-value {
+    font-size: 1.6rem;
+  }
+
+  .plt-status,
+  .wbc-status {
+    font-size: 0.95rem;
+  }
+
+  .plt-slider,
+  .wbc-slider {
+    height: 7px;
+  }
+
+  .plt-slider::-webkit-slider-thumb,
+  .wbc-slider::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+  }
+
+  .plt-slider::-moz-range-thumb,
+  .wbc-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+  }
+
+  .wbc-preset-btn,
+  .plt-preset-btn {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+  }
+
+  .wbc-reference,
+  .plt-reference {
+    font-size: 0.8rem;
+  }
+
+  .differential-section h4 {
+    font-size: 0.95rem;
+  }
+
+  .diff-cell-name {
+    font-size: 0.8rem;
+  }
+
+  .diff-cell-value {
+    font-size: 0.75rem;
+  }
+
+  .diff-abs-value {
+    font-size: 0.65rem;
+  }
+
+  /* Morphology panel */
+  .morphology-control-panel {
+    width: 180px;
+    padding: 14px 16px;
+  }
+
+  .morphology-control-panel.expanded {
+    width: 320px;
+  }
+
+  .morphology-control-panel.collapsed {
+    width: 110px;
+  }
+
+  .morph-presets {
+    gap: 6px;
+  }
+
+  .morph-section-title {
+    font-size: 0.8rem;
+  }
+
+  .morph-row label {
+    font-size: 0.75rem;
+  }
+
+  .morph-slider-value {
+    font-size: 0.7rem;
+  }
+
+  /* Title and microscope panel */
+  .viewer-title h1 {
+    font-size: 1.3rem;
+  }
+
+  .viewer-title .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .microscope-panel {
+    padding: 10px 14px;
+    border-radius: 10px;
+  }
+
+  .density-label {
+    font-size: 0.95rem;
+  }
+
+  .density-btn {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+
+  /* Slide minimap */
+  .slide-minimap-container {
+    padding: 16px;
+  }
+
+  .slide-minimap {
+    width: 150px;
+    height: 200px;
+  }
+
+  .minimap-viewport {
+    width: 32%;
+    height: 22%;
+  }
+
+  .minimap-title {
+    font-size: 1.05rem;
+  }
+
+  .zone-indicator {
+    font-size: 0.9rem;
+  }
+
+  .zone-label {
+    font-size: 0.8rem;
+  }
+
+  .minimap-hint {
+    font-size: 0.85rem;
+  }
+
+  /* Cell types panel */
+  .cell-types-panel {
+    max-width: 300px;
+    padding: 8px;
+  }
+
+  .cell-types-panel .panel-toggle {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .count-grid .count-item {
+    font-size: 0.85rem;
+  }
+
+  .count-grid .count-value {
+    font-size: 1.3rem;
+  }
+
+  /* RBC panel interior - calculated values */
+  .rbc-index-absolute {
+    font-size: 0.6rem;
+  }
+
+  .rbc-reference {
+    font-size: 0.6rem;
+  }
+
+  .calculated-row .rbc-index-label {
+    font-size: 0.65rem;
+  }
+
+  .calculated-row .rbc-index-value {
+    font-size: 0.65rem;
+  }
+
+  .calculated-row .rbc-index-status {
+    font-size: 0.6rem;
+  }
+
+  .calculated-bar {
+    max-width: 90px;
+    height: 4px;
+  }
+
+  /* WBC Differential sliders */
+  .diff-slider-row {
+    gap: 6px;
+  }
+
+  .diff-label {
+    font-size: 0.8rem;
+    width: 38px;
+  }
+
+  .diff-slider {
+    max-width: 55px;
+    height: 5px;
+  }
+
+  .diff-slider::-webkit-slider-thumb {
+    width: 14px;
+    height: 14px;
+  }
+
+  .diff-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+  }
+
+  .diff-percent {
+    font-size: 0.75rem;
+    width: 28px;
+  }
+
+  .diff-absolute {
+    font-size: 0.65rem;
+    width: 32px;
+  }
+
+  .diff-preset-btn {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+
+  /* Morphology panel interior */
+  .morph-toggle {
+    font-size: 0.95rem;
+  }
+
+  .morph-summary {
+    font-size: 0.75rem;
+  }
+
+  .morph-slider-row {
+    gap: 6px;
+  }
+
+  .morph-label {
+    font-size: 0.75rem;
+    width: 80px;
+  }
+
+  .morph-slider {
+    max-width: 55px;
+    height: 5px;
+  }
+
+  .morph-slider::-webkit-slider-thumb {
+    width: 14px;
+    height: 14px;
+  }
+
+  .morph-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+  }
+
+  .morph-percent {
+    font-size: 0.7rem;
+    width: 28px;
+  }
+
+  .morph-preset-btn {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+}
+
+/* 1920p / Full HD monitors */
+@media (min-width: 1920px) {
+  .rbc-control-panel,
+  .wbc-control-panel,
+  .plt-control-panel {
+    width: 360px;
+    padding: 18px 24px;
+    border-radius: 16px;
+  }
+
+  .rbc-control-panel.collapsed,
+  .wbc-control-panel.collapsed,
+  .plt-control-panel.collapsed {
+    width: 260px;
+  }
+
+  .panel-toggle {
+    font-size: 1.3rem;
+    gap: 12px;
+  }
+
+  .panel-summary {
+    font-size: 0.95rem;
+  }
+
+  .toggle-icon {
+    font-size: 1rem;
+  }
+
+  /* RBC panel scaling */
+  .rbc-index-label {
+    font-size: 0.85rem;
+    min-width: 36px;
+  }
+
+  .rbc-index-value {
+    font-size: 0.85rem;
+    min-width: 50px;
+  }
+
+  .rbc-index-value .unit {
+    font-size: 0.7rem;
+  }
+
+  .rbc-index-status {
+    font-size: 0.75rem;
+  }
+
+  .rbc-index-row {
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .rbc-slider {
+    height: 5px;
+    max-width: 75px;
+  }
+
+  .rbc-slider::-webkit-slider-thumb {
+    width: 14px;
+    height: 14px;
+  }
+
+  .rbc-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+  }
+
+  .anemia-preset-btn {
+    font-size: 0.7rem;
+    padding: 4px 6px;
+    border-radius: 3px;
+  }
+
+  .anemia-presets {
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  /* PLT/WBC panel scaling */
+  .plt-value,
+  .wbc-value {
+    font-size: 1.8rem;
+  }
+
+  .plt-status,
+  .wbc-status {
+    font-size: 1.05rem;
+  }
+
+  .plt-slider,
+  .wbc-slider {
+    height: 8px;
+    margin-bottom: 14px;
+  }
+
+  .plt-slider::-webkit-slider-thumb,
+  .wbc-slider::-webkit-slider-thumb {
+    width: 22px;
+    height: 22px;
+  }
+
+  .plt-slider::-moz-range-thumb,
+  .wbc-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+  }
+
+  .wbc-preset-btn,
+  .plt-preset-btn {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
+
+  .wbc-presets,
+  .plt-presets {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .wbc-reference,
+  .plt-reference {
+    font-size: 0.9rem;
+  }
+
+  .differential-section h4 {
+    font-size: 1.05rem;
+  }
+
+  .diff-cell-name {
+    font-size: 0.9rem;
+  }
+
+  .diff-cell-value {
+    font-size: 0.85rem;
+  }
+
+  .diff-abs-value {
+    font-size: 0.75rem;
+  }
+
+  /* Morphology panel */
+  .morphology-control-panel {
+    width: 210px;
+    padding: 16px 18px;
+  }
+
+  .morphology-control-panel.expanded {
+    width: 380px;
+  }
+
+  .morphology-control-panel.collapsed {
+    width: 130px;
+  }
+
+  .morph-presets {
+    gap: 8px;
+  }
+
+  .morph-section-title {
+    font-size: 0.9rem;
+  }
+
+  .morph-row label {
+    font-size: 0.85rem;
+  }
+
+  .morph-slider-value {
+    font-size: 0.8rem;
+  }
+
+  /* Title and microscope panel */
+  .viewer-title h1 {
+    font-size: 1.5rem;
+  }
+
+  .viewer-title .subtitle {
+    font-size: 1rem;
+  }
+
+  .microscope-panel {
+    padding: 12px 16px;
+    border-radius: 12px;
+  }
+
+  .density-label {
+    font-size: 1.1rem;
+  }
+
+  .density-btn {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+
+  /* Slide minimap */
+  .slide-minimap-container {
+    padding: 18px;
+  }
+
+  .slide-minimap {
+    width: 170px;
+    height: 225px;
+  }
+
+  .minimap-viewport {
+    width: 32%;
+    height: 22%;
+  }
+
+  .minimap-title {
+    font-size: 1.15rem;
+  }
+
+  .zone-indicator {
+    font-size: 1rem;
+  }
+
+  .zone-label {
+    font-size: 0.9rem;
+  }
+
+  .minimap-hint {
+    font-size: 0.95rem;
+  }
+
+  /* Cell types panel */
+  .cell-types-panel {
+    max-width: 340px;
+    padding: 10px;
+  }
+
+  .cell-types-panel .panel-toggle {
+    font-size: 1.05rem;
+    padding: 12px;
+  }
+
+  .count-grid .count-item {
+    font-size: 0.95rem;
+  }
+
+  .count-grid .count-value {
+    font-size: 1.5rem;
+  }
+
+  /* RBC panel interior - calculated values */
+  .rbc-index-absolute {
+    font-size: 0.7rem;
+  }
+
+  .rbc-reference {
+    font-size: 0.7rem;
+  }
+
+  .calculated-row .rbc-index-label {
+    font-size: 0.75rem;
+  }
+
+  .calculated-row .rbc-index-value {
+    font-size: 0.75rem;
+  }
+
+  .calculated-row .rbc-index-status {
+    font-size: 0.7rem;
+  }
+
+  .calculated-bar {
+    max-width: 100px;
+    height: 5px;
+  }
+
+  /* WBC Differential sliders */
+  .diff-slider-row {
+    gap: 8px;
+  }
+
+  .diff-label {
+    font-size: 0.9rem;
+    width: 44px;
+  }
+
+  .diff-slider {
+    max-width: 65px;
+    height: 6px;
+  }
+
+  .diff-slider::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+  }
+
+  .diff-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+  }
+
+  .diff-percent {
+    font-size: 0.85rem;
+    width: 32px;
+  }
+
+  .diff-absolute {
+    font-size: 0.75rem;
+    width: 36px;
+  }
+
+  .diff-preset-btn {
+    font-size: 0.85rem;
+    padding: 5px 10px;
+  }
+
+  /* Morphology panel interior */
+  .morph-toggle {
+    font-size: 1.1rem;
+  }
+
+  .morph-summary {
+    font-size: 0.85rem;
+  }
+
+  .morph-slider-row {
+    gap: 8px;
+  }
+
+  .morph-label {
+    font-size: 0.85rem;
+    width: 90px;
+  }
+
+  .morph-slider {
+    max-width: 65px;
+    height: 6px;
+  }
+
+  .morph-slider::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+  }
+
+  .morph-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+  }
+
+  .morph-percent {
+    font-size: 0.8rem;
+    width: 32px;
+  }
+
+  .morph-preset-btn {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+  }
+}
+
+/* 2560p / QHD and 4K monitors */
+@media (min-width: 2560px) {
+  .rbc-control-panel,
+  .wbc-control-panel,
+  .plt-control-panel {
+    width: 420px;
+    padding: 22px 28px;
+    border-radius: 18px;
+  }
+
+  .rbc-control-panel.collapsed,
+  .wbc-control-panel.collapsed,
+  .plt-control-panel.collapsed {
+    width: 300px;
+  }
+
+  .panel-toggle {
+    font-size: 1.5rem;
+    gap: 14px;
+  }
+
+  .panel-summary {
+    font-size: 1.1rem;
+  }
+
+  .toggle-icon {
+    font-size: 1.15rem;
+  }
+
+  /* RBC panel scaling */
+  .rbc-index-label {
+    font-size: 1rem;
+    min-width: 42px;
+  }
+
+  .rbc-index-value {
+    font-size: 1rem;
+    min-width: 58px;
+  }
+
+  .rbc-index-value .unit {
+    font-size: 0.8rem;
+  }
+
+  .rbc-index-status {
+    font-size: 0.9rem;
+  }
+
+  .rbc-index-row {
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .rbc-slider {
+    height: 6px;
+    max-width: 90px;
+  }
+
+  .rbc-slider::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+  }
+
+  .rbc-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+  }
+
+  .anemia-preset-btn {
+    font-size: 0.8rem;
+    padding: 5px 8px;
+    border-radius: 4px;
+  }
+
+  .anemia-presets {
+    gap: 5px;
+    margin-bottom: 10px;
+  }
+
+  /* PLT/WBC panel scaling */
+  .plt-value,
+  .wbc-value {
+    font-size: 2.1rem;
+  }
+
+  .plt-status,
+  .wbc-status {
+    font-size: 1.2rem;
+  }
+
+  .plt-slider,
+  .wbc-slider {
+    height: 10px;
+    margin-bottom: 16px;
+  }
+
+  .plt-slider::-webkit-slider-thumb,
+  .wbc-slider::-webkit-slider-thumb {
+    width: 26px;
+    height: 26px;
+  }
+
+  .plt-slider::-moz-range-thumb,
+  .wbc-slider::-moz-range-thumb {
+    width: 26px;
+    height: 26px;
+  }
+
+  .wbc-preset-btn,
+  .plt-preset-btn {
+    font-size: 1rem;
+    padding: 8px 14px;
+  }
+
+  .wbc-presets,
+  .plt-presets {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .wbc-reference,
+  .plt-reference {
+    font-size: 1rem;
+  }
+
+  .differential-section h4 {
+    font-size: 1.2rem;
+  }
+
+  .diff-cell-name {
+    font-size: 1.05rem;
+  }
+
+  .diff-cell-value {
+    font-size: 1rem;
+  }
+
+  .diff-abs-value {
+    font-size: 0.9rem;
+  }
+
+  /* Morphology panel */
+  .morphology-control-panel {
+    width: 250px;
+    padding: 20px 22px;
+  }
+
+  .morphology-control-panel.expanded {
+    width: 450px;
+  }
+
+  .morphology-control-panel.collapsed {
+    width: 150px;
+  }
+
+  .morph-presets {
+    gap: 10px;
+  }
+
+  .morph-section-title {
+    font-size: 1.05rem;
+  }
+
+  .morph-row label {
+    font-size: 1rem;
+  }
+
+  .morph-slider-value {
+    font-size: 0.95rem;
+  }
+
+  /* Title and microscope panel */
+  .viewer-title h1 {
+    font-size: 1.8rem;
+  }
+
+  .viewer-title .subtitle {
+    font-size: 1.2rem;
+  }
+
+  .microscope-panel {
+    padding: 14px 20px;
+    border-radius: 14px;
+  }
+
+  .density-label {
+    font-size: 1.3rem;
+  }
+
+  .density-btn {
+    font-size: 1.05rem;
+    padding: 10px 16px;
+  }
+
+  /* Slide minimap */
+  .slide-minimap-container {
+    padding: 22px;
+  }
+
+  .slide-minimap {
+    width: 210px;
+    height: 280px;
+  }
+
+  .minimap-viewport {
+    width: 32%;
+    height: 22%;
+  }
+
+  .minimap-title {
+    font-size: 1.3rem;
+  }
+
+  .zone-indicator {
+    font-size: 1.15rem;
+  }
+
+  .zone-label {
+    font-size: 1.05rem;
+  }
+
+  .minimap-hint {
+    font-size: 1.1rem;
+  }
+
+  /* Cell types panel */
+  .cell-types-panel {
+    max-width: 400px;
+    padding: 12px;
+  }
+
+  .cell-types-panel .panel-toggle {
+    font-size: 1.2rem;
+    padding: 14px;
+  }
+
+  .count-grid .count-item {
+    font-size: 1.1rem;
+  }
+
+  .count-grid .count-value {
+    font-size: 1.8rem;
+  }
+
+  /* RBC panel interior - calculated values */
+  .rbc-index-absolute {
+    font-size: 0.85rem;
+  }
+
+  .rbc-reference {
+    font-size: 0.85rem;
+  }
+
+  .calculated-row .rbc-index-label {
+    font-size: 0.9rem;
+  }
+
+  .calculated-row .rbc-index-value {
+    font-size: 0.9rem;
+  }
+
+  .calculated-row .rbc-index-status {
+    font-size: 0.85rem;
+  }
+
+  .calculated-bar {
+    max-width: 120px;
+    height: 6px;
+  }
+
+  /* WBC Differential sliders */
+  .diff-slider-row {
+    gap: 10px;
+  }
+
+  .diff-label {
+    font-size: 1.05rem;
+    width: 52px;
+  }
+
+  .diff-slider {
+    max-width: 80px;
+    height: 7px;
+  }
+
+  .diff-slider::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+  }
+
+  .diff-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+  }
+
+  .diff-percent {
+    font-size: 1rem;
+    width: 38px;
+  }
+
+  .diff-absolute {
+    font-size: 0.9rem;
+    width: 42px;
+  }
+
+  .diff-preset-btn {
+    font-size: 1rem;
+    padding: 6px 12px;
+  }
+
+  /* Morphology panel interior */
+  .morph-toggle {
+    font-size: 1.25rem;
+  }
+
+  .morph-summary {
+    font-size: 1rem;
+  }
+
+  .morph-slider-row {
+    gap: 10px;
+  }
+
+  .morph-label {
+    font-size: 1rem;
+    width: 100px;
+  }
+
+  .morph-slider {
+    max-width: 80px;
+    height: 7px;
+  }
+
+  .morph-slider::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+  }
+
+  .morph-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+  }
+
+  .morph-percent {
+    font-size: 0.95rem;
+    width: 38px;
+  }
+
+  .morph-preset-btn {
+    font-size: 0.95rem;
+    padding: 6px 12px;
   }
 }
 

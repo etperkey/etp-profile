@@ -28,7 +28,14 @@ const PageLoader = () => (
 
 function App() {
   const [theme, setTheme] = useState(() => {
-    // Load saved theme from localStorage, default to 'modern'
+    // Check hash for theme parameter first (e.g., #theme=myspace)
+    const hash = window.location.hash;
+    const themeMatch = hash.match(/theme=(\w+)/);
+    if (themeMatch && ['modern', 'geocities', 'myspace'].includes(themeMatch[1])) {
+      localStorage.setItem('etp-theme', themeMatch[1]);
+      return themeMatch[1];
+    }
+    // Fall back to localStorage, default to 'modern'
     return localStorage.getItem('etp-theme') || 'modern';
   });
   const [currentPage, setCurrentPage] = useState('home');
@@ -69,6 +76,20 @@ function App() {
       window.removeEventListener('hashchange', handleRouteChange);
       window.removeEventListener('popstate', handleRouteChange);
     };
+  }, []);
+
+  // Listen for theme changes via hash
+  useEffect(() => {
+    const handleThemeHash = () => {
+      const hash = window.location.hash;
+      const themeMatch = hash.match(/theme=(\w+)/);
+      if (themeMatch && ['modern', 'geocities', 'myspace'].includes(themeMatch[1])) {
+        setTheme(themeMatch[1]);
+      }
+    };
+
+    window.addEventListener('hashchange', handleThemeHash);
+    return () => window.removeEventListener('hashchange', handleThemeHash);
   }, []);
 
   useEffect(() => {

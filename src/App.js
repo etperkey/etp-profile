@@ -33,11 +33,21 @@ function App() {
   });
   const [currentPage, setCurrentPage] = useState('home');
 
-  // Handle hash-based routing
+  // Handle routing - supports both clean URLs (/smear) and hash (#smear)
   useEffect(() => {
-    const handleHashChange = () => {
+    const handleRouteChange = () => {
+      const path = window.location.pathname;
       const hash = window.location.hash;
-      if (hash === '#cv' || hash === '#/cv') {
+
+      // Check pathname first (clean URLs for Instagram, etc.)
+      if (path === '/cv') {
+        setCurrentPage('cv');
+      } else if (path === '/smear') {
+        setCurrentPage('smear');
+      } else if (path === '/morphology') {
+        setCurrentPage('morphology');
+      // Fallback to hash-based routing for backwards compatibility
+      } else if (hash === '#cv' || hash === '#/cv') {
         setCurrentPage('cv');
       } else if (hash === '#smear' || hash === '#/smear' || hash === '#blood-smear') {
         setCurrentPage('smear');
@@ -49,11 +59,16 @@ function App() {
     };
 
     // Check on mount
-    handleHashChange();
+    handleRouteChange();
 
-    // Listen for hash changes
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    // Listen for hash changes (backwards compatibility)
+    window.addEventListener('hashchange', handleRouteChange);
+    // Listen for popstate (browser back/forward with clean URLs)
+    window.addEventListener('popstate', handleRouteChange);
+    return () => {
+      window.removeEventListener('hashchange', handleRouteChange);
+      window.removeEventListener('popstate', handleRouteChange);
+    };
   }, []);
 
   useEffect(() => {

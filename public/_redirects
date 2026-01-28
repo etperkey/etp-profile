@@ -1,0 +1,7 @@
+# Clean URLs for direct linking (Instagram, etc.)
+/smear          /index.html    200
+/morphology     /index.html    200
+/cv             /index.html    200
+
+# Fallback for SPA routing
+/*              /index.html    200

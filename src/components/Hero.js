@@ -220,7 +220,7 @@ function Hero({ theme = 'modern' }) {
             role="button"
             tabIndex={0}
             aria-label={isFlipped ? 'Click to flip back to profile photo' : 'Click to reveal a blood cell'}
-            title={isFlipped ? 'Click to flip back' : 'Click to reveal a blood cell!'}
+            title={isFlipped ? 'Click to flip back' : '🔬 Click me to reveal a cell'}
           >
             <div className="profile-flip-inner">
               <div className="profile-flip-front">

@@ -1,0 +1,2 @@
+# Ignore root projects folder (duplicate of public/projects)
+/projects/

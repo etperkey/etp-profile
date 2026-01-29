@@ -167,7 +167,7 @@ function App() {
         <Contact />
         <section className="quote-section">
           <p className="nietzsche-quote">
-            &ldquo;He who fights with monsters should see to it that he himself does not become a{' '}
+            &ldquo;He who fights with{' '}
             <a
               href="/worms"
               onClick={(e) => {
@@ -175,8 +175,18 @@ function App() {
                 window.history.pushState({}, '', '/worms');
                 window.dispatchEvent(new PopStateEvent('popstate'));
               }}
+              className="monsters-link"
+              title="🪱 wyrms"
+            >
+              monsters
+            </a>
+            {' '}should see to it that he himself does not become a{' '}
+            <a
+              href="https://www.nejm.org/doi/full/10.1056/NEJMoa2411507"
+              target="_blank"
+              rel="noopener noreferrer"
               className="monster-link"
-              title="🪱"
+              data-tooltip="🧬 TP53"
             >
               monster
             </a>

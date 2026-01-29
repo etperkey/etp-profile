@@ -1201,7 +1201,6 @@ function Projects() {
             target="_blank"
             rel="noopener noreferrer"
             className="arcade-link-card"
-            style={{ marginTop: '1rem' }}
           >
             <div className="arcade-icon">
               <svg viewBox="0 0 64 64" className="project-icon arcade-icon-svg">

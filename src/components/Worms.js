@@ -1,7 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './Worms.css';
 
 function Worms() {
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     // Set document title
     document.title = '🪱 WORMS';
@@ -16,8 +18,16 @@ function Worms() {
     window.dispatchEvent(new PopStateEvent('popstate'));
   };
 
+  const handleIframeLoad = () => {
+    setIsLoading(false);
+  };
+
   return (
     <div className="worms-container">
+      <div className={`worms-loader ${isLoading ? '' : 'hidden'}`}>
+        <div className="worms-spinner"></div>
+        <span className="worms-loader-text">🪱 Loading worms...</span>
+      </div>
       <button className="worms-back-button" onClick={handleBack}>
         ← Back to Portfolio
       </button>
@@ -26,6 +36,7 @@ function Worms() {
         title="WORMS - A Viagra Boys Parody"
         className="worms-iframe"
         allow="autoplay"
+        onLoad={handleIframeLoad}
       />
     </div>
   );

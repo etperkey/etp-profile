@@ -2477,6 +2477,47 @@ a {
   color: #e53e3e;
 }
 
+/* Custom tooltip for monster link */
+.nietzsche-quote .monster-link {
+  position: relative;
+}
+
+.nietzsche-quote .monster-link::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-style: italic;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  margin-bottom: 5px;
+}
+
+.nietzsche-quote .monster-link:hover::after {
+  opacity: 1;
+}
+
+/* Easter egg link - looks like normal text */
+.nietzsche-quote .monsters-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: text;
+  transition: color 0.2s ease;
+}
+
+.nietzsche-quote .monsters-link:hover {
+  color: #ff6b9d;
+  cursor: pointer;
+}
+
 .nietzsche-quote .quote-attribution {
   display: block;
   font-style: normal;

@@ -710,6 +710,10 @@
   box-shadow: 0 4px 15px rgba(45, 27, 78, 0.3);
 }
 
+.arcade-link-card + .arcade-link-card {
+  margin-top: 1.5rem;
+}
+
 .arcade-link-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 25px rgba(45, 27, 78, 0.4);

@@ -17,6 +17,7 @@ import './App.css';
 const CV = lazy(() => import('./components/CV'));
 const BloodSmearViewer = lazy(() => import('./components/BloodSmearViewer'));
 const MorphologyGuide = lazy(() => import('./components/MorphologyGuide'));
+const Worms = lazy(() => import('./components/Worms'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -53,6 +54,8 @@ function App() {
         setCurrentPage('smear');
       } else if (path === '/morphology') {
         setCurrentPage('morphology');
+      } else if (path === '/worms') {
+        setCurrentPage('worms');
       // Fallback to hash-based routing for backwards compatibility
       } else if (hash === '#cv' || hash === '#/cv') {
         setCurrentPage('cv');
@@ -60,6 +63,8 @@ function App() {
         setCurrentPage('smear');
       } else if (hash === '#morphology' || hash === '#/morphology' || hash === '#morphology-guide') {
         setCurrentPage('morphology');
+      } else if (hash === '#worms' || hash === '#/worms') {
+        setCurrentPage('worms');
       } else {
         setCurrentPage('home');
       }
@@ -139,6 +144,17 @@ function App() {
     );
   }
 
+  // Render Worms easter egg page
+  if (currentPage === 'worms') {
+    return (
+      <ErrorBoundary>
+        <Suspense fallback={<PageLoader />}>
+          <Worms />
+        </Suspense>
+      </ErrorBoundary>
+    );
+  }
+
   return (
     <div className="App">
       <Header />
@@ -153,10 +169,14 @@ function App() {
           <p className="nietzsche-quote">
             &ldquo;He who fights with monsters should see to it that he himself does not become a{' '}
             <a
-              href="https://www.nejm.org/doi/full/10.1056/NEJMoa2411507"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/worms"
+              onClick={(e) => {
+                e.preventDefault();
+                window.history.pushState({}, '', '/worms');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
               className="monster-link"
+              title="🪱"
             >
               monster
             </a>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🪱 WORMS</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪱</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: white;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: #ff6b9d;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        #canvas-container {
+            position: relative;
+            border: 4px solid #ff6b9d;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(255, 107, 157, 0.3);
+        }
+
+        canvas {
+            display: block;
+            background: linear-gradient(180deg, #2d1b3d 0%, #1a1a2e 100%);
+        }
+
+        #controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-family: 'Comic Sans MS', cursive;
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-shadow: 1px 1px 0 #000;
+            box-shadow: 0 4px 0 #cc5580;
+            transition: transform 0.1s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #cc5580;
+        }
+
+        #info {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        #timestamp {
+            font-family: monospace;
+            color: #ff6b9d;
+        }
+
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #ff6b9d;
+        }
+
+        #seekbar-container {
+            margin-top: 15px;
+            width: 800px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #seekbar {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #333;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        #seekbar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #ff6b9d;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        #seekbar::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: #ff6b9d;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .time-label {
+            font-family: monospace;
+            font-size: 12px;
+            color: #888;
+            min-width: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🪱 WORMS 🪱</h1>
+
+    <div id="canvas-container">
+        <canvas id="canvas" width="800" height="600"></canvas>
+        <div id="loading">Loading assets...</div>
+    </div>
+
+    <div id="controls">
+        <button id="playBtn">▶ PLAY</button>
+        <button id="stopBtn">⬛ STOP</button>
+        <button id="replayBtn" style="display: none;">🪱 BACK THROUGH THE WORMHOLE 🪱</button>
+    </div>
+
+    <div id="credits" style="margin-top: 20px; font-size: 12px; color: #666; text-align: center;">
+        Song: "Worms" by <a href="https://viagr-aboys.com/" target="_blank" style="color: #ff6b9d;">Viagra Boys</a> from <em>Cave World</em> (2022). Please buy their mp3 to put on your ipod.
+        <br>
+        Created by <a href="https://eperkey.org" target="_blank" style="color: #ff6b9d;">Eric Perkey, MD-PhD</a>. If not apparent, this video is not for profit.
+    </div>
+
+    <audio id="audio" preload="auto">
+        <source src="../audio/1-08 Worms.m4a" type="audio/mp4">
+    </audio>
+
+    <script src="animation.js"></script>
+</body>
+</html>

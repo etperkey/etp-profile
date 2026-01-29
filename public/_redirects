@@ -2,6 +2,7 @@
 /smear          /index.html    200
 /morphology     /index.html    200
 /cv             /index.html    200
+/worms          /index.html    200
 
 # Fallback for SPA routing
 /*              /index.html    200

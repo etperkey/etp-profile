@@ -1119,6 +1119,44 @@ function Projects() {
             Interactive learning tools for hematology education, featuring gamified approaches to
             mastering blood smear morphology and clinical reasoning.
           </p>
+          {/* Peripheral Smear Viewer */}
+          <a
+            href="/smear"
+            onClick={(e) => {
+              e.preventDefault();
+              window.history.pushState({}, '', '/smear');
+              window.dispatchEvent(new PopStateEvent('popstate'));
+            }}
+            className="arcade-link-card"
+          >
+            <div className="arcade-icon">
+              <svg viewBox="0 0 64 64" className="project-icon arcade-icon-svg">
+                {/* Microscope-inspired blood smear icon */}
+                <circle cx="32" cy="32" r="24" fill="#fdf6f0" stroke="#e8d4c4" strokeWidth="2" />
+                {/* RBCs */}
+                <ellipse cx="24" cy="28" rx="6" ry="4" fill="#cc4444" opacity="0.9" />
+                <ellipse cx="38" cy="24" rx="5" ry="3.5" fill="#cc4444" opacity="0.85" />
+                <ellipse cx="28" cy="38" rx="5.5" ry="4" fill="#cc4444" opacity="0.9" />
+                <ellipse cx="42" cy="36" rx="5" ry="3.5" fill="#cc4444" opacity="0.8" />
+                <ellipse cx="20" cy="40" rx="4.5" ry="3" fill="#cc4444" opacity="0.85" />
+                {/* WBC (neutrophil) */}
+                <circle cx="35" cy="32" r="5" fill="#8866aa" opacity="0.9" />
+                <circle cx="34" cy="31" r="2" fill="#5533aa" opacity="0.6" />
+                <circle cx="36" cy="33" r="1.5" fill="#5533aa" opacity="0.5" />
+                {/* Platelet */}
+                <ellipse cx="46" cy="28" rx="2" ry="1.5" fill="#6688cc" opacity="0.7" />
+              </svg>
+            </div>
+            <div className="arcade-link-content">
+              <h4 className="arcade-title">Peripheral Smear Explorer</h4>
+              <p className="arcade-description">
+                Interactive virtual microscopy for learning blood cell morphology. Identify RBCs, WBCs,
+                and platelets while mastering the art of peripheral smear interpretation.
+              </p>
+              <span className="arcade-cta">View Smear →</span>
+            </div>
+          </a>
+
           <a
             href="/HematologyArcade/index.html"
             target="_blank"

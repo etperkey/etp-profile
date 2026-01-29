@@ -1,0 +1,11 @@
+# RFK Jaw Position Info
+
+Original head size: 1000x1000
+Jaw bounding box: (184, 692, 831, 997)
+Jaw anchor point (for rotation): approximately center-top of jaw image
+
+## Animation Notes:
+- The jaw pivots from roughly where it meets the ears
+- Rotate the jaw 5-15 degrees for open mouth
+- Jaw anchor X: 500
+- Jaw anchor Y: 680

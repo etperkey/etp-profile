@@ -19,7 +19,7 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Comic Sans MS', 'Comic Neue', 'Chalkboard SE', 'Marker Felt', cursive, sans-serif;
             color: white;
         }
 
@@ -51,7 +51,7 @@
         button {
             padding: 15px 30px;
             font-size: 18px;
-            font-family: 'Comic Sans MS', cursive;
+            font-family: 'Comic Sans MS', 'Comic Neue', 'Chalkboard SE', 'Marker Felt', cursive, sans-serif;
             background: #ff6b9d;
             color: white;
             border: none;
@@ -135,6 +135,202 @@
             font-size: 12px;
             color: #888;
             min-width: 40px;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 850px) {
+            #canvas-container {
+                width: 95vw;
+                max-width: 800px;
+            }
+
+            canvas {
+                width: 100%;
+                height: auto;
+            }
+
+            #seekbar-container {
+                width: 95vw;
+                max-width: 800px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 8px;
+            }
+
+            #canvas-container {
+                border-width: 3px;
+            }
+
+            #controls {
+                margin-top: 15px;
+                gap: 8px;
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 0 10px;
+            }
+
+            button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            #credits {
+                font-size: 10px;
+                padding: 0 15px;
+                margin-top: 15px;
+            }
+
+            #seekbar-container {
+                padding: 0 10px;
+            }
+
+            .time-label {
+                font-size: 10px;
+                min-width: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px 0;
+                justify-content: flex-start;
+                padding-top: 20px;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+                margin-bottom: 5px;
+            }
+
+            #canvas-container {
+                border-width: 2px;
+                border-radius: 4px;
+            }
+
+            #controls {
+                margin-top: 10px;
+                gap: 5px;
+            }
+
+            button {
+                padding: 10px 15px;
+                font-size: 12px;
+                border-radius: 6px;
+            }
+
+            #replayBtn {
+                font-size: 10px;
+                padding: 8px 12px;
+            }
+
+            #credits {
+                font-size: 9px;
+                margin-top: 10px;
+            }
+
+            #seekbar-container {
+                margin-top: 10px;
+            }
+
+            #seekbar {
+                height: 6px;
+            }
+
+            #seekbar::-webkit-slider-thumb {
+                width: 14px;
+                height: 14px;
+            }
+
+            #seekbar::-moz-range-thumb {
+                width: 14px;
+                height: 14px;
+            }
+        }
+
+        @media (max-width: 375px) {
+            h1 {
+                font-size: 1rem;
+            }
+
+            button {
+                padding: 8px 12px;
+                font-size: 11px;
+            }
+
+            #replayBtn {
+                font-size: 9px;
+                padding: 6px 10px;
+            }
+
+            #credits {
+                font-size: 8px;
+            }
+
+            .time-label {
+                font-size: 9px;
+                min-width: 25px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            h1 {
+                font-size: 0.9rem;
+            }
+
+            button {
+                padding: 6px 10px;
+                font-size: 10px;
+            }
+
+            #credits {
+                font-size: 7px;
+            }
+        }
+
+        /* Landscape mode */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 5px;
+                justify-content: center;
+            }
+
+            h1 {
+                font-size: 1rem;
+                margin-bottom: 5px;
+            }
+
+            #canvas-container {
+                max-height: 70vh;
+                width: auto;
+            }
+
+            canvas {
+                max-height: 70vh;
+                width: auto;
+            }
+
+            #controls {
+                margin-top: 5px;
+                gap: 5px;
+            }
+
+            button {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+
+            #credits {
+                display: none;
+            }
+
+            #seekbar-container {
+                margin-top: 5px;
+                width: 80vw;
+            }
         }
     </style>
 </head>

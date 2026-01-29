@@ -431,7 +431,7 @@ function drawDeadBear(time) {
     ctx.stroke();
 
     // "RIP" text
-    ctx.font = 'bold 12px "Comic Sans MS", cursive';
+    ctx.font = 'bold 12px "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive';
     ctx.fillStyle = '#ffffff';
     ctx.strokeStyle = '#000';
     ctx.lineWidth = 2;
@@ -1070,7 +1070,7 @@ function drawJay(time) {
         // "RAW MILK" on top - rock style with slight tilt
         ctx.save();
         ctx.rotate(-0.05);
-        ctx.font = 'bold italic 18px Impact, sans-serif';
+        ctx.font = 'bold italic 18px Impact, "Arial Black", "Helvetica Bold", sans-serif';
         ctx.fillStyle = '#ff4444';
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 4;
@@ -1081,7 +1081,7 @@ function drawJay(time) {
         // "BOYS" bigger, bolder - slight opposite tilt
         ctx.save();
         ctx.rotate(0.03);
-        ctx.font = 'bold italic 26px Impact, sans-serif';
+        ctx.font = 'bold italic 26px Impact, "Arial Black", "Helvetica Bold", sans-serif';
         ctx.fillStyle = '#ffffff';
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 4;
@@ -1498,7 +1498,7 @@ function drawLyrics(time, scene) {
     const textY = 70 + wobble() * 3;
 
     // Draw main lyrics letter by letter with random colors
-    ctx.font = 'bold 42px "Comic Sans MS", cursive';
+    ctx.font = 'bold 42px "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive';
     ctx.strokeStyle = '#000';
     ctx.lineWidth = 5;
     ctx.textAlign = 'left';
@@ -1522,7 +1522,7 @@ function drawLyrics(time, scene) {
 
     // Subtext with random colors too
     if (subtext) {
-        ctx.font = 'bold 28px "Comic Sans MS", cursive';
+        ctx.font = 'bold 28px "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive';
         const subWidth = ctx.measureText(subtext).width;
         currentX = textX - subWidth / 2;
 
@@ -1675,7 +1675,7 @@ function drawFloatingObjects(time, scene) {
             ctx.fillText('doi: 10.1038/retracted', 0, 22);
         } else {
             // Regular floating text
-            ctx.font = 'bold 18px "Comic Sans MS", cursive';
+            ctx.font = 'bold 18px "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive';
             ctx.strokeStyle = '#000';
             ctx.lineWidth = 3;
             ctx.fillStyle = obj.color;
@@ -1727,7 +1727,7 @@ function drawCountdown(time) {
 
     // Draw number with random colors
     const colors = ['#ff6b9d', '#ffeb3b', '#4caf50', '#2196f3', '#ff5722'];
-    ctx.font = 'bold 120px "Comic Sans MS", cursive';
+    ctx.font = 'bold 120px "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.strokeStyle = '#000';
@@ -1968,7 +1968,7 @@ function drawEndCredits(time, scene) {
         if (y > -50 && y < CONFIG.CANVAS_HEIGHT + 50) {
             ctx.font = line.includes('WORMS') || line.includes('CAST') || line.includes('MUSIC') ||
                        line.includes('CATERING') || line.includes('SPECIAL') ?
-                       'bold 24px "Comic Sans MS", cursive' : '18px "Comic Sans MS", cursive';
+                       'bold 24px "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive' : '18px "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive';
 
             // Random color for title and emojis
             if (line.includes('🪱')) {
@@ -2016,7 +2016,7 @@ function drawScreenEffects(time, scene) {
     // rathergood.com watermark in corner
     ctx.save();
     ctx.globalAlpha = 0.6;
-    ctx.font = '12px "Comic Sans MS", cursive';
+    ctx.font = '12px "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive';
     ctx.fillStyle = '#ffffff';
     ctx.strokeStyle = '#000';
     ctx.lineWidth = 2;

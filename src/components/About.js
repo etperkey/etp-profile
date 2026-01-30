@@ -62,10 +62,9 @@ function About() {
               >
                 <strong>Dr. Justin Kline</strong> <span aria-hidden="true">↗</span>
               </a>
-              &apos;s lab, I investigate how lymphomas evade immune surveillance and how we can
-              overcome resistance to immunotherapy. My projects focus on TP53-driven immune escape,
-              optimizing BiTE therapy, and understanding lymphoma dissemination through chemokine
-              signaling.
+              &apos;s lab, I investigate the intersection of lymphomagenesis, lymphoma genetics, and
+              immune escape mechanisms—with the goals of improving immunotherapies and understanding
+              ways to prevent transformation to aggressive lymphomas.
             </p>
             <p>
               <strong>Prior Work:</strong> My PhD training with{' '}
